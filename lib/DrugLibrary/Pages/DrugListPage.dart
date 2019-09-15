@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
@@ -11,7 +12,7 @@ class DrugListPage extends StatefulWidget {
 	_DrugListState createState() => _DrugListState();
 }
 
-class _DrugListState extends State<DrugListPage> {
+class _DrugListState extends State<DrugListPage> with AutomaticKeepAliveClientMixin {
 	List <MedicineItemModel> dataSource = [];
 	
 	@override
@@ -40,8 +41,9 @@ class _DrugListState extends State<DrugListPage> {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			appBar: AppBar(
-				title: Text(widget.drugClassModel == null ? '名医推荐' : widget.drugClassModel.categoryName),
+			appBar: ZFAppBar(
+				widget.drugClassModel == null ? '名医推荐' : widget.drugClassModel.categoryName,
+				context: context
 			),
 			body: Column(
 				children: <Widget>[
@@ -141,4 +143,7 @@ class _DrugListState extends State<DrugListPage> {
 			},
 		);
 	}
+	
+	@override
+	bool get wantKeepAlive => true;
 }

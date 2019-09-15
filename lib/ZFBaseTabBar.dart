@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugLibraryPage.dart';
+import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
+import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
+import 'Common/ZFAppBar.dart';
 
 class ZFBaseTabBar extends StatefulWidget {
 	@override
@@ -22,30 +25,18 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> with SingleTickerProviderSt
 				child: Text('首页')
 			)))
 			..add(DrugLibraryPage())
-			..add(Container(child: Center(
-				child: Text('我的邀请')
-			)))
+			..add(InvitationPage())
 			..add(Container(child: Center(
 				child: Text('订单')
 			)))
-			..add(Container(child: Center(
-				child: Text('我的')
-			)));
+			..add(MinePage());
 	}
 	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
 			// 顶部导航栏
-			appBar: AppBar(
-				title: Text(
-					_appBarTitles[_currentIndex],
-					style: TextStyle(fontSize: 18, color: Color(0xff1a1a1a), fontWeight: FontWeight.normal)
-				),
-				backgroundColor: Colors.white,
-				centerTitle: true,
-				elevation: 0.5
-			),
+			appBar: ZFAppBar(_appBarTitles[_currentIndex], showBackBtn: false),
 			
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),

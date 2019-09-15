@@ -55,8 +55,10 @@ class HttpUtil {
 				queryParameters: data,
 				cancelToken: cancelToken
 			);
+			print('请求成功：${response.data}');
 			return response.data;
 		} on DioError catch(e){
+			print('请求失败error：$e');
 			return null;
 		}
 	}

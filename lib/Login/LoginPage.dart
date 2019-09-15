@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/UserModel.dart';
-import 'package:flutter_jkxing/Redux//ZFAuthState.dart';
+import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'LoginRequest.dart';
@@ -22,9 +22,23 @@ class _LoginPageState extends State<LoginPageWidget> {
 	String pwdStr = '';     // 输入的密码
 	String verifyStr = '';  // 输入的验证码
 	String tokenStr = '';   // 图形验证码token
+	String prefixStr = '';
 	@override
 	void initState() {
 		super.initState();
+		_getPhoneNum();
+	}
+	
+	_getPhoneNum() async {
+		SharedPreferences pref = await SharedPreferences.getInstance();
+		// 保存账号信息
+		String numStr = pref.getString('loginPhoneNum');
+		print('numStr = $numStr');
+		if (numStr != null && numStr.length > 0) {
+			setState(() {
+				this.prefixStr = numStr;
+			});
+		}
 	}
 	
 	@override
@@ -82,43 +96,39 @@ class _LoginPageState extends State<LoginPageWidget> {
 					)
 				)
 			),
-			child: Row(
-				children: <Widget>[
-					Image.asset(imgStr, width: 20),
-					Expanded(child: CupertinoTextField(
-						decoration: BoxDecoration(
-							border: Border.all(width: 0, color: Colors.white)
-						),
-						padding: EdgeInsets.only(left: 10),
-						maxLength: isPassword ? 30 : 11,
-						style: TextStyle(
-							fontSize: 14,
-							color: Color(0xff4d4d4d),
-							fontWeight: FontWeight.normal
-						),
-						placeholder: placeholder,
-						placeholderStyle: TextStyle(
-							fontSize: 14,
-							color: Color(0xffcccccc),
-							fontWeight: FontWeight.normal
-						),
-						clearButtonMode: OverlayVisibilityMode.editing,
-						cursorColor: Color(0xff6bcbd6),
-						cursorRadius: Radius.circular(1),
-						obscureText: isPassword,
-						onChanged: (text) {
-							if (isPassword) {
-								setState(() {
-									this.pwdStr = text;
-								});
-							} else {
-								setState(() {
-									this.accountStr = text;
-								});
-							}
-						}
-					))
-				]
+			child: CupertinoTextField(
+				decoration: BoxDecoration(
+					border: Border.all(width: 0, color: Colors.white)
+				),
+				padding: EdgeInsets.only(left: 10),
+				maxLength: isPassword ? 30 : 11,
+				style: TextStyle(
+					fontSize: 14,
+					color: Color(0xff4d4d4d),
+					fontWeight: FontWeight.normal
+				),
+				placeholder: placeholder,
+				placeholderStyle: TextStyle(
+					fontSize: 14,
+					color: Color(0xffcccccc),
+					fontWeight: FontWeight.normal
+				),
+				clearButtonMode: OverlayVisibilityMode.editing,
+				cursorColor: Color(0xff6bcbd6),
+				cursorRadius: Radius.circular(1),
+				obscureText: isPassword,
+				prefix: Image.asset(imgStr, width: 20),
+				onChanged: (text) {
+					if (isPassword) {
+						setState(() {
+							this.pwdStr = text;
+						});
+					} else {
+						setState(() {
+							this.accountStr = text;
+						});
+					}
+				}
 			),
 			height: 40
 		);
@@ -187,10 +197,9 @@ class _LoginPageState extends State<LoginPageWidget> {
 	// 登陆按钮
 	Widget _getLoginBtn() {
 		return StoreConnector<ZFAppState, VoidCallback> (
-			key: ValueKey('loginKey'),
 			// converter的返回值将做为builder的callback参数
 			converter: (Store<ZFAppState> store) {
-				return () => store.dispatch(ZFLoginAction());
+				return () => store.dispatch(AppActions.LoginSuccess);
 			},
 			builder: (BuildContext context, VoidCallback callback) {
 				return Container(
@@ -219,7 +228,6 @@ class _LoginPageState extends State<LoginPageWidget> {
 	// 点击登陆
 	_loginBtnAction(VoidCallback callback) {
 		LoginRequest.loginReq(this.accountStr, this.pwdStr, this.verifyStr, this.tokenStr).then((response) {
-			print('response = $response');
 			int respCode = response['msg']['code'];
 			if (respCode == 20002) {
 				// 展示图形验证码
@@ -254,7 +262,7 @@ class _LoginPageState extends State<LoginPageWidget> {
 		SharedPreferences pref = await SharedPreferences.getInstance();
 		// 保存账号信息
 		pref.setString('loginPhoneNum', this.accountStr);
-		String userId = respData['userId'];
+		String userId = respData['userId'].toString();
 		String userToken = respData['userToken'];
 		// 保存userId/userToken
 		pref.setString('kSessionAccess_userId', userId).then((value) {
@@ -262,10 +270,10 @@ class _LoginPageState extends State<LoginPageWidget> {
 				PPSession session = PPSession.getInstance();
 				session.userId = userId;
 				session.userToken = userToken;
-				UserModel model = UserModel.fromJson(respData);
-				session.userModel = model;
-
 				callback();
+				
+				// 请求获取用户信息
+				LoginRequest.getUserInfoReq();
 			});
 		});
 	}

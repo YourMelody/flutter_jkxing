@@ -10,7 +10,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return UserModel(
     json['realName'] as String,
     json['userPhone'] as String,
-    json['userId'] as String,
+    json['userId'] as int,
     json['medicalCompany'] as String,
     json['regionName'] as String,
     json['investCodeImage'] as String,

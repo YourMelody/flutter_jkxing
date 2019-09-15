@@ -10,7 +10,7 @@ class UserModel {
 	
 	String realName;
 	String userPhone;
-	String userId;
+	int userId;
 	String medicalCompany;
 	String regionName;
 	String investCodeImage;

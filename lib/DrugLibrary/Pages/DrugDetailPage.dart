@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Network/DrugLibRequest.dart';
 
@@ -60,10 +61,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			appBar: AppBar(
-				title: Text('药品详情'),
-				elevation: 0.5,
-			),
+			appBar: ZFAppBar('药品详情', context: context),
 			body: Column(children: <Widget>[
 				// 头部药品信息
 				_drugDetailHeader(widget.drugModel),

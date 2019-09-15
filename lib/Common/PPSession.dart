@@ -16,7 +16,7 @@ class PPSession {
 	}
 	
 	// 清除用户信息
-	void removeUserInfo() async {
+	Future removeUserInfo() async {
 		this.userId = null;
 		this.userToken = null;
 		this.userModel = null;
