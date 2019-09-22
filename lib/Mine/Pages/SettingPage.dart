@@ -5,6 +5,7 @@ import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatelessWidget {
 	@override
@@ -108,12 +109,22 @@ class SettingPage extends StatelessWidget {
 				)
 			);
 		} else {
-			return Text('020-80736878',
-				style: TextStyle(
-					fontWeight: FontWeight.normal,
-					fontSize: 16,
-					color: Color(0xff6bcbd6)
-				)
+			return GestureDetector(
+				onTap: () {
+					const String telNum = 'tel:020-80736878';
+					canLaunch(telNum).then((value) {
+						if (value) {
+							launch(telNum);
+						}
+					});
+				},
+				child: Text('020-80736878',
+					style: TextStyle(
+						fontWeight: FontWeight.normal,
+						fontSize: 16,
+						color: Color(0xff6bcbd6)
+					)
+				),
 			);
 		}
 	}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_jkxing/Common/UserModel.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -45,7 +44,7 @@ class _LoginPageState extends State<LoginPageWidget> {
 	Widget build(BuildContext context) {
 		return Container(
 			color: Colors.white,
-			child: Column(
+			child: SafeArea(child: Column(
 				children: <Widget>[
 					Padding(padding: EdgeInsets.only(top: 67)),
 					// 大白logo
@@ -79,8 +78,8 @@ class _LoginPageState extends State<LoginPageWidget> {
 					Padding(padding: EdgeInsets.only(top: 44)),
 					// 登陆按钮
 					_getLoginBtn()
-				],
-			),
+				]
+			))
 		);
 	}
 	
@@ -271,9 +270,6 @@ class _LoginPageState extends State<LoginPageWidget> {
 				session.userId = userId;
 				session.userToken = userToken;
 				callback();
-				
-				// 请求获取用户信息
-				LoginRequest.getUserInfoReq();
 			});
 		});
 	}

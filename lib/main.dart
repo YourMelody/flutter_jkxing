@@ -8,6 +8,7 @@ import 'package:flutter_jkxing/Redux/ZFMainReducer.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Pages/SettingPage.dart';
 import 'Common/ZFShareAlertView.dart';
+import 'Login/LoginRequest.dart';
 
 void main() {
 	PPSession session = PPSession.getInstance();
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
 					},
 					builder: (BuildContext context, ZFAppState appState) {
 						if (appState.loginState.isLogin) {
+							// 请求获取用户信息
+							LoginRequest.getUserInfoReq();
 							return Stack(
 								children: <Widget>[
 									ZFBaseTabBar(),
