@@ -60,6 +60,7 @@ flutter:
     - lib/Images/btn_arrow.png
     - lib/Images/date_icon_dropdown.png
     - lib/Images/home_btn_more.png
+    - lib/Images/nav_btn_back.png
 
 
 

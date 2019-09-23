@@ -21,7 +21,8 @@ class _LoginPageState extends State<LoginPageWidget> {
 	String pwdStr = '';     // 输入的密码
 	String verifyStr = '';  // 输入的验证码
 	String tokenStr = '';   // 图形验证码token
-	String prefixStr = '';
+	TextEditingController accountCon = TextEditingController(text: '');
+	TextEditingController pwdCon = TextEditingController(text: '');
 	@override
 	void initState() {
 		super.initState();
@@ -35,7 +36,8 @@ class _LoginPageState extends State<LoginPageWidget> {
 		print('numStr = $numStr');
 		if (numStr != null && numStr.length > 0) {
 			setState(() {
-				this.prefixStr = numStr;
+				this.accountStr = numStr;
+				accountCon = TextEditingController(text: this.accountStr);
 			});
 		}
 	}
@@ -96,6 +98,7 @@ class _LoginPageState extends State<LoginPageWidget> {
 				)
 			),
 			child: CupertinoTextField(
+				controller: isPassword ? pwdCon : accountCon,
 				decoration: BoxDecoration(
 					border: Border.all(width: 0, color: Colors.white)
 				),

@@ -9,6 +9,7 @@ import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Pages/SettingPage.dart';
 import 'Common/ZFShareAlertView.dart';
 import 'Login/LoginRequest.dart';
+import 'Mine/Pages/ResetPwdPage.dart';
 
 void main() {
 	PPSession session = PPSession.getInstance();
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
 								children: <Widget>[
 									ZFBaseTabBar(),
 									
+									// 分享弹框
 									Positioned(
 										top: 0,
 										right: 0,
@@ -66,7 +68,8 @@ class MyApp extends StatelessWidget {
 					}
 				),
 				routes: {
-					'my_setting_page': (_) => SettingPage()
+					'my_setting_page': (_) => SettingPage(),
+					'reset_password_page': (_) => ResetPwdPage()
 				},
 				debugShowCheckedModeBanner: false
 			)

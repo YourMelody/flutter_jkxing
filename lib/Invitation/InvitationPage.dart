@@ -137,7 +137,6 @@ class _InvitationPageState extends State<InvitationPage> {
 									Text(
 										'分享到微信',
 										style: TextStyle(
-											fontWeight: FontWeight.normal,
 											fontSize: 18,
 											color: Colors.white
 										)

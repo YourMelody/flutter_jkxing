@@ -64,8 +64,7 @@ class _MinePageState extends State<MinePage> {
 							style: TextStyle(
 								color: Color(0xff0a1314),
 								fontSize: 18,
-								height: 1,
-								fontWeight: FontWeight.normal
+								height: 1
 							),
 						),
 						Padding(padding: EdgeInsets.only(top: 10)),
@@ -74,8 +73,7 @@ class _MinePageState extends State<MinePage> {
 							style: TextStyle(
 								color: Color(0xff3b4243),
 								fontSize: 14,
-								height: 1,
-								fontWeight: FontWeight.normal
+								height: 1
 							)
 						)
 					], crossAxisAlignment: CrossAxisAlignment.start),
@@ -94,8 +92,7 @@ class _MinePageState extends State<MinePage> {
 						child: Row(children: <Widget>[
 							Text('本月', style: TextStyle(
 								fontSize: 14, 
-								color: Color(0xff6c7172),
-								fontWeight: FontWeight.normal
+								color: Color(0xff6c7172)
 							)),
 							Padding(padding: EdgeInsets.only(right: 4)),
 							Image.asset('lib/Images/date_icon_dropdown.png', width: 16, height: 16)
@@ -134,7 +131,6 @@ class _MinePageState extends State<MinePage> {
 					Expanded(child: Text(
 						titleStr,
 						style: TextStyle(
-							fontWeight: FontWeight.normal,
 							fontSize: 16,
 							color: Color(0xff4d4d4d)
 						)
@@ -144,7 +140,6 @@ class _MinePageState extends State<MinePage> {
 						child: Text(
 							teamM,
 							style: TextStyle(
-								fontWeight: FontWeight.normal,
 								fontSize: 16,
 								color: Color(0xffe75d5b)
 							),
@@ -172,6 +167,5 @@ class _MinePageState extends State<MinePage> {
 			// 设置
 			Navigator.pushNamed(context, 'my_setting_page');
 		}
-		
 	}
 }

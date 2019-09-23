@@ -17,7 +17,7 @@ class SettingPage extends StatelessWidget {
 				child: SafeArea(child: Column(children: <Widget>[
 					// 列表
 					Expanded(child: ListView.separated(
-						itemBuilder: (context, index) => _getSettingItem(index),
+						itemBuilder: (context, index) => _getSettingItem(index, context),
 						separatorBuilder: (BuildContext context, int index) {
 							return Container(
 								height: 10,
@@ -47,7 +47,6 @@ class SettingPage extends StatelessWidget {
 									child: Text('退出登录',
 										style: TextStyle(
 											fontSize: 17,
-											fontWeight: FontWeight.normal,
 											color: Color(0xff999999)
 										)
 									)
@@ -61,11 +60,11 @@ class SettingPage extends StatelessWidget {
 		);
 	}
 	
-	_getSettingItem(index) {
+	_getSettingItem(index, context) {
 		if (index == 0) {
 			return GestureDetector(
 				onTap: () {
-				
+					Navigator.pushNamed(context, 'reset_password_page');
 				},
 				child:  _getItemContainer('重设密码', index)
 			);
@@ -87,8 +86,7 @@ class SettingPage extends StatelessWidget {
 					Expanded(child: Text(titleStr,
 						style: TextStyle(
 							fontSize: 16,
-							color: Color(0xff4d4d4d),
-							fontWeight: FontWeight.normal
+							color: Color(0xff4d4d4d)
 						)
 					)),
 					_getItemRight(index)
@@ -103,7 +101,6 @@ class SettingPage extends StatelessWidget {
 		} else if (index == 1) {
 			return Text('v2.6.4',
 				style: TextStyle(
-					fontWeight: FontWeight.normal,
 					fontSize: 16,
 					color: Color(0xff4d4d4d)
 				)
@@ -120,7 +117,6 @@ class SettingPage extends StatelessWidget {
 				},
 				child: Text('020-80736878',
 					style: TextStyle(
-						fontWeight: FontWeight.normal,
 						fontSize: 16,
 						color: Color(0xff6bcbd6)
 					)
