@@ -23,7 +23,7 @@ class _ResetPwdState extends State<ResetPwdPage> {
 		return Scaffold(
 			appBar: ZFAppBar('重设密码', context: context),
 			body: Container(
-				padding: EdgeInsets.fromLTRB(59, 40, 59, 0),
+				padding: EdgeInsets.fromLTRB(50, 40, 50, 0),
 				child: Column(
 					children: <Widget>[
 						Image.asset('lib/Images/login_icon_logo.png', width: 88, height: 88),
@@ -51,7 +51,32 @@ class _ResetPwdState extends State<ResetPwdPage> {
 						Padding(padding: EdgeInsets.only(top: 30)),
 						
 						// 验证码
-						_createVerifyTf()
+						_createVerifyTf(),
+						
+						// 分割线
+						Container(
+							margin: EdgeInsets.only(top: 7, bottom: 40),
+							height: 0.5,
+							color: Color(0xff999999),
+						),
+						
+						// 下一步btn
+						Container(
+							child: CupertinoButton(
+								child: Text(
+									'下一步',
+									style: TextStyle(fontSize: 18, color: Colors.white),
+								),
+								color: Color(0xff6bcbd7),
+								minSize: 48,
+								borderRadius: BorderRadius.circular(24),
+								pressedOpacity: 0.8,
+								onPressed: () {
+								
+								}
+							),
+							width: double.maxFinite,
+						)
 					],
 				),
 				width: double.maxFinite,

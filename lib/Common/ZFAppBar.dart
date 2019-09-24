@@ -27,8 +27,9 @@ PreferredSizeWidget ZFAppBar(String title, {List<Widget> rightBarBtn, bool showB
 					padding: EdgeInsets.only(left: 6, top: 10, bottom: 10),
 					child: Image.asset('lib/Images/nav_btn_back.png', width: 24, height: 24, fit: BoxFit.contain)
 				),
-			) : null
-		), 
+			) : null,
+			brightness: Brightness.light
+		),
 		preferredSize: Size.fromHeight(44)
 	);
 }

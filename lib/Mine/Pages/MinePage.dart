@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
+import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
+import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 
 class MinePage extends StatefulWidget {
 	@override
@@ -9,6 +12,21 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
+	MineDetailModel detailModel;
+	@override
+	void initState() {
+		super.initState();
+		_getSaleDetail();
+	}
+	
+	_getSaleDetail() {
+		MineRequest.getAgentSalesDetail(0, 0).then((response) {
+			setState(() {
+				this.detailModel = response;
+			});
+		});
+	}
+	
 	@override
 	Widget build(BuildContext context) {
 		return Container(
@@ -27,13 +45,13 @@ class _MinePageState extends State<MinePage> {
 			return _createHeaderInfo();
 		} else if (index == 1) {
 			// 提成、业绩、指标等
-			return _createMoneyInfo();
+			return MineSaleDetailWidget(this.detailModel);
 		} else if (index == 2) {
 			// 二级（全职和兼职）都不展示
 			if (session.userModel.agentLevel == 2) {
 				return null;
 			}
-			return _createCommonItem('团队业绩', index, teamM: '0.00', showTopBorder: true);
+			return _createCommonItem('团队业绩', index, teamM: this?.detailModel?.teamSaleMoney?.toString(), showTopBorder: true);
 		} else if (index == 3) {
 			// 兼职（一级和二级）都不展示
 			if (session.userModel.agentType == 2) {
@@ -67,7 +85,7 @@ class _MinePageState extends State<MinePage> {
 								height: 1
 							),
 						),
-						Padding(padding: EdgeInsets.only(top: 10)),
+						Padding(padding: EdgeInsets.only(top: 5)),
 						Text(
 							'医疗经纪人-北京',
 							style: TextStyle(
@@ -79,7 +97,7 @@ class _MinePageState extends State<MinePage> {
 					], crossAxisAlignment: CrossAxisAlignment.start),
 					height: 76,
 					color: Colors.white,
-					padding: EdgeInsets.fromLTRB(15, 18, 15, 0)
+					padding: EdgeInsets.fromLTRB(15, 15, 15, 0)
 				),
 				Container(
 					color: Color(0xfff4f6f9),
@@ -91,7 +109,7 @@ class _MinePageState extends State<MinePage> {
 						},
 						child: Row(children: <Widget>[
 							Text('本月', style: TextStyle(
-								fontSize: 14, 
+								fontSize: 14,
 								color: Color(0xff6c7172)
 							)),
 							Padding(padding: EdgeInsets.only(right: 4)),
@@ -100,15 +118,6 @@ class _MinePageState extends State<MinePage> {
 					)
 				)
 			]
-		);
-	}
-	
-	// 提成、业绩、指标等
-	Widget _createMoneyInfo(){
-		return Container(
-			height: 100,
-			color: Colors.white,
-			child: Center(child: Text('暂未完成'))
 		);
 	}
 	
@@ -136,9 +145,9 @@ class _MinePageState extends State<MinePage> {
 						)
 					)),
 					Offstage(
-						offstage: teamM.length == 0,
+						offstage: teamM == null,
 						child: Text(
-							teamM,
+							teamM == null ? '' : teamM,
 							style: TextStyle(
 								fontSize: 16,
 								color: Color(0xffe75d5b)
