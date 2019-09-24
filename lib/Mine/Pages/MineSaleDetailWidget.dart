@@ -31,7 +31,6 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 			children: <Widget>[
 				Container(
 					height: PPSession.getInstance().userModel.agentType == 1 ? 235 : 195,
-					padding: EdgeInsets.fromLTRB(15, 23, 15, 0),
 					width: double.maxFinite,
 					color: Colors.white,
 					child: PageView.builder(
@@ -86,113 +85,36 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	
 	// 全职
 	Widget _getFirstPageAgentType1() {
-		return Column(
-			children: <Widget>[
-				Text(
-					'预计个人提成(元)',
-					style: TextStyle(
-						fontSize: 16,
-						color: Color(0xff3b4243)
-					)
-				),
-				Padding(padding: EdgeInsets.only(top: 6)),
-				
-				// 个人提成
-				Text(
-					_manageMoney(widget.model?.bonusMoney),
-					style: TextStyle(
-						fontSize: 30,
-						fontWeight: FontWeight.w500,
-						color: Color(0xff6bcbd7)
-					)
-				),
-				Padding(padding: EdgeInsets.only(bottom: 18)),
-				
-				Row(
-					children: <Widget>[
-						Expanded(child: Column(
-							children: <Widget>[
-								Text(
-									'销售业绩(元)',
-									style: TextStyle(
-										fontSize: 12,
-										color: Color(0xff9da1a1)
-									)
-								),
-								Padding(padding: EdgeInsets.only(bottom: 4)),
-								Text(
-									_manageMoney(widget.model?.saleMoney),
-									style: TextStyle(
-										fontSize: 16,
-										color: Color(0xff3b4243)
-									)
-								),
-								Padding(padding: EdgeInsets.only(bottom: 11)),
-								Row(
-									children: <Widget>[
-										Text(
-											'月销售指标(元)',
-											style: TextStyle(
-												fontSize: 12,
-												color: Color(0xff9da1a1)
-											)
-										),
-										
-										GestureDetector(
-											onTap: () {
-												showDialog(
-													context: context,
-													builder: (context) {
-														return CupertinoAlertDialog(
-															title: Text('提示', style: TextStyle(fontSize: 16, color: Color(0xff0a1314))),
-															content: Padding(
-																padding: EdgeInsets.only(top: 10),
-																child: Text('查询销售指标时不支持跨月查询', style: TextStyle(fontSize: 14, color: Color(0xff0a1314))),
-															),
-															actions: <Widget>[
-																CupertinoButton(
-																	onPressed: () {
-																		Navigator.pop(context);
-																	},
-																	child: Text('知道了', style: TextStyle(fontSize: 16, color: Color(0xff6bcbd6))),
-																	pressedOpacity: 0.8
-																)
-															],
-														);
-													}
-												);
-											},
-											
-											child: Container(
-												width: 16, height: 16,
-												child: Center(
-													child: Image.asset(
-														'lib/Images/me_btn_msg.png',
-														width: 12, height: 12
-													)
-												)
-											)
-										)
-									]
-								),
-								Text(
-									_manageMoney(widget.model?.targetMoney),
-									style: TextStyle(
-										fontSize: 16,
-										color: Color(0xff3b4243)
-									)
-								)
-							],
-							crossAxisAlignment: CrossAxisAlignment.start
-						)),
-						Padding(padding: EdgeInsets.only(right: 10)),
-						Container(
-							width: 130,
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
+		return Container(
+			padding: EdgeInsets.fromLTRB(15, 22, 15, 0),
+			child: Column(
+				children: <Widget>[
+					Text(
+						'预计个人提成(元)',
+						style: TextStyle(
+							fontSize: 16,
+							color: Color(0xff3b4243)
+						)
+					),
+					Padding(padding: EdgeInsets.only(top: 6)),
+					
+					// 个人提成
+					Text(
+						_manageMoney(widget.model?.bonusMoney),
+						style: TextStyle(
+							fontSize: 30,
+							fontWeight: FontWeight.w500,
+							color: Color(0xff6bcbd7)
+						)
+					),
+					Padding(padding: EdgeInsets.only(bottom: 18)),
+					
+					Row(
+						children: <Widget>[
+							Expanded(child: Column(
 								children: <Widget>[
 									Text(
-										'净毛利率',
+										'销售业绩(元)',
 										style: TextStyle(
 											fontSize: 12,
 											color: Color(0xff9da1a1)
@@ -200,36 +122,116 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 									),
 									Padding(padding: EdgeInsets.only(bottom: 4)),
 									Text(
-										(widget.model?.grossProfitMargin == null || widget.model?.grossProfitMargin?.length == 0) ? '0.00%' :
-										widget.model.grossProfitMargin.length,
+										_manageMoney(widget.model?.saleMoney, showLine: widget.model?.crossMonth),
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
 										)
 									),
 									Padding(padding: EdgeInsets.only(bottom: 11)),
-									Text(
-										'距离销售指标(元)',
-										style: TextStyle(
-											fontSize: 12,
-											color: Color(0xff9da1a1)
-										)
+									Row(
+										children: <Widget>[
+											Text(
+												'月销售指标(元)',
+												style: TextStyle(
+													fontSize: 12,
+													color: Color(0xff9da1a1)
+												)
+											),
+											
+											GestureDetector(
+												onTap: () {
+													showDialog(
+														context: context,
+														builder: (context) {
+															return CupertinoAlertDialog(
+																title: Text('提示', style: TextStyle(fontSize: 16, color: Color(0xff0a1314))),
+																content: Padding(
+																	padding: EdgeInsets.only(top: 10),
+																	child: Text('查询销售指标时不支持跨月查询', style: TextStyle(fontSize: 14, color: Color(0xff0a1314))),
+																),
+																actions: <Widget>[
+																	CupertinoButton(
+																		onPressed: () {
+																			Navigator.pop(context);
+																		},
+																		child: Text('知道了', style: TextStyle(fontSize: 16, color: Color(0xff6bcbd6))),
+																		pressedOpacity: 0.8
+																	)
+																],
+															);
+														}
+													);
+												},
+												
+												child: Container(
+													width: 16, height: 16,
+													child: Center(
+														child: Image.asset(
+															'lib/Images/me_btn_msg.png',
+															width: 12, height: 12
+														)
+													)
+												)
+											)
+										]
 									),
 									Text(
-										_manageMoney(widget.model?.floatMoney),
+										_manageMoney(widget.model?.targetMoney),
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
 										)
 									)
-								]
+								],
+								crossAxisAlignment: CrossAxisAlignment.start
+							)),
+							Padding(padding: EdgeInsets.only(right: 10)),
+							Container(
+								width: 130,
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.start,
+									children: <Widget>[
+										Text(
+											'净毛利率',
+											style: TextStyle(
+												fontSize: 12,
+												color: Color(0xff9da1a1)
+											)
+										),
+										Padding(padding: EdgeInsets.only(bottom: 4)),
+										Text(
+											(widget.model?.grossProfitMargin == null || widget.model?.grossProfitMargin?.length == 0) ? '0.00%' :
+											widget.model.grossProfitMargin.length,
+											style: TextStyle(
+												fontSize: 16,
+												color: Color(0xff3b4243)
+											)
+										),
+										Padding(padding: EdgeInsets.only(bottom: 11)),
+										Text(
+											'距离销售指标(元)',
+											style: TextStyle(
+												fontSize: 12,
+												color: Color(0xff9da1a1)
+											)
+										),
+										Text(
+											_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth),
+											style: TextStyle(
+												fontSize: 16,
+												color: Color(0xff3b4243)
+											)
+										)
+									]
+								)
 							)
-						)
-					],
-					crossAxisAlignment: CrossAxisAlignment.start
-				)
-			],
-			crossAxisAlignment: CrossAxisAlignment.start
+						],
+						crossAxisAlignment: CrossAxisAlignment.start
+					)
+				],
+				crossAxisAlignment: CrossAxisAlignment.start
+			)
 		);
 	}
 	
@@ -240,19 +242,70 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	
 	// isType1: true全职  false兼职
 	Widget _getSecondPage(bool isType1) {
-		return Column(
-			children: <Widget>[
-				Padding(padding: EdgeInsets.only(top: isType1 ? 15 : 0)),
-				Text('医生数', style: TextStyle(fontSize: 16, color: Color(0xff3b4243))),
-				Padding(padding: EdgeInsets.only(top: 2)),
-				Text('532', style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7))),
-				Padding(padding: EdgeInsets.only(top: isType1 ? 25 : 15)),
-			]
+		return Container(
+			padding: EdgeInsets.fromLTRB(15, isType1 ? 32 : 17, 15, 0),
+			child: Column(
+				children: <Widget>[
+					Text('医生数', style: TextStyle(fontSize: 16, color: Color(0xff3b4243))),
+					Padding(padding: EdgeInsets.only(top: 2)),
+					Text('532', style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7))),
+					Padding(padding: EdgeInsets.only(top: isType1 ? 18 : 8)),
+					Container(
+						height: 78,
+						child: Row(children: <Widget>[
+							Expanded(child: GestureDetector(
+								onTap: () {
+								
+								},
+								child: Column(
+									children: <Widget>[
+										Padding(padding: EdgeInsets.only(top: 15)),
+										Row(
+											children: <Widget>[
+												Text('已通过', style: TextStyle(fontSize: 14, color: Color(0xff9da1a1))),
+												Padding(padding: EdgeInsets.only(right: 5)),
+												Image.asset('lib/Images/mini_right_arrow.png', width: 12, height: 12)
+											],
+											mainAxisAlignment: MainAxisAlignment.center
+										),
+										Padding(padding: EdgeInsets.only(top: 8)),
+										Text('0', style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+									]
+								),
+							)),
+							Container(height: 40, width: 1, color: Color(0xffe5e5e5)),
+							Expanded(child: GestureDetector(
+								onTap: () {
+								
+								},
+								child: Column(
+									children: <Widget>[
+										Padding(padding: EdgeInsets.only(top: 15)),
+										Row(
+											children: <Widget>[
+												Text('待认证', style: TextStyle(fontSize: 14, color: Color(0xff9da1a1))),
+												Padding(padding: EdgeInsets.only(right: 5)),
+												Image.asset('lib/Images/mini_right_arrow.png', width: 12, height: 12)
+											],
+											mainAxisAlignment: MainAxisAlignment.center
+										),
+										Padding(padding: EdgeInsets.only(top: 8)),
+										Text('0', style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+									]
+								)
+							))
+						])
+					)
+				]
+			)
 		);
 	}
 	
-	String _manageMoney(int money) {
+	String _manageMoney(int money, {bool showLine}) {
 		String resultMoney = money == null ? '0.00' : (money/1000).toStringAsFixed(2);
+		if (resultMoney == '0.00' && showLine == true) {
+			resultMoney = '--';
+		}
 		return resultMoney;
 	}
 }

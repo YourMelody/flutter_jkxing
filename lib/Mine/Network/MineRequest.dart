@@ -17,11 +17,11 @@ class MineRequest {
 	}
 	
 	// 获取医生数、已通过数、待认证数
-	static Future<dynamic> getDoctorNumber(int startTime, int endTime) {
+	static Future<dynamic> getDoctorNumber(int startTime, int endTime, {String agentId}) {
 		return HttpUtil.getInstance().get(
-			'',
+			'/crm/api/agentMine/getDoctorNum',
 			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'startTime': startTime, 'endTime': endTime}
+			data: {'startTime': startTime, 'endTime': endTime, 'agentId': agentId == null? '' : agentId}
 		).then((data) {
 			return data;
 		});

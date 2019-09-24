@@ -17,13 +17,22 @@ class _MinePageState extends State<MinePage> {
 	void initState() {
 		super.initState();
 		_getSaleDetail();
+		_getDoctorNum();
 	}
 	
+	// 获取业绩、提成等信息
 	_getSaleDetail() {
 		MineRequest.getAgentSalesDetail(0, 0).then((response) {
 			setState(() {
 				this.detailModel = response;
 			});
+		});
+	}
+	
+	// 获取医生数量信息
+	_getDoctorNum() {
+		MineRequest.getDoctorNumber(0, 0).then((response) {
+		
 		});
 	}
 	

@@ -63,6 +63,7 @@ flutter:
     - lib/Images/home_btn_more.png
     - lib/Images/nav_btn_back.png
     - lib/Images/me_btn_msg.png
+    - lib/Images/mini_right_arrow.png
 
 
 

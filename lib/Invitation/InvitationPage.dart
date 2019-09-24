@@ -3,6 +3,7 @@ import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:device_info/device_info.dart';
 
 class InvitationPage extends StatefulWidget {
 	@override
@@ -63,16 +64,21 @@ class _InvitationPageState extends State<InvitationPage> {
 					)),
 					
 					Padding(padding: EdgeInsets.only(top: 15)),
-					Image.asset('lib/Images/img_invite_n0_network.png', width: 180, height: 180, fit: BoxFit.contain),
+					Image.asset(
+						'lib/Images/img_invite_n0_network.png',
+						width: 180 / 667 * MediaQuery.of(context).size.height,
+						height: 180 / 667 * MediaQuery.of(context).size.height,
+						fit: BoxFit.contain
+					),
 					
-					Padding(padding: EdgeInsets.only(top: 10)),
+					Padding(padding: EdgeInsets.only(top: 8)),
 					Text('微信扫一扫', style: TextStyle(
 						fontSize: 14,
 						fontWeight: FontWeight.w500,
 						color: Color(0xff999999)
 					)),
 					
-					Padding(padding: EdgeInsets.only(top: 30)),
+					Padding(padding: EdgeInsets.only(top: 25)),
 					Container(
 						margin: EdgeInsets.only(left: 20),
 						alignment: Alignment.topLeft,
