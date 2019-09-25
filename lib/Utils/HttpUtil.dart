@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 
 class HttpUtil {
 	static HttpUtil instance;
@@ -32,7 +37,8 @@ class HttpUtil {
 		
 		options = BaseOptions(
 			//连接服务器超时时间，单位是毫秒.
-			connectTimeout: 30000,
+			connectTimeout: 15000,
+			receiveTimeout: 15000,
 			headers: optHeader
 		);
 		dio = Dio(options);
@@ -45,37 +51,83 @@ class HttpUtil {
 //		};
 	}
 	
-	// get
-	get<T>(url, {baseUrl, data, options, cancelToken}) async {
+	/*
+	* url：请求链接
+	* baseUrl：请求域名
+	* data：请求参数，默认为ZFBaseUrl().BjUrl()
+	* showToast：是否toast提示，默认为true
+	* disposeData：是否处理返回的数据，默认为true
+	* */
+	get<T>(url, {baseUrl, data, bool showToast: true, bool disposeData: true}) async {
 		Response<T> response;
 		try{
-			dio.options.baseUrl = baseUrl;
+			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.get<T>(
 				url,
-				queryParameters: data,
-				cancelToken: cancelToken
+				queryParameters: data
 			);
-			print('请求成功：${response.data}');
-			return response.data;
-		} on DioError catch(e){
-			print('请求失败error：$e');
+			print('-----${response.request.path}-----response-----${response.data}');
+			// 直接返回请求的结果
+			if (disposeData == false) {
+				return response.data;
+			}
+			
+			// 处理返回的数据
+			String respStr = json.encode(response.data);
+			Map<dynamic, dynamic> respMap = json.decode(respStr);
+			if (respMap['msg']['code'] == 0) {
+				// 请求成功
+				return respMap['data'];
+			} else {
+				// 请求失败
+				if (showToast == true) {
+				
+				}
+				return null;
+			}
+		} on DioError catch(error){
+			print('请求error：$error');
 			return null;
 		}
 	}
 	
-	// post
-	post<T>(url, {baseUrl, data, options, cancelToken}) async {
+	/*
+	* url：请求链接
+	* baseUrl：请求域名
+	* data：请求参数
+	* showToast：是否toast提示，默认为true
+	* disposeData：是否处理返回的数据，默认为true
+	* */
+	post<T>(url, {baseUrl, data, bool showToast: true, bool disposeData: true}) async {
 		Response<T> response;
 		try{
-			dio.options.baseUrl = baseUrl;
+			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.post<T>(
 				url,
-				data: data,
-				cancelToken: cancelToken
+				data: data
 			);
-			return response.data;
+			print('${response.request.path}请求的response=====${response.data}');
+			// 直接返回请求的结果
+			if (disposeData == false) {
+				return response.data;
+			}
+			
+			// 处理返回的数据
+			String respStr = json.encode(response.data);
+			Map<dynamic, dynamic> respMap = json.decode(respStr);
+			if (respMap['msg']['code'] == 0) {
+				// 请求成功
+				return respMap['data'];
+			} else {
+				// 请求失败
+				if (showToast == true) {
+				
+				}
+				return null;
+			}
 		} on DioError catch(error){
-			return error;
+			print('请求error=====$error');
+			return null;
 		}
 	}
 }

@@ -7,71 +7,75 @@ import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 
 class DrugLibRequest {
 	// 获取药品库
-	static Future<dynamic> getDrugClassList(String useSource, {CancelToken cancelToken}) {
+	static Future<dynamic> getDrugClassList(String useSource) {
 		return HttpUtil.getInstance().get(
 			'product/listCategory',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'useSource': useSource},
-			cancelToken: cancelToken).then((data) {
-				List tempData = data['data'];
-				tempData.insert(0, {
-					'hasNode': false,
-					'categoryName': '名医推荐',
-					'categories': [],
-					'categoryCode': ''
-				});
-				return tempData?.map((e) {
-					return e == null ? null : DrugClassModel.fromJson(e);
-				})?.toList();
+			data: {'useSource': useSource}).then((data) {
+				try {
+					List tempData = data;
+					tempData.insert(0, {
+						'hasNode': false,
+						'categoryName': '名医推荐',
+						'categories': [],
+						'categoryCode': ''
+					});
+					return tempData?.map((e) {
+						return e == null ? null : DrugClassModel.fromJson(e);
+					})?.toList();
+				} catch(e) {
+					return null;
+				}
 			}
 		);
 	}
 	
-	// 名医推荐
-	static Future<dynamic> getRecommendMedicineList({CancelToken cancelToken}) {
+	// 名医推荐药品列表
+	static Future<dynamic> getRecommendMedicineList() {
 		return HttpUtil.getInstance().get(
-			'product/getRecommendProduct',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			cancelToken: cancelToken).then((data) {
-				return (data['data'] as List)?.map((e) {
-					return e == null ? null : MedicineItemModel.fromJson(e);
-				})?.toList();
+			'product/getRecommendProduct').then((data) {
+				try {
+					return (data as List)?.map((e) {
+						return e == null ? null : MedicineItemModel.fromJson(e);
+					})?.toList();
+				} catch(e) {
+					return null;
+				}
 			}
 		);
 	}
 	
 	// 分类药品列表
-	static Future<dynamic> getMedicineList(String categoryCode, bool hasNode, int page, {CancelToken cancelToken}) {
+	static Future<dynamic> getMedicineList(String categoryCode, bool hasNode, int page) {
 		return HttpUtil().get(
 			'product/listByCategory',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'categoryCode': categoryCode, 'limit': 10, 'hasNode': hasNode, 'page': page},
-			cancelToken: cancelToken).then((data) {
-				return (data['data']['list'] as List)?.map((e) {
-					return e == null ? null : MedicineItemModel.fromJson(e);
-				})?.toList();
+			data: {'categoryCode': categoryCode, 'limit': 10, 'hasNode': hasNode, 'page': page}).then((data) {
+				try {
+					return (data['list'] as List)?.map((e) {
+						return e == null ? null : MedicineItemModel.fromJson(e);
+					})?.toList();
+				} catch(e) {
+					return null;
+				}
 			}
 		);
 	}
 	
 	// 药品详情
-	static Future<dynamic> getMedicineDetail(int drugCode, {CancelToken cancelToken}) {
+	static Future<dynamic> getMedicineDetail(int drugCode) {
 		return HttpUtil().get(
 			'details/api/app/mainData/$drugCode',
-			baseUrl: ZFBaseUrl().GDUrl(),
-			cancelToken: cancelToken).then((data) {
+			disposeData: false,
+			baseUrl: ZFBaseUrl().GDUrl()).then((data) {
 				return data;
 			}
 		);
 	}
 	
 	// 药品库存
-	static Future<dynamic> getMedicineLastCount(int drugCode, {CancelToken cancelToken}) {
+	static Future<dynamic> getMedicineLastCount(int drugCode) {
 		return HttpUtil().post(
 			'product/stock/getLast',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'productCodeList': [drugCode.toString()], 'hospital': 'true'},
-			cancelToken: cancelToken).then((data) {
+			data: {'productCodeList': [drugCode.toString()], 'hospital': 'true'}).then((data) {
 				return data;
 			}
 		);

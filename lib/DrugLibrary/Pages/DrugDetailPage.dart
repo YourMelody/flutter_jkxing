@@ -37,9 +37,9 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	}
 	
 	// 获取药品库存
-	getDrugLastCount(var detailInfo) {
+	getDrugLastCount(Map detailInfo) {
 		DrugLibRequest.getMedicineLastCount(widget.drugModel.productCode).then((response) {
-			int count = response['data'][widget.drugModel.productCode.toString()];
+			int count = response[widget.drugModel.productCode.toString()];
 			if (detailInfo != null) {
 				setState(() {
 					lastCount = count;

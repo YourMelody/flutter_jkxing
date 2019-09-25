@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/UserModel.dart';
 import '../Utils/HttpUtil.dart';
 import 'package:crypto/crypto.dart';
-import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 
 class LoginRequest {
 	/*
@@ -16,7 +14,7 @@ class LoginRequest {
 	* verifyCode： 输入的验证码
 	* authCode： 接口返回的验证码
 	* */
-	static Future<dynamic> loginReq(String account, String password, String inputCode, String token, {CancelToken cancelToken}) {
+	static Future<dynamic> loginReq(String account, String password, String inputCode, String token) {
 		var content = new Utf8Encoder().convert(password);
 		var digest = md5.convert(content);
 		Map params = {
@@ -29,8 +27,7 @@ class LoginRequest {
 		return HttpUtil.getInstance().post(
 			'user/api/user/v2/login',
 			data: params,
-			baseUrl: ZFBaseUrl().BjUrl(),
-			cancelToken: cancelToken
+			disposeData: false
 		).then((data) {
 			return data;
 		});
@@ -42,7 +39,7 @@ class LoginRequest {
 	static Future<dynamic> getImgToken() {
 		return HttpUtil.getInstance().get(
 			'user/api/sms/getToken',
-			baseUrl: ZFBaseUrl().BjUrl()
+			disposeData: false
 		).then((data) {
 			return data;
 		});
@@ -55,9 +52,11 @@ class LoginRequest {
 		return HttpUtil.getInstance().get(
 			'user/api/medicalAgentUser/getAgentInfoWithInvestUrl',
 			data: {'userId': PPSession.getInstance().userId},
-			baseUrl: ZFBaseUrl().BjUrl()
+			showToast: false
 		).then((data) {
-			PPSession.getInstance().userModel = UserModel.fromJson(data['data']);
+			if (data != null) {
+				PPSession.getInstance().userModel = UserModel.fromJson(data);
+			}
 		});
 	}
 }

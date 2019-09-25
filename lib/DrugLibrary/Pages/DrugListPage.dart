@@ -25,15 +25,19 @@ class _DrugListState extends State<DrugListPage> with AutomaticKeepAliveClientMi
 		if (widget.drugClassModel == null) {
 			// 名医推荐药品列表
 			DrugLibRequest.getRecommendMedicineList().then((response) {
-				setState(() {
-					dataSource = response;
-				});
+				if (response != null) {
+					setState(() {
+						dataSource = response;
+					});
+				}
 			});
 		} else {
 			DrugLibRequest.getMedicineList(widget.drugClassModel.categoryCode, widget.drugClassModel.hasNode, 1).then((response) {
-				setState(() {
-					dataSource = response;
-				});
+				if (response != null) {
+					setState(() {
+						dataSource = response;
+					});
+				}
 			});
 		}
 	}

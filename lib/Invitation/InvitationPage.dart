@@ -88,19 +88,19 @@ class _InvitationPageState extends State<InvitationPage> {
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.3
+									height: 1.2
 								)),
 								Text('2、扫码后进行医生注册', style: TextStyle(
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.3
+									height: 1.2
 								)),
 								Text('3、下载健客医院APP，登录后即可接诊', style: TextStyle(
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.3
+									height: 1.2
 								))
 							],
 							crossAxisAlignment: CrossAxisAlignment.start

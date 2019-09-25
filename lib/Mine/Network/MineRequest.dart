@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
-import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 
 class MineRequest {
@@ -9,10 +7,14 @@ class MineRequest {
 	static Future<dynamic> getAgentSalesDetail(int startTime, int endTime) {
 		return HttpUtil.getInstance().get(
 			'/crm/api/agentMine/agentSalesPerformanceDetail',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'startTime': startTime, 'endTime': endTime}
+			data: {'startTime': startTime, 'endTime': endTime},
+			showToast: false
 		).then((data) {
-			return MineDetailModel.fromJson(data['data']);
+			try {
+				return MineDetailModel.fromJson(data);
+			} catch(e) {
+				return null;
+			}
 		});
 	}
 	
@@ -20,8 +22,8 @@ class MineRequest {
 	static Future<dynamic> getDoctorNumber(int startTime, int endTime, {String agentId}) {
 		return HttpUtil.getInstance().get(
 			'/crm/api/agentMine/getDoctorNum',
-			baseUrl: ZFBaseUrl().BjUrl(),
-			data: {'startTime': startTime, 'endTime': endTime, 'agentId': agentId == null? '' : agentId}
+			data: {'startTime': startTime, 'endTime': endTime, 'agentId': agentId == null? '' : agentId},
+			showToast: false
 		).then((data) {
 			return data;
 		});

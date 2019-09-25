@@ -16,7 +16,8 @@ import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 
 class MineSaleDetailWidget extends StatefulWidget {
 	final MineDetailModel model;
-	MineSaleDetailWidget(this.model);
+	final Map doctorNumMap;
+	MineSaleDetailWidget(this.model, this.doctorNumMap);
 	@override
 	State<StatefulWidget> createState() {
 		return _MineSaleDetailState();
@@ -242,13 +243,27 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	
 	// isType1: true全职  false兼职
 	Widget _getSecondPage(bool isType1) {
+		String allNum = '0';
+		String waitAuthNum = '0';
+		String auditPassNum = '0';
+		if (widget.doctorNumMap != null) {
+			if (widget.doctorNumMap['allDoctors'] != null) {
+				allNum = widget.doctorNumMap['allDoctors'].toString();
+			}
+			if (widget.doctorNumMap['waitAuthDoctors'] != null) {
+				waitAuthNum = widget.doctorNumMap['waitAuthDoctors'].toString();
+			}
+			if (widget.doctorNumMap['auditPassDoctors'] != null) {
+				auditPassNum = widget.doctorNumMap['auditPassDoctors'].toString();
+			}
+		}
 		return Container(
 			padding: EdgeInsets.fromLTRB(15, isType1 ? 32 : 17, 15, 0),
 			child: Column(
 				children: <Widget>[
 					Text('医生数', style: TextStyle(fontSize: 16, color: Color(0xff3b4243))),
 					Padding(padding: EdgeInsets.only(top: 2)),
-					Text('532', style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7))),
+					Text(allNum, style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7))),
 					Padding(padding: EdgeInsets.only(top: isType1 ? 18 : 8)),
 					Container(
 						height: 78,
@@ -269,7 +284,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text('0', style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+										Text(auditPassNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
 									]
 								),
 							)),
@@ -290,7 +305,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text('0', style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+										Text(waitAuthNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
 									]
 								)
 							))

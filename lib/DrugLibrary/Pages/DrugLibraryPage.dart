@@ -50,9 +50,12 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> {
 	// 请求数据
 	void _initData() {
 		DrugLibRequest.getDrugClassList('2').then((response) {
-			setState(() {
-				dataSource = response;
-			});
+			if (response != null) {
+				// 显示网络异常缺省页
+				setState(() {
+					dataSource = response;
+				});
+			}
 		});
 	}
 	

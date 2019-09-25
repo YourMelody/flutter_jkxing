@@ -4,6 +4,8 @@ import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 
+import 'SelectDatePage.dart';
+
 class MinePage extends StatefulWidget {
 	@override
 	State<StatefulWidget> createState() {
@@ -13,6 +15,7 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage> {
 	MineDetailModel detailModel;
+	Map doctorNumMap;
 	@override
 	void initState() {
 		super.initState();
@@ -32,7 +35,9 @@ class _MinePageState extends State<MinePage> {
 	// 获取医生数量信息
 	_getDoctorNum() {
 		MineRequest.getDoctorNumber(0, 0).then((response) {
-		
+			setState(() {
+				this.doctorNumMap = response;
+			});
 		});
 	}
 	
@@ -53,8 +58,8 @@ class _MinePageState extends State<MinePage> {
 			// 用户信息和选择日期
 			return _createHeaderInfo();
 		} else if (index == 1) {
-			// 提成、业绩、指标等
-			return MineSaleDetailWidget(this.detailModel);
+			// 提成、业绩、指标、医生数等
+			return MineSaleDetailWidget(this.detailModel, this.doctorNumMap);
 		} else if (index == 2) {
 			// 二级（全职和兼职）都不展示
 			if (session.userModel.agentLevel == 2) {
@@ -114,7 +119,7 @@ class _MinePageState extends State<MinePage> {
 					padding: EdgeInsets.only(left: 15),
 					child: GestureDetector(
 						onTap: () {
-						
+							Navigator.of(context).push(MaterialPageRoute(builder: (_) => SelectDatePage('本月', 0, 0)));
 						},
 						child: Row(children: <Widget>[
 							Text('本月', style: TextStyle(
