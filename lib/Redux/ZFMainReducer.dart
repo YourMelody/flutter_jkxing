@@ -22,12 +22,19 @@ ZFAppState mainReducer(ZFAppState state, dynamic action) {
 		// 加载loading
 		state.progressState.progressHUDType = ProgressHUDType.ProgressHUDType_Loading;
 		state.progressState.titleStr = '';
-	} else if (action == AppActions.ZFProgressHUDSuccess) {
-		// ProgressHUD成功提示
-		state.progressState.progressHUDType = ProgressHUDType.ProgressHUDType_Success;
-	} else if (action == AppActions.ZFProgressHUDError) {
-		// ProgressHUD错误提示
-		state.progressState.progressHUDType = ProgressHUDType.ProgressHUDType_Error;
+	} else if (action.runtimeType != AppActions) {
+		if (action['success']) {
+			// ProgressHUD成功提示
+			state.progressState.progressHUDType = ProgressHUDType.ProgressHUDType_Success;
+		} else {
+			// ProgressHUD错误提示
+			state.progressState.progressHUDType = ProgressHUDType.ProgressHUDType_Error;
+		}
+		String title = action['title'];
+		if (title == null) {
+			title = '网络连接异常，请检查您的网络设置';
+		}
+		state.progressState.titleStr = title;
 	} else if (action == HttpAlertType.HttpAlertType_None) {
 		// 请求无提示
 		state.httpActionState.httpAlertType = HttpAlertType.HttpAlertType_None;

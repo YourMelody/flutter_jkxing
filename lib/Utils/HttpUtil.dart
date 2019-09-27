@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -5,6 +6,10 @@ import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
+import 'package:flutter_jkxing/Redux/ZFAction.dart';
+import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 class HttpUtil {
 	static HttpUtil instance;
@@ -51,82 +56,177 @@ class HttpUtil {
 //		};
 	}
 	
+	
+	
 	/*
 	* url：请求链接
 	* baseUrl：请求域名
 	* data：请求参数，默认为ZFBaseUrl().BjUrl()
-	* showToast：是否toast提示，默认为true
 	* disposeData：是否处理返回的数据，默认为true
+	* showToast：是否toast提示，默认为false，为true时，需要传context
 	* */
-	get<T>(url, {baseUrl, data, bool showToast: true, bool disposeData: true}) async {
+	get<T>(url, {
+		baseUrl,
+		data,
+		bool disposeData: true,
+		bool showToast: false,
+		BuildContext context
+	}) async {
 		Response<T> response;
+		Store store;
+		if (showToast && context != null) {
+			store = StoreProvider.of<ZFAppState>(context);
+			store.dispatch(AppActions.ZFProgressHUDLoading);
+		}
+		
 		try{
+			if (showToast && context != null) {
+				store = StoreProvider.of<ZFAppState>(context);
+				store.dispatch(AppActions.ZFProgressHUDLoading);
+			}
+			
 			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.get<T>(
 				url,
 				queryParameters: data
 			);
 			print('-----${response.request.path}-----response-----${response.data}');
+			String respStr = json.encode(response.data);
+			Map<dynamic, dynamic> respMap = json.decode(respStr);
+			
 			// 直接返回请求的结果
 			if (disposeData == false) {
+				if (respMap['msg']['code'] == 0) {
+					if (showToast && store != null) {
+						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					}
+				} else {
+					// 请求失败
+					if (showToast == true && store != null) {
+						String respStr = respMap['msg']['info'];
+						store.dispatch({'success': false, 'title':respStr});
+						Timer(Duration(seconds: 1), () {
+							store.dispatch(AppActions.ZFProgressHUDDismiss);
+						});
+					}
+				}
 				return response.data;
 			}
 			
 			// 处理返回的数据
-			String respStr = json.encode(response.data);
-			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			if (respMap['msg']['code'] == 0) {
+				if (showToast && store != null) {
+					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast == true) {
-				
+				if (showToast == true && store != null) {
+					String respStr = respMap['msg']['info'];
+					store.dispatch({'success': false, 'title':respStr});
+					Timer(Duration(seconds: 1), () {
+						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					});
 				}
 				return null;
 			}
 		} on DioError catch(error){
-			print('请求error：$error');
+			// 网络异常
+			if (showToast == true && store != null) {
+				store.dispatch({'success': false, 'title':'网络连接异常，请检查您的网络设置'});
+				Timer(Duration(seconds: 1), () {
+					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				});
+			}
 			return null;
 		}
 	}
+	
+	
+	
 	
 	/*
 	* url：请求链接
 	* baseUrl：请求域名
 	* data：请求参数
-	* showToast：是否toast提示，默认为true
 	* disposeData：是否处理返回的数据，默认为true
+	* showToast：是否toast提示，默认为false，为true时，需要传context
 	* */
-	post<T>(url, {baseUrl, data, bool showToast: true, bool disposeData: true}) async {
+	post<T>(url, {
+		baseUrl,
+		data,
+		bool disposeData: true,
+		bool showToast: false,
+		BuildContext context
+	}) async {
 		Response<T> response;
+		Store store;
+		if (showToast && context != null) {
+			store = StoreProvider.of<ZFAppState>(context);
+			store.dispatch(AppActions.ZFProgressHUDLoading);
+		}
+		
 		try{
+			if (showToast && context != null) {
+				store = StoreProvider.of<ZFAppState>(context);
+				store.dispatch(AppActions.ZFProgressHUDLoading);
+			}
+			
 			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.post<T>(
 				url,
 				data: data
 			);
-			print('${response.request.path}请求的response=====${response.data}');
+			print('-----${response.request.path}-----response-----${response.data}');
+			String respStr = json.encode(response.data);
+			Map<dynamic, dynamic> respMap = json.decode(respStr);
+			
 			// 直接返回请求的结果
 			if (disposeData == false) {
+				if (respMap['msg']['code'] == 0) {
+					if (showToast && store != null) {
+						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					}
+				} else {
+					// 请求失败
+					if (showToast == true && store != null) {
+						String respStr = respMap['msg']['info'];
+						store.dispatch({'success': false, 'title':respStr});
+						Timer(Duration(seconds: 1), () {
+							store.dispatch(AppActions.ZFProgressHUDDismiss);
+						});
+					}
+				}
 				return response.data;
 			}
 			
 			// 处理返回的数据
-			String respStr = json.encode(response.data);
-			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			if (respMap['msg']['code'] == 0) {
+				if (showToast && store != null) {
+					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast == true) {
-				
+				if (showToast == true && store != null) {
+					String respStr = respMap['msg']['info'];
+					store.dispatch({'success': false, 'title':respStr});
+					Timer(Duration(seconds: 1), () {
+						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					});
 				}
 				return null;
 			}
 		} on DioError catch(error){
-			print('请求error=====$error');
+			// 网络异常
+			if (showToast == true && store != null) {
+				store.dispatch({'success': false, 'title':'网络连接异常，请检查您的网络设置'});
+				Timer(Duration(seconds: 1), () {
+					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				});
+			}
 			return null;
 		}
 	}

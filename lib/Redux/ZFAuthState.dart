@@ -1,4 +1,6 @@
 // 管理登陆状态的state
+import 'dart:math';
+
 class ZFLoginState {
 	bool isLogin;
 	ZFLoginState({this.isLogin:false});
@@ -54,4 +56,17 @@ class ZFAppState {
 		this.progressState,
 		this.httpActionState
 	});
+	
+	static ZFAppState getInstance(bool isLogin) {
+		ZFLoginState loginState = ZFLoginState(isLogin: isLogin);
+		ZFAlertViewState alertState = ZFAlertViewState();
+		ZFProgressHUDState progressHUDState = ZFProgressHUDState(progressHUDType: ProgressHUDType.ProgressHUDType_Dismiss);
+		ZFHttpActionState httpActionState = ZFHttpActionState();
+		return ZFAppState(
+			loginState: loginState,
+			shareState: alertState,
+			progressState: progressHUDState,
+			httpActionState: httpActionState
+		);
+	}
 }

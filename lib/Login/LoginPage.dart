@@ -229,12 +229,12 @@ class _LoginPageState extends State<LoginPageWidget> {
 	
 	// 点击登陆
 	_loginBtnAction(VoidCallback callback) {
-		LoginRequest.loginReq(this.accountStr, this.pwdStr, this.verifyStr, this.tokenStr).then((response) {
+		LoginRequest.loginReq(this.accountStr, this.pwdStr, this.verifyStr, this.tokenStr, context).then((response) {
 			int respCode = response['msg']['code'];
 			if (respCode == 20002) {
 				// 展示图形验证码
 				if (this.tokenStr == null || this.tokenStr.length == 0) {
-					LoginRequest.getImgToken().then((tokenResp) {
+					LoginRequest.getImgToken(context).then((tokenResp) {
 						String token = tokenResp['data']['token'];
 						setState(() {
 							this.tokenStr = token;
@@ -273,6 +273,8 @@ class _LoginPageState extends State<LoginPageWidget> {
 				session.userId = userId;
 				session.userToken = userToken;
 				callback();
+				// 请求获取用户信息
+				LoginRequest.getUserInfoReq();
 			});
 		});
 	}

@@ -15,17 +15,11 @@ import 'Mine/Pages/ResetPwdPage.dart';
 void main() {
 	PPSession session = PPSession.getInstance();
 	session.isLogin().then((value) {
-		print('isLogin = $value');
 		ZFLoginState loginState = ZFLoginState(isLogin: value == true);
-		ZFAlertViewState alertState = ZFAlertViewState();
-		ZFProgressHUDState progressHUDState = ZFProgressHUDState(progressHUDType: ProgressHUDType.ProgressHUDType_Success);
-		ZFHttpActionState httpActionState = ZFHttpActionState();
-		Store<ZFAppState> store = Store<ZFAppState>(mainReducer, initialState: ZFAppState(
-			loginState: loginState,
-			shareState: alertState,
-			progressState: progressHUDState,
-			httpActionState: httpActionState
-		));
+		Store<ZFAppState> store = Store<ZFAppState>(
+			mainReducer,
+			initialState: ZFAppState.getInstance(value)
+		);
 		return runApp(MyApp(store));
 	});
 }
@@ -48,8 +42,6 @@ class MyApp extends StatelessWidget {
 					},
 					builder: (BuildContext context, ZFAppState appState) {
 						if (appState.loginState.isLogin) {
-							// 请求获取用户信息
-							LoginRequest.getUserInfoReq();
 							return Stack(
 								children: <Widget>[
 									ZFBaseTabBar(),
@@ -62,7 +54,7 @@ class MyApp extends StatelessWidget {
 										left: 0,
 										child: Offstage(
 											offstage: appState.shareState.showShare != true,
-											child: ZFShareAlertView(),
+											child: ZFShareAlertView()
 										)
 									),
 									
@@ -77,10 +69,26 @@ class MyApp extends StatelessWidget {
 											child: ZFProgressHUDView(appState.progressState.progressHUDType, appState.progressState.titleStr),
 										)
 									)
-								],
+								]
 							);
 						} else {
-							return LoginPageWidget();
+							return Stack(
+								children: <Widget>[
+									LoginPageWidget(),
+									
+									// 提示弹框
+									Positioned(
+										top: 0,
+										right: 0,
+										bottom: 0,
+										left: 0,
+										child: Offstage(
+											offstage: appState.progressState.progressHUDType == ProgressHUDType.ProgressHUDType_Dismiss,
+											child: ZFProgressHUDView(appState.progressState.progressHUDType, appState.progressState.titleStr),
+										)
+									)
+								]
+							);
 						}
 					}
 				),

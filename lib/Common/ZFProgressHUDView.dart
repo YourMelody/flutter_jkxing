@@ -19,37 +19,47 @@ class ZFProgressHUDView extends StatelessWidget {
 					color: Color.fromRGBO(0, 0, 0, 0.88),
 					borderRadius: BorderRadius.circular(18)
 				),
-				padding: EdgeInsets.all(20),
+				padding: EdgeInsets.all(12),
+				child: _getContentWidget(),
 				constraints: BoxConstraints(
 					minWidth: 100,
-					maxWidth: MediaQuery.of(context).size.width - 120,
-					minHeight: 100,
-					maxHeight: 120
-				),
-				child: _getContentWidget()
+					maxWidth: MediaQuery.of(context).size.width - 140,
+					minHeight: 100
+				)
 			)
 		);
 	}
 	
 	Widget _getContentWidget() {
-		if (this.progressHUDType != ProgressHUDType.ProgressHUDType_Loading) {
+		if (this.progressHUDType == ProgressHUDType.ProgressHUDType_Loading) {
 			return CircularProgressIndicator(
-				strokeWidth: 5,
-				backgroundColor: Colors.white,
-				valueColor: AlwaysStoppedAnimation(Colors.black)
+				strokeWidth: 4,
+				backgroundColor: Colors.black,
+				valueColor: AlwaysStoppedAnimation(Colors.white)
 			);
 		} else {
-			return Text(
-				this.titleStr == null ? '解放发饿了发来我看饥饿疗法未来房价未来可减肥' : this.titleStr,
-				style: TextStyle(
-					fontSize: 16,
-					height: 1.1,
-					color: Colors.white,
-					fontWeight: FontWeight.normal,
-					decoration: TextDecoration.none
-				),
-				maxLines: 2,
-				textAlign: TextAlign.center
+			return IntrinsicHeight(
+				child: Column(
+					children: <Widget>[
+						this.progressHUDType == ProgressHUDType.ProgressHUDType_Error ?
+						Icon(Icons.error_outline, color: Colors.white, size: 30) :
+						Icon(Icons.done, color: Colors.white, size: 30),
+						Padding(padding: EdgeInsets.only(top: 8)),
+						Text(
+							this.titleStr,
+							style: TextStyle(
+								fontSize: 16,
+								height: 1.1,
+								color: Colors.white,
+								fontWeight: FontWeight.normal,
+								decoration: TextDecoration.none
+							),
+							maxLines: 2,
+							textAlign: TextAlign.center
+						)
+					],
+					mainAxisAlignment: MainAxisAlignment.center
+				)
 			);
 		}
 	}

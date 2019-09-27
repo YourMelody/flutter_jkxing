@@ -7,8 +7,6 @@ enum AppActions {
 	
 	ZFProgressHUDLoading,	// 加载loading
 	ZFProgressHUDDismiss,	// 提示框消失
-	ZFProgressHUDSuccess,	// 成功提示框
-	ZFProgressHUDError,		// 错误提示框
 	
 	ZFEmptyDataAction,		// 空数据
 	ZFErrorDataAction,		// 请求出错
