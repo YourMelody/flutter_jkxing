@@ -18,7 +18,9 @@ class _DrugListState extends State<DrugListPage> with AutomaticKeepAliveClientMi
 	@override
 	void initState() {
 		super.initState();
-		_initData();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
 	}
 	
 	_initData() {

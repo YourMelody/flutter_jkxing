@@ -24,11 +24,14 @@ class _DrugDetailState extends State<DrugDetailPage> {
 				// 请求刷新库存
 				getDrugLastCount(null);
 			};
-		getDrugDetailInfo();
+		
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_getDrugDetailInfo();
+		});
 	}
 	
 	// 获取药品详细信息
-	getDrugDetailInfo() {
+	_getDrugDetailInfo() {
 		DrugLibRequest.getMedicineDetail(widget.drugModel.productCode).then((response) {
 			getDrugLastCount(response);
 		}).catchError((e) {

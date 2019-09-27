@@ -15,7 +15,9 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> {
 	@override
 	void initState() {
 		super.initState();
-		_initData();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
 	}
 	
 	@override

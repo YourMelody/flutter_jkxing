@@ -19,13 +19,17 @@ class _MinePageState extends State<MinePage> {
 	@override
 	void initState() {
 		super.initState();
-		_getSaleDetail();
-		_getDoctorNum();
+		// 这么写原因参考 https://www.jianshu.com/p/d1c98b49ab43
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			// 接口请求
+			_getSaleDetail();
+			_getDoctorNum();
+		});
 	}
 	
 	// 获取业绩、提成等信息
 	_getSaleDetail() {
-		MineRequest.getAgentSalesDetail(0, 0).then((response) {
+		MineRequest.getAgentSalesDetail(0, 0, context).then((response) {
 			setState(() {
 				this.detailModel = response;
 			});
@@ -34,7 +38,7 @@ class _MinePageState extends State<MinePage> {
 	
 	// 获取医生数量信息
 	_getDoctorNum() {
-		MineRequest.getDoctorNumber(0, 0).then((response) {
+		MineRequest.getDoctorNumber(0, 0 ,context: context).then((response) {
 			setState(() {
 				this.doctorNumMap = response;
 			});
@@ -62,13 +66,13 @@ class _MinePageState extends State<MinePage> {
 			return MineSaleDetailWidget(this.detailModel, this.doctorNumMap);
 		} else if (index == 2) {
 			// 二级（全职和兼职）都不展示
-			if (session.userModel.agentLevel == 2) {
+			if (session?.userModel?.agentLevel == 2) {
 				return null;
 			}
 			return _createCommonItem('团队业绩', index, teamM: this?.detailModel?.teamSaleMoney?.toString(), showTopBorder: true);
 		} else if (index == 3) {
 			// 兼职（一级和二级）都不展示
-			if (session.userModel.agentType == 2) {
+			if (session?.userModel?.agentType == 2) {
 				return null;
 			}
 			return _createCommonItem('药品明细', index);
@@ -92,7 +96,7 @@ class _MinePageState extends State<MinePage> {
 					alignment: Alignment.topLeft,
 					child: Column(children: <Widget>[
 						Text(
-							PPSession.getInstance().userModel.realName,
+							PPSession.getInstance()?.userModel?.realName == null ? '' : PPSession.getInstance().userModel.realName,
 							style: TextStyle(
 								color: Color(0xff0a1314),
 								fontSize: 18,

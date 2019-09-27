@@ -100,7 +100,12 @@ class ZFShareAlertView extends StatelessWidget {
 									child: Container(
 										alignment: Alignment.center,
 										color: Colors.white,
-										child: Text('取消', style: TextStyle(fontSize: 15, color: Color(0xff999999), fontWeight: FontWeight.normal)),
+										child: Text('取消', style: TextStyle(
+											fontSize: 15,
+											color: Color(0xff999999),
+											fontWeight: FontWeight.normal,
+											decoration: TextDecoration.none
+										)),
 										height: 45,
 										width: double.maxFinite
 									)

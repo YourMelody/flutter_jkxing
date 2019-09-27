@@ -31,7 +31,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 		return Stack(
 			children: <Widget>[
 				Container(
-					height: PPSession.getInstance().userModel.agentType == 1 ? 235 : 195,
+					height: PPSession.getInstance()?.userModel?.agentType == 1 ? 235 : 195,
 					width: double.maxFinite,
 					color: Colors.white,
 					child: PageView.builder(
@@ -72,7 +72,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	}
 	
 	Widget _pageViewItem(int index) {
-		int agentType = PPSession.getInstance().userModel.agentType;
+		int agentType = PPSession.getInstance()?.userModel?.agentType;
 		if (index == 0) {
 			if (agentType == 1) {
 				return _getFirstPageAgentType1();

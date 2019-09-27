@@ -22,9 +22,9 @@ class ZFProgressHUDView extends StatelessWidget {
 				padding: EdgeInsets.all(12),
 				child: _getContentWidget(),
 				constraints: BoxConstraints(
-					minWidth: 100,
+					minWidth: 90,
 					maxWidth: MediaQuery.of(context).size.width - 140,
-					minHeight: 100
+					minHeight: 90
 				)
 			)
 		);
@@ -33,7 +33,7 @@ class ZFProgressHUDView extends StatelessWidget {
 	Widget _getContentWidget() {
 		if (this.progressHUDType == ProgressHUDType.ProgressHUDType_Loading) {
 			return CircularProgressIndicator(
-				strokeWidth: 4,
+				strokeWidth: 3,
 				backgroundColor: Colors.black,
 				valueColor: AlwaysStoppedAnimation(Colors.white)
 			);
