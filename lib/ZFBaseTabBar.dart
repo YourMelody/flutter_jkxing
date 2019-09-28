@@ -10,10 +10,10 @@ class ZFBaseTabBar extends StatefulWidget {
 	_ZFBaseTabBarState createState() => _ZFBaseTabBarState();
 }
 
-class _ZFBaseTabBarState extends State<ZFBaseTabBar> with SingleTickerProviderStateMixin {
+class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 	List <String> _appBarTitles;
 	int _currentIndex = 0;
-	List _widgetList = List();
+	List <Widget> _widgetList = List();
 	
 	@override
 	void initState() {
@@ -41,7 +41,10 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> with SingleTickerProviderSt
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),
 			
-			body: _widgetList[_currentIndex],
+			body: IndexedStack(
+				index: _currentIndex,
+				children: _widgetList
+			),
 		);
 	}
 	

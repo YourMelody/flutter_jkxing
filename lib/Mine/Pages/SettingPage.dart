@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:device_info/device_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -34,12 +38,7 @@ class SettingPage extends StatelessWidget {
 						builder: (BuildContext context, VoidCallback callback) {
 							// 退出登录按钮
 							return GestureDetector(
-								onTap: () {
-									Navigator.pop(context);
-									PPSession.getInstance().removeUserInfo().then((_) {
-										callback();
-									});
-								},
+								onTap: () => _logoutAction(callback, context),
 								child: Container(
 									height: 44,
 									alignment: Alignment.center,
@@ -57,6 +56,53 @@ class SettingPage extends StatelessWidget {
 				]))
 			),
 			backgroundColor: Color(0xfff4f6f9)
+		);
+	}
+	
+	// 退出登陆
+	_logoutAction(VoidCallback callback, BuildContext context) {
+		// 弹框提示
+		showDialog(
+			context: context,
+			builder: (value) {
+				return CupertinoAlertDialog(
+					title: Text('确定退出登陆？'),
+					actions: <Widget>[
+						CupertinoButton(
+							onPressed: () {
+								Navigator.pop(value);
+							},
+							child: Text('取消'),
+							pressedOpacity: 0.8
+						),
+						CupertinoButton(
+							onPressed: () async {
+								Navigator.pop(value);
+								String deviceId;
+								DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+								if (Platform.isAndroid) {
+									AndroidDeviceInfo devInfo = await deviceInfo.androidInfo;
+									deviceId = devInfo.androidId;
+								} else {
+									//
+									IosDeviceInfo devInfo = await deviceInfo.iosInfo;
+									deviceId = devInfo.identifierForVendor;
+								}
+								MineRequest.logoutRequest(PPSession.getInstance().userId, deviceId, context).then((response) {
+									if (response != null) {
+										Navigator.pop(context);
+										PPSession.getInstance().removeUserInfo().then((_) {
+											callback();
+										});
+									}
+								});
+							},
+							child: Text('确定'),
+							pressedOpacity: 0.8
+						)
+					]
+				);
+			}
 		);
 	}
 	

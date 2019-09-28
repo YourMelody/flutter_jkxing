@@ -25,7 +25,7 @@ class PPSession {
 		pref.remove('kSessionAccess_userToken');
 	}
 	
-	// 判断用户是否登陆
+	// 判断用户是否登陆--刚启动App用该方法（此时PPSession为null），其它情况可直接根据PPSession来判断
 	Future isLogin() async {
 		SharedPreferences pref = await SharedPreferences.getInstance();
 		String tempId = pref.getString('kSessionAccess_userId');

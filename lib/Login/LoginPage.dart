@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -185,11 +186,15 @@ class _LoginPageState extends State<LoginPageWidget> {
 						),
 						height: 40
 					)),
-					Image(
-						image: NetworkImage('https://bjtest.jianke.com/user/api/sms/authCode?token=' + this.tokenStr),
-						width: 105,
-						height: 40,
-						fit: BoxFit.cover,
+					GestureDetector(
+						onTap: () => _getImgToken(),
+						child: FadeInImage.assetNetwork(
+							placeholder: this.tokenStr == 'failed' ? 'lib/Images/login_token_failed.png' : 'lib/Images/login_token_loading.png',
+							image: '${ZFBaseUrl().BjUrl()}/user/api/sms/authCode?token=' + this.tokenStr,
+							width: 105,
+							height: 40,
+							fit: BoxFit.cover
+						)
 					)
 				]
 			)
@@ -234,20 +239,13 @@ class _LoginPageState extends State<LoginPageWidget> {
 			if (respCode == 20002) {
 				// 展示图形验证码
 				if (this.tokenStr == null || this.tokenStr.length == 0) {
-					LoginRequest.getImgToken(context).then((tokenResp) {
-						String token = tokenResp['data']['token'];
-						setState(() {
-							this.tokenStr = token;
-						});
-					}).catchError((error) {
-					
-					});
+					_getImgToken();
 				} else {
 					setState(() {});
 				}
 			} else if (respCode == 10012) {
 				// 输入验证码有误，刷新图形验证码
-				setState(() {});
+				_getImgToken();
 			} else if (respCode == 10002 || respCode == 10001) {
 				return;
 			} else if (respCode == 0) {
@@ -256,6 +254,27 @@ class _LoginPageState extends State<LoginPageWidget> {
 			}
 		}).catchError((error) {
 			print('error = $error');
+		});
+	}
+	
+	// 获取图形验证码的token
+	_getImgToken() {
+		LoginRequest.getImgToken(context).then((tokenResp) {
+			if (tokenResp != null) {
+				// 获取token成功
+				String respToken = tokenResp['token'];
+				setState(() {
+					this.tokenStr = respToken;
+				});
+			} else {
+				setState(() {
+					this.tokenStr = 'failed';
+				});
+			}
+		}).catchError((error) {
+			setState(() {
+				this.tokenStr = 'failed';
+			});
 		});
 	}
 	

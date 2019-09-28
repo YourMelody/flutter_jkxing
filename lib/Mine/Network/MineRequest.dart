@@ -31,4 +31,16 @@ class MineRequest {
 			return data;
 		});
 	}
+	
+	// 退出登陆
+	static Future<dynamic> logoutRequest(String userId, String deviceId,BuildContext context) {
+		return HttpUtil.getInstance().post(
+			'/user/api/user/logout',
+			data: {'userId': userId, 'deviceUuid': deviceId},
+			showToast: true,
+			context: context
+		).then((data) {
+			return data;
+		});
+	}
 }

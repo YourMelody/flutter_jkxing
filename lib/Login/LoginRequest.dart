@@ -46,7 +46,6 @@ class LoginRequest {
 	static Future<dynamic> getImgToken(BuildContext context) {
 		return HttpUtil.getInstance().get(
 			'user/api/sms/getToken',
-			disposeData: false,
 			showToast: true,
 			context: context
 		).then((data) {

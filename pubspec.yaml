@@ -68,6 +68,8 @@ flutter:
     - lib/Images/mini_right_arrow.png
     - lib/Images/btn_date_unselect.png
     - lib/Images/btn_date_select.png
+    - lib/Images/login_token_failed.png
+    - lib/Images/login_token_loading.png
 
 
 

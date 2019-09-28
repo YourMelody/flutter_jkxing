@@ -3,7 +3,6 @@ import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:device_info/device_info.dart';
 
 class InvitationPage extends StatefulWidget {
 	@override

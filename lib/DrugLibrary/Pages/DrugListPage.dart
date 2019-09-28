@@ -12,7 +12,7 @@ class DrugListPage extends StatefulWidget {
 	_DrugListState createState() => _DrugListState();
 }
 
-class _DrugListState extends State<DrugListPage> with AutomaticKeepAliveClientMixin {
+class _DrugListState extends State<DrugListPage> {
 	List <MedicineItemModel> dataSource = [];
 	
 	@override
@@ -149,7 +149,4 @@ class _DrugListState extends State<DrugListPage> with AutomaticKeepAliveClientMi
 			},
 		);
 	}
-	
-	@override
-	bool get wantKeepAlive => true;
 }
