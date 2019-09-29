@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_jkxing/Common/UserModel.dart';
 import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -291,9 +292,13 @@ class _LoginPageState extends State<LoginPageWidget> {
 				PPSession session = PPSession.getInstance();
 				session.userId = userId;
 				session.userToken = userToken;
-				callback();
 				// 请求获取用户信息
-				LoginRequest.getUserInfoReq();
+				LoginRequest.getUserInfoReq().then((data) {
+					if (data != null) {
+						PPSession.getInstance().userModel = UserModel.fromJson(data);
+						callback();
+					}
+				});
 			});
 		});
 	}

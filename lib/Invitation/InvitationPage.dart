@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -63,8 +64,9 @@ class _InvitationPageState extends State<InvitationPage> {
 					)),
 					
 					Padding(padding: EdgeInsets.only(top: 15)),
-					Image.asset(
-						'lib/Images/img_invite_n0_network.png',
+					FadeInImage.assetNetwork(
+						placeholder: 'lib/Images/img_invite_n0_network.png',
+						image: PPSession.getInstance()?.userModel?.investCodeImage == null ? '' : PPSession.getInstance().userModel.investCodeImage,
 						width: 180 / 667 * MediaQuery.of(context).size.height,
 						height: 180 / 667 * MediaQuery.of(context).size.height,
 						fit: BoxFit.contain
@@ -87,19 +89,19 @@ class _InvitationPageState extends State<InvitationPage> {
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.2
+									height: MediaQuery.of(context).size.width <= 320 ? 1.2 : 1.4
 								)),
 								Text('2、扫码后进行医生注册', style: TextStyle(
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.2
+									height: MediaQuery.of(context).size.width <= 320 ? 1.2 : 1.4
 								)),
 								Text('3、下载健客医院APP，登录后即可接诊', style: TextStyle(
 									fontSize: 13,
 									fontWeight: FontWeight.w500,
 									color: Color(0xff999999),
-									height: 1.2
+									height: MediaQuery.of(context).size.width <= 320 ? 1.2 : 1.4
 								))
 							],
 							crossAxisAlignment: CrossAxisAlignment.start

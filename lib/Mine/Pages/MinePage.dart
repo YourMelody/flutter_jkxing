@@ -14,11 +14,21 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage> {
+	int startTime;
+	int endTime;
+	String timeStr = '本月';
+	
 	MineDetailModel detailModel;
 	Map doctorNumMap;
 	@override
 	void initState() {
 		super.initState();
+		var now = DateTime.now();
+		// 本月开始时间
+		this.startTime = DateTime(now.year, now.month).millisecondsSinceEpoch;
+		// 当前时间
+		this.endTime = now.millisecondsSinceEpoch;
+		
 		// 这么写原因参考 https://www.jianshu.com/p/d1c98b49ab43
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			// 接口请求
@@ -29,7 +39,7 @@ class _MinePageState extends State<MinePage> {
 	
 	// 获取业绩、提成等信息
 	_getSaleDetail() {
-		MineRequest.getAgentSalesDetail(0, 0, context).then((response) {
+		MineRequest.getAgentSalesDetail(this.startTime, this.endTime, context).then((response) {
 			setState(() {
 				this.detailModel = response;
 			});
@@ -38,7 +48,7 @@ class _MinePageState extends State<MinePage> {
 	
 	// 获取医生数量信息
 	_getDoctorNum() {
-		MineRequest.getDoctorNumber(0, 0 ,context: context).then((response) {
+		MineRequest.getDoctorNumber(this.startTime, this.endTime, context: context).then((response) {
 			setState(() {
 				this.doctorNumMap = response;
 			});
@@ -69,7 +79,7 @@ class _MinePageState extends State<MinePage> {
 			if (session?.userModel?.agentLevel == 2) {
 				return null;
 			}
-			return _createCommonItem('团队业绩', index, teamM: this?.detailModel?.teamSaleMoney?.toString(), showTopBorder: true);
+			return _createCommonItem('团队业绩', index, teamM: this?.detailModel?.teamSaleMoney, showTopBorder: true);
 		} else if (index == 3) {
 			// 兼职（一级和二级）都不展示
 			if (session?.userModel?.agentType == 2) {
@@ -123,10 +133,24 @@ class _MinePageState extends State<MinePage> {
 					padding: EdgeInsets.only(left: 15),
 					child: GestureDetector(
 						onTap: () {
-							Navigator.of(context).push(MaterialPageRoute(builder: (_) => SelectDatePage('本月', 0, 0)));
+							Navigator.of(context).push(
+								MaterialPageRoute(builder: (_) => SelectDatePage(this.timeStr))
+							).then((backValue) {
+								print('backValue ===== $backValue');
+								if (backValue != null) {
+									setState(() {
+										this.timeStr = backValue['timeStr'];
+										this.startTime = backValue['startTime'];
+										this.endTime = backValue['endTime'];
+									});
+									// 刷新数据
+									_getSaleDetail();
+									_getDoctorNum();
+								}
+							});
 						},
 						child: Row(children: <Widget>[
-							Text('本月', style: TextStyle(
+							Text(this.timeStr, style: TextStyle(
 								fontSize: 14,
 								color: Color(0xff6c7172)
 							)),
@@ -139,7 +163,7 @@ class _MinePageState extends State<MinePage> {
 		);
 	}
 	
-	Widget _createCommonItem(String titleStr, int index, {String teamM:'', bool showTopBorder: false}) {
+	Widget _createCommonItem(String titleStr, int index, {int teamM, bool showTopBorder: false}) {
 		return GestureDetector(
 			onTap: () => _tapItem(index),
 			child: Container(
@@ -165,7 +189,7 @@ class _MinePageState extends State<MinePage> {
 					Offstage(
 						offstage: teamM == null,
 						child: Text(
-							teamM == null ? '' : teamM,
+							teamM == null ? '' : (teamM / 100).toStringAsFixed(2),
 							style: TextStyle(
 								fontSize: 16,
 								color: Color(0xffe75d5b)

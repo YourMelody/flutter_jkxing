@@ -2,11 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
-import 'package:flutter_jkxing/Common/UserModel.dart';
-import 'package:flutter_jkxing/Redux/ZFAction.dart';
-import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 import '../Utils/HttpUtil.dart';
 import 'package:crypto/crypto.dart';
 
@@ -60,11 +55,9 @@ class LoginRequest {
 		return HttpUtil.getInstance().get(
 			'user/api/medicalAgentUser/getAgentInfoWithInvestUrl',
 			data: {'userId': PPSession.getInstance().userId},
-			showToast: false
+			showToast: true
 		).then((data) {
-			if (data != null) {
-				PPSession.getInstance().userModel = UserModel.fromJson(data);
-			}
+			return data;
 		});
 	}
 }

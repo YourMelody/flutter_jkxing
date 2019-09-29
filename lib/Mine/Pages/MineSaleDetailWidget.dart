@@ -77,7 +77,8 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 			if (agentType == 1) {
 				return _getFirstPageAgentType1();
 			} else {
-				return _getFirstPageAgentType2();
+				int agentLevel = PPSession.getInstance()?.userModel?.agentLevel;
+				return _getFirstPageAgentType2(agentLevel == 1);
 			}
 		} else {
 			return _getSecondPage(agentType == 1);
@@ -237,8 +238,149 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	}
 	
 	// 兼职
-	Widget _getFirstPageAgentType2() {
-		return Center(child: Text('first'));
+	Widget _getFirstPageAgentType2(bool isFirstLevel) {
+		if (isFirstLevel) {
+			return Container(
+				padding: EdgeInsets.fromLTRB(15, 35, 15, 0),
+				child: Column(
+					children: <Widget>[
+						Text(
+							'销售业绩(元)',
+							style: TextStyle(
+								fontSize: 12,
+								color: Color.fromRGBO(10, 19, 20, 0.4)
+							)
+						),
+						
+						// 销售业绩
+						Text(
+							_manageMoney(widget.model?.bonusMoney),
+							style: TextStyle(
+								fontSize: 36,
+								fontWeight: FontWeight.w500,
+								color: Color(0xff6bcbd7)
+							)
+						),
+						Padding(padding: EdgeInsets.only(bottom: 21)),
+						
+						Row(
+							children: <Widget>[
+								Expanded(child: Column(
+									children: <Widget>[
+										Row(
+											children: <Widget>[
+												Text(
+													'月销售指标(元)',
+													style: TextStyle(
+														fontSize: 12,
+														color: Color.fromRGBO(10, 19, 20, 0.4)
+													)
+												),
+												
+												GestureDetector(
+													onTap: () {
+														showDialog(
+															context: context,
+															builder: (context) {
+																return CupertinoAlertDialog(
+																	title: Text('提示', style: TextStyle(fontSize: 16, color: Color(0xff0a1314))),
+																	content: Padding(
+																		padding: EdgeInsets.only(top: 10),
+																		child: Text('查询销售指标时不支持跨月查询', style: TextStyle(fontSize: 14, color: Color(0xff0a1314))),
+																	),
+																	actions: <Widget>[
+																		CupertinoButton(
+																			onPressed: () {
+																				Navigator.pop(context);
+																			},
+																			child: Text('知道了', style: TextStyle(fontSize: 16, color: Color(0xff6bcbd6))),
+																			pressedOpacity: 0.8
+																		)
+																	],
+																);
+															}
+														);
+													},
+													
+													child: Container(
+														width: 16, height: 16,
+														child: Center(
+															child: Image.asset(
+																'lib/Images/me_btn_msg.png',
+																width: 12, height: 12
+															)
+														)
+													)
+												)
+											]
+										),
+										Padding(padding: EdgeInsets.only(bottom: 2)),
+										Text(
+											_manageMoney(widget.model?.targetMoney),
+											style: TextStyle(
+												fontSize: 16,
+												color: Color.fromRGBO(10, 19, 20, 0.8)
+											)
+										)
+									],
+									crossAxisAlignment: CrossAxisAlignment.start
+								)),
+								Padding(padding: EdgeInsets.only(right: 10)),
+								Container(
+									width: 130,
+									child: Column(
+										crossAxisAlignment: CrossAxisAlignment.end,
+										children: <Widget>[
+											Text(
+												'距离销售指标(元)',
+												style: TextStyle(
+													fontSize: 12,
+													color: Color.fromRGBO(10, 19, 20, 0.4)
+												)
+											),
+											Padding(padding: EdgeInsets.only(bottom: 2)),
+											Text(
+												_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth),
+												style: TextStyle(
+													fontSize: 16,
+													color: Color(0xffe75d5b)
+												)
+											)
+										]
+									)
+								)
+							],
+							crossAxisAlignment: CrossAxisAlignment.start
+						)
+					]
+				)
+			);
+		} else {
+			return Container(
+				padding: EdgeInsets.only(top: 60),
+				child: Column(
+					children: <Widget>[
+						Text(
+							'销售业绩(元)',
+							style: TextStyle(
+								fontSize: 12,
+								color: Color.fromRGBO(10, 19, 20, 0.4)
+							)
+						),
+						
+						// 销售业绩
+						Text(
+							_manageMoney(widget.model?.bonusMoney),
+							style: TextStyle(
+								fontSize: 36,
+								fontWeight: FontWeight.w500,
+								color: Color(0xff6bcbd7)
+							)
+						)
+					]
+				)
+			);
+		}
 	}
 	
 	// isType1: true全职  false兼职
@@ -317,7 +459,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 	}
 	
 	String _manageMoney(int money, {bool showLine}) {
-		String resultMoney = money == null ? '0.00' : (money/1000).toStringAsFixed(2);
+		String resultMoney = money == null ? '0.00' : (money/100).toStringAsFixed(2);
 		if (resultMoney == '0.00' && showLine == true) {
 			resultMoney = '--';
 		}

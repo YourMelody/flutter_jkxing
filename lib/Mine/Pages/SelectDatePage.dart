@@ -1,20 +1,55 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Redux/ZFAction.dart';
+import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_picker/flutter_picker.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 class SelectDatePage extends StatefulWidget {
 	final String timeTitle;
-	final int startTime;
-	final int endTime;
-	SelectDatePage(this.timeTitle, this.startTime, this.endTime);
+	SelectDatePage(this.timeTitle);
 	@override
 	State<StatefulWidget> createState() {
-		return _SelectDateState();
+		return _SelectDateState(this.timeTitle);
 	}
 }
 
 class _SelectDateState extends State<SelectDatePage> {
+	String startTimeStr = '开始时间';
+	String endTimeStr = '结束时间';
+	String timeTitle;
+	int startTime;
+	int endTime;
+	_SelectDateState(this.timeTitle);
 	
+	@override
+	void initState() {
+		super.initState();
+		if (this.timeTitle.contains('-')) {
+			// 自定义时间
+			List<String> timeList = this.timeTitle.split('-');
+			if (timeList.length >= 2) {
+				startTimeStr = timeList[0];
+				startTimeStr = startTimeStr.replaceAll('年', '-');
+				startTimeStr = startTimeStr.replaceAll('月', '-');
+				startTimeStr = startTimeStr.replaceAll('日', '');
+				print('timeList = $timeList, startTimeStr = $startTimeStr');
+				startTime = DateTime.parse(startTimeStr).millisecondsSinceEpoch;
+				
+				endTimeStr = timeList[1];
+				endTimeStr = endTimeStr.replaceAll('年', '-');
+				endTimeStr = endTimeStr.replaceAll('月', '-');
+				endTimeStr = endTimeStr.replaceAll('日', '');
+				endTime = DateTime.parse(endTimeStr).millisecondsSinceEpoch;
+			}
+		} else {
+			startTime = endTime = DateTime.now().millisecondsSinceEpoch;
+		}
+	}
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -24,7 +59,64 @@ class _SelectDateState extends State<SelectDatePage> {
 				rightBarBtn: [
 					GestureDetector(
 						onTap: () {
-						
+							String tempTimeStr = timeTitle;
+							DateTime now = DateTime.now();
+							if (this.timeTitle == '昨天') {
+								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 00:00:00').millisecondsSinceEpoch;
+								this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 23:59:59').millisecondsSinceEpoch;
+							} else if (this.timeTitle == '近七天') {
+								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 6)} 00:00:00').millisecondsSinceEpoch;
+								this.endTime = now.millisecondsSinceEpoch;
+							} else if (this.timeTitle == '本月') {
+								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch;
+								this.endTime = now.millisecondsSinceEpoch;
+							} else if (this.timeTitle == '上月') {
+								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month - 1)}-01 00:00:00').millisecondsSinceEpoch;
+								this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch - 1000;
+							} else {
+								Store store = StoreProvider.of<ZFAppState>(context);
+								if (this.startTimeStr == '开始时间' || this.endTimeStr == '结束时间') {
+									store.dispatch({'success': false, 'title': '请选择时间'});
+									Timer(Duration(seconds: 1), () {
+										store.dispatch(AppActions.ZFProgressHUDDismiss);
+									});
+									return;
+								}
+								
+								// 开始时间
+								DateTime tempStartT = DateTime.parse('${this.startTimeStr} 00:00:00');
+								this.startTime = tempStartT.millisecondsSinceEpoch;
+								
+								// 结束时间
+								DateTime tempEndT = DateTime.parse('${this.endTimeStr}');
+								if (tempEndT.year == now.year &&
+									tempEndT.month == now.month &&
+									tempEndT.day == now.day) {
+									this.endTime = now.millisecondsSinceEpoch;
+								} else {
+									DateTime tempEndT = DateTime.parse('${this.endTimeStr} 23:59:59');
+									this.endTime = tempEndT.millisecondsSinceEpoch;
+								}
+								
+								if (this.startTime > this.endTime) {
+									store.dispatch({'success': false, 'title': '结束时间不能比开始时间早'});
+									Timer(Duration(seconds: 1), () {
+										store.dispatch(AppActions.ZFProgressHUDDismiss);
+									});
+									return;
+								}
+								
+								if (this.startTime > now.millisecondsSinceEpoch || this.endTime > now.millisecondsSinceEpoch) {
+									store.dispatch({'success': false, 'title': '最早能查看当天数据，请重新选择'});
+									Timer(Duration(seconds: 1), () {
+										store.dispatch(AppActions.ZFProgressHUDDismiss);
+									});
+									return;
+								}
+								
+								tempTimeStr = '${tempStartT.year}年${_addZero(tempStartT.month)}月${_addZero(tempStartT.day)}日-${tempEndT.year}年${_addZero(tempEndT.month)}月${_addZero(tempEndT.day)}日';
+							}
+							Navigator.pop(context, {'timeStr': tempTimeStr, 'startTime': this.startTime, 'endTime': this.endTime});
 						},
 						child: Container(
 							height: 44,
@@ -53,29 +145,44 @@ class _SelectDateState extends State<SelectDatePage> {
 	
 	//
 	Widget _createCommonItem(String title, {bool hideSepLine: false}) {
-		return Container(
-			height: 53,
-			padding: EdgeInsets.symmetric(horizontal: 15),
-			decoration: BoxDecoration(
-				border: Border(
-					bottom: BorderSide(
-						color: hideSepLine == true ? Colors.white : Color(0xffe5e5e5),
-						width: 0.5
+		return GestureDetector(
+			onTap: () {
+				if (title == '自定义') {
+					setState(() {
+						this.timeTitle = '-';
+					});
+				} else {
+					setState(() {
+						this.timeTitle = title;
+					});
+				}
+			},
+			child: Container(
+				height: 53,
+				padding: EdgeInsets.symmetric(horizontal: 15),
+				decoration: BoxDecoration(
+					border: Border(
+						bottom: BorderSide(
+							color: hideSepLine == true ? Colors.white : Color(0xffe5e5e5),
+							width: 0.5
+						)
 					)
+				),
+				child: Row(
+					children: <Widget>[
+						Image.asset(
+							(this.timeTitle == title || (title == '自定义' && this.timeTitle.contains('-'))) ?
+							'lib/Images/btn_date_select.png' : 
+							'lib/Images/btn_date_unselect.png',
+							width: 18, height: 18
+						),
+						Padding(padding: EdgeInsets.only(right: 5)),
+						Text(title, style: TextStyle(
+							fontSize: 16,
+							color: Color(0xff0a1314)
+						))
+					]
 				)
-			),
-			child: Row(
-				children: <Widget>[
-					Image.asset(
-						widget.timeTitle == title ? 'lib/Images/btn_date_select.png' : 'lib/Images/btn_date_unselect.png',
-						width: 18, height: 18
-					),
-					Padding(padding: EdgeInsets.only(right: 5)),
-					Text(title, style: TextStyle(
-						fontSize: 16,
-						color: Color(0xff0a1314)
-					))
-				]
 			)
 		);
 	}
@@ -86,7 +193,7 @@ class _SelectDateState extends State<SelectDatePage> {
 			padding: EdgeInsets.symmetric(horizontal: 15),
 			child: Row(
 				children: <Widget>[
-					_selectTimeItem(true, widget.timeTitle == '自定义'),
+					_selectTimeItem(true, this.timeTitle.contains('-')),
 					
 					Container(
 						width: 25,
@@ -97,7 +204,7 @@ class _SelectDateState extends State<SelectDatePage> {
 						))
 					),
 					
-					_selectTimeItem(false, widget.timeTitle == '自定义')
+					_selectTimeItem(false, this.timeTitle.contains('-'))
 				]
 			)
 		);
@@ -106,7 +213,46 @@ class _SelectDateState extends State<SelectDatePage> {
 	Widget _selectTimeItem(bool isBeginTime, bool isEditable) {
 		return Expanded(child: GestureDetector(
 			onTap: () {
-			
+				if (isEditable == true) {
+					Picker(
+						adapter: DateTimePickerAdapter(
+							type: 7,
+							isNumberMonth: true,
+							yearBegin: 2000,
+							yearSuffix: '年',
+							monthSuffix: '月',
+							daySuffix: '日',
+							value: isBeginTime ?
+								DateTime.fromMillisecondsSinceEpoch(this.startTime) :
+								DateTime.fromMillisecondsSinceEpoch(this.endTime)
+						),
+						title: Text('选择日期'),
+						textAlign: TextAlign.right,
+						selectedTextStyle: TextStyle(color: Color(0xff6bcbd6)),
+						cancelText: '取消',
+						cancelTextStyle: TextStyle(fontSize: 16, color: Color(0xff999999)),
+						confirmText: '确定',
+						confirmTextStyle: TextStyle(fontSize: 16, color: Color(0xff6bcbd6)),
+						onSelect: (Picker picker, int index, List<int> selecteds) {
+							setState(() {});
+						},
+						onConfirm: (Picker picker, List<int> selected) {
+							DateTime tempTime = (picker.adapter as DateTimePickerAdapter).value;
+							String tempDateStr = '${tempTime.year}-${_addZero(tempTime.month)}-${_addZero(tempTime.day)}';
+							if (isBeginTime) {
+								// 开始时间
+								setState(() {
+									this.startTimeStr = tempDateStr;
+								});
+							} else {
+								// 结束时间
+								setState(() {
+									this.endTimeStr = tempDateStr;
+								});
+							}
+						}
+					).showModal(context);
+				}
 			},
 			child: Container(
 				height: 44,
@@ -121,7 +267,7 @@ class _SelectDateState extends State<SelectDatePage> {
 				child: Row(
 					children: <Widget>[
 						Expanded(child: Text(
-							'2029-22-28',
+							isBeginTime ? this.startTimeStr : this.endTimeStr,
 							style: TextStyle(
 								fontSize: 16,
 								color: isEditable ? Color(0xFF0A1314) : Color(0xffcccccc)
@@ -132,5 +278,12 @@ class _SelectDateState extends State<SelectDatePage> {
 				),
 			),
 		));
+	}
+	
+	String _addZero(int value) {
+		if (value < 10) {
+			return '0' + value.toString();
+		}
+		return value.toString();
 	}
 }

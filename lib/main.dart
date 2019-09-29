@@ -8,13 +8,20 @@ import 'package:flutter_jkxing/Redux/ZFMainReducer.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Pages/SettingPage.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
+import 'Common/UserModel.dart';
 import 'Common/ZFShareAlertView.dart';
 import 'Login/LoginRequest.dart';
 import 'Mine/Pages/ResetPwdPage.dart';
 
 void main() {
 	PPSession session = PPSession.getInstance();
-	session.isLogin().then((value) {
+	session.isLogin().then((value) async {
+		if (value == true && PPSession.getInstance().userModel == null) {
+			var respData = await LoginRequest.getUserInfoReq();
+			if (respData != null) {
+				PPSession.getInstance().userModel = UserModel.fromJson(respData);
+			}
+		}
 		ZFLoginState loginState = ZFLoginState(isLogin: value == true);
 		Store<ZFAppState> store = Store<ZFAppState>(
 			mainReducer,

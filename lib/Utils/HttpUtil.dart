@@ -90,7 +90,7 @@ class HttpUtil {
 				url,
 				queryParameters: data
 			);
-			print('-----${response.request.path}-----response-----${response.data}');
+//			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
@@ -178,7 +178,7 @@ class HttpUtil {
 				url,
 				data: data
 			);
-			print('-----${response.request.path}-----response-----${response.data}');
+//			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			

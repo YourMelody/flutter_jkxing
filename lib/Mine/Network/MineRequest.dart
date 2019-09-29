@@ -6,12 +6,14 @@ import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 class MineRequest {
 	// 获取销售业绩、指标、提成等
 	static Future<dynamic> getAgentSalesDetail(int startTime, int endTime, BuildContext context) {
+		print('startTime = $startTime, endTime = $endTime');
 		return HttpUtil.getInstance().get(
 			'/crm/api/agentMine/agentSalesPerformanceDetail',
 			data: {'startTime': startTime, 'endTime': endTime},
 			showToast: true,
 			context: context
 		).then((data) {
+			print(data);
 			try {
 				return MineDetailModel.fromJson(data);
 			} catch(e) {
@@ -28,6 +30,7 @@ class MineRequest {
 			showToast: true,
 			context: context
 		).then((data) {
+			print(data);
 			return data;
 		});
 	}
