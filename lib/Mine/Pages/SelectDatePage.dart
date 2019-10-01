@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -75,10 +77,7 @@ class _SelectDateState extends State<SelectDatePage> {
 							} else {
 								Store store = StoreProvider.of<ZFAppState>(context);
 								if (this.startTimeStr == '开始时间' || this.endTimeStr == '结束时间') {
-									store.dispatch({'success': false, 'title': '请选择时间'});
-									Timer(Duration(seconds: 1), () {
-										store.dispatch(AppActions.ZFProgressHUDDismiss);
-									});
+									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '请选择时间');
 									return;
 								}
 								
@@ -98,18 +97,12 @@ class _SelectDateState extends State<SelectDatePage> {
 								}
 								
 								if (this.startTime > this.endTime) {
-									store.dispatch({'success': false, 'title': '结束时间不能比开始时间早'});
-									Timer(Duration(seconds: 1), () {
-										store.dispatch(AppActions.ZFProgressHUDDismiss);
-									});
+									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '结束时间不能比开始时间早');
 									return;
 								}
 								
 								if (this.startTime > now.millisecondsSinceEpoch || this.endTime > now.millisecondsSinceEpoch) {
-									store.dispatch({'success': false, 'title': '最早能查看当天数据，请重新选择'});
-									Timer(Duration(seconds: 1), () {
-										store.dispatch(AppActions.ZFProgressHUDDismiss);
-									});
+									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '最早能查看当天数据，请重新选择');
 									return;
 								}
 								

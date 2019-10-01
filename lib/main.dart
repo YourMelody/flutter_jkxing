@@ -7,7 +7,6 @@ import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_jkxing/Redux/ZFMainReducer.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Pages/SettingPage.dart';
-import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'Common/UserModel.dart';
 import 'Common/ZFShareAlertView.dart';
 import 'Login/LoginRequest.dart';
@@ -63,39 +62,11 @@ class MyApp extends StatelessWidget {
 											offstage: appState.shareState.showShare != true,
 											child: ZFShareAlertView()
 										)
-									),
-									
-									// 提示弹框
-									Positioned(
-										top: 0,
-										right: 0,
-										bottom: 0,
-										left: 0,
-										child: Offstage(
-											offstage: appState.progressState.progressHUDType == ProgressHUDType.ProgressHUDType_Dismiss,
-											child: ZFProgressHUDView(appState.progressState.progressHUDType, appState.progressState.titleStr),
-										)
 									)
 								]
 							);
 						} else {
-							return Stack(
-								children: <Widget>[
-									LoginPageWidget(),
-									
-									// 提示弹框
-									Positioned(
-										top: 0,
-										right: 0,
-										bottom: 0,
-										left: 0,
-										child: Offstage(
-											offstage: appState.progressState.progressHUDType == ProgressHUDType.ProgressHUDType_Dismiss,
-											child: ZFProgressHUDView(appState.progressState.progressHUDType, appState.progressState.titleStr),
-										)
-									)
-								]
-							);
+							return LoginPageWidget();
 						}
 					}
 				),

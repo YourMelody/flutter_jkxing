@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:redux/redux.dart';
 
 class HttpUtil {
@@ -73,10 +74,8 @@ class HttpUtil {
 		BuildContext context
 	}) async {
 		Response<T> response;
-		Store store;
 		if (showToast && context != null) {
-			store = StoreProvider.of<ZFAppState>(context);
-			store.dispatch(AppActions.ZFProgressHUDLoading);
+			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading, autoDismiss: false);
 		}
 		
 		try{
@@ -92,17 +91,14 @@ class HttpUtil {
 			// 直接返回请求的结果
 			if (disposeData == false) {
 				if (respMap['msg']['code'] == 0) {
-					if (showToast && store != null) {
-						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					if (showToast && context != null) {
+						ProgressUtil().dismiss(context);
 					}
 				} else {
 					// 请求失败
-					if (showToast == true && store != null) {
+					if (showToast && context != null) {
 						String respStr = respMap['msg']['info'];
-						store.dispatch({'success': false, 'title':respStr});
-						Timer(Duration(seconds: 1), () {
-							store.dispatch(AppActions.ZFProgressHUDDismiss);
-						});
+						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 					}
 				}
 				return response.data;
@@ -110,29 +106,23 @@ class HttpUtil {
 			
 			// 处理返回的数据
 			if (respMap['msg']['code'] == 0) {
-				if (showToast && store != null) {
-					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				if (showToast && context != null) {
+					ProgressUtil().dismiss(context);
 				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast == true && store != null) {
+				if (showToast && context != null) {
 					String respStr = respMap['msg']['info'];
-					store.dispatch({'success': false, 'title':respStr});
-					Timer(Duration(seconds: 1), () {
-						store.dispatch(AppActions.ZFProgressHUDDismiss);
-					});
+					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 				}
 				return null;
 			}
 		} on DioError catch(error){
 			// 网络异常
-			if (showToast == true && store != null) {
-				store.dispatch({'success': false, 'title':'网络连接异常，请检查您的网络设置'});
-				Timer(Duration(seconds: 1), () {
-					store.dispatch(AppActions.ZFProgressHUDDismiss);
-				});
+			if (showToast && context != null) {
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
 			}
 			return null;
 		}
@@ -156,10 +146,8 @@ class HttpUtil {
 		BuildContext context
 	}) async {
 		Response<T> response;
-		Store store;
 		if (showToast && context != null) {
-			store = StoreProvider.of<ZFAppState>(context);
-			store.dispatch(AppActions.ZFProgressHUDLoading);
+			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading);
 		}
 		
 		try{
@@ -175,17 +163,14 @@ class HttpUtil {
 			// 直接返回请求的结果
 			if (disposeData == false) {
 				if (respMap['msg']['code'] == 0) {
-					if (showToast && store != null) {
-						store.dispatch(AppActions.ZFProgressHUDDismiss);
+					if (showToast && context != null) {
+						ProgressUtil().dismiss(context);
 					}
 				} else {
 					// 请求失败
-					if (showToast == true && store != null) {
+					if (showToast == true && context != null) {
 						String respStr = respMap['msg']['info'];
-						store.dispatch({'success': false, 'title':respStr});
-						Timer(Duration(seconds: 1), () {
-							store.dispatch(AppActions.ZFProgressHUDDismiss);
-						});
+						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 					}
 				}
 				return response.data;
@@ -193,29 +178,23 @@ class HttpUtil {
 			
 			// 处理返回的数据
 			if (respMap['msg']['code'] == 0) {
-				if (showToast && store != null) {
-					store.dispatch(AppActions.ZFProgressHUDDismiss);
+				if (showToast && context != null) {
+					ProgressUtil().dismiss(context);
 				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast == true && store != null) {
+				if (showToast == true && context != null) {
 					String respStr = respMap['msg']['info'];
-					store.dispatch({'success': false, 'title':respStr});
-					Timer(Duration(seconds: 1), () {
-						store.dispatch(AppActions.ZFProgressHUDDismiss);
-					});
+					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 				}
 				return null;
 			}
 		} on DioError catch(error){
 			// 网络异常
-			if (showToast == true && store != null) {
-				store.dispatch({'success': false, 'title':'网络连接异常，请检查您的网络设置'});
-				Timer(Duration(seconds: 1), () {
-					store.dispatch(AppActions.ZFProgressHUDDismiss);
-				});
+			if (showToast == true && context != null) {
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
 			}
 			return null;
 		}

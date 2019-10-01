@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
@@ -32,14 +34,14 @@ class _MinePageState extends State<MinePage> {
 		// 这么写原因参考 https://www.jianshu.com/p/d1c98b49ab43
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			// 接口请求
-			_getSaleDetail();
-			_getDoctorNum();
+			_getSaleDetail(true);
+			_getDoctorNum(true);
 		});
 	}
 	
 	// 获取业绩、提成等信息
-	_getSaleDetail() {
-		MineRequest.getAgentSalesDetail(this.startTime, this.endTime, context).then((response) {
+	_getSaleDetail(bool showToast) {
+		MineRequest.getAgentSalesDetail(this.startTime, this.endTime, context, showToast: showToast).then((response) {
 			setState(() {
 				this.detailModel = response;
 			});
@@ -47,8 +49,8 @@ class _MinePageState extends State<MinePage> {
 	}
 	
 	// 获取医生数量信息
-	_getDoctorNum() {
-		MineRequest.getDoctorNumber(this.startTime, this.endTime, context: context).then((response) {
+	_getDoctorNum(bool showToast) {
+		MineRequest.getDoctorNumber(this.startTime, this.endTime, context: context, showToast: showToast).then((response) {
 			setState(() {
 				this.doctorNumMap = response;
 			});
@@ -136,16 +138,17 @@ class _MinePageState extends State<MinePage> {
 							Navigator.of(context).push(
 								MaterialPageRoute(builder: (_) => SelectDatePage(this.timeStr))
 							).then((backValue) {
-								print('backValue ===== $backValue');
 								if (backValue != null) {
 									setState(() {
 										this.timeStr = backValue['timeStr'];
 										this.startTime = backValue['startTime'];
 										this.endTime = backValue['endTime'];
 									});
-									// 刷新数据
-									_getSaleDetail();
-									_getDoctorNum();
+									Timer(Duration(milliseconds: 200), () {
+										// 刷新数据
+										_getSaleDetail(false);
+										_getDoctorNum(false);
+									});
 								}
 							});
 						},
