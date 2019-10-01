@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 
 class ZFProgressHUDView extends StatelessWidget {
 	final ProgressHUDType progressHUDType;

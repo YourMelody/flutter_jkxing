@@ -80,11 +80,6 @@ class HttpUtil {
 		}
 		
 		try{
-			if (showToast && context != null) {
-				store = StoreProvider.of<ZFAppState>(context);
-				store.dispatch(AppActions.ZFProgressHUDLoading);
-			}
-			
 			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.get<T>(
 				url,
@@ -168,11 +163,6 @@ class HttpUtil {
 		}
 		
 		try{
-			if (showToast && context != null) {
-				store = StoreProvider.of<ZFAppState>(context);
-				store.dispatch(AppActions.ZFProgressHUDLoading);
-			}
-			
 			dio.options.baseUrl = baseUrl == null ? ZFBaseUrl().BjUrl() : baseUrl;
 			response = await dio.post<T>(
 				url,
