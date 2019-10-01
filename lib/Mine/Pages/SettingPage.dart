@@ -90,7 +90,9 @@ class SettingPage extends StatelessWidget {
 								}
 								MineRequest.logoutRequest(PPSession.getInstance().userId, deviceId, context).then((response) {
 									if (response != null) {
-										Navigator.pop(context);
+										if (Navigator.canPop(context)) {
+											Navigator.pop(context);
+										}
 										PPSession.getInstance().removeUserInfo().then((_) {
 											callback();
 										});

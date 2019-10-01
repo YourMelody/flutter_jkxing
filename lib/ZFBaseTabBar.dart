@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugLibraryPage.dart';
 import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
+import 'package:flutter_jkxing/Order/Pages/OrderListPage.dart';
 import 'Common/ZFAppBar.dart';
 
 class ZFBaseTabBar extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 	@override
 	void initState() {
 		super.initState();
-		_appBarTitles = ['首页', '药品库', '我的邀请', '订单', '我的'];
+		_appBarTitles = ['首页', '药品库', '我的邀请', '', '我的'];
 		
 		_widgetList
 			..add(Container(child: Center(
@@ -26,9 +27,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 			)))
 			..add(DrugLibraryPage())
 			..add(InvitationPage())
-			..add(Container(child: Center(
-				child: Text('订单')
-			)))
+			..add(OrderListPage())
 			..add(MinePage());
 	}
 	
@@ -36,7 +35,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			// 顶部导航栏
-			appBar: ZFAppBar(_appBarTitles[_currentIndex], showBackBtn: false),
+			appBar: _currentIndex == 3 ? null : ZFAppBar(_appBarTitles[_currentIndex], showBackBtn: false),
 			
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),

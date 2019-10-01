@@ -6,14 +6,22 @@ import 'package:flutter/material.dart';
 * showBackBtn：是否显示返回按钮
 * context：只有当showBackBtn为true才需要传
 * */
-PreferredSizeWidget ZFAppBar(String title, {List<Widget> rightBarBtn, bool showBackBtn: true, BuildContext context}) {
+PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, PreferredSizeWidget bottom, double height : 44, bool showBackBtn: true, BuildContext context}) {
 	return PreferredSize(
 		child: AppBar(
 			title: Text(
 				title,
 				style: TextStyle(fontSize: 18, color: Color(0xff1a1a1a), fontWeight: FontWeight.normal)
 			),
-			actions: rightBarBtn,
+			actions: [
+				Container(
+					height: 44,
+					alignment: Alignment.center,
+					padding: EdgeInsets.only(right: 15, left: 5),
+					child: rightBarBtn
+				)
+			],
+			bottom: bottom,
 			backgroundColor: Colors.white,
 			centerTitle: true,
 			elevation: 0.5,
@@ -30,6 +38,6 @@ PreferredSizeWidget ZFAppBar(String title, {List<Widget> rightBarBtn, bool showB
 			) : null,
 			brightness: Brightness.light
 		),
-		preferredSize: Size.fromHeight(44)
+		preferredSize: Size.fromHeight(height)
 	);
 }

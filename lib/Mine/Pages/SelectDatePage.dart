@@ -57,70 +57,63 @@ class _SelectDateState extends State<SelectDatePage> {
 			appBar: ZFAppBar(
 				'选择时间',
 				context: context,
-				rightBarBtn: [
-					GestureDetector(
-						onTap: () {
-							String tempTimeStr = timeTitle;
-							DateTime now = DateTime.now();
-							if (this.timeTitle == '昨天') {
-								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 00:00:00').millisecondsSinceEpoch;
-								this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 23:59:59').millisecondsSinceEpoch;
-							} else if (this.timeTitle == '近七天') {
-								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 6)} 00:00:00').millisecondsSinceEpoch;
-								this.endTime = now.millisecondsSinceEpoch;
-							} else if (this.timeTitle == '本月') {
-								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch;
-								this.endTime = now.millisecondsSinceEpoch;
-							} else if (this.timeTitle == '上月') {
-								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month - 1)}-01 00:00:00').millisecondsSinceEpoch;
-								this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch - 1000;
-							} else {
-								Store store = StoreProvider.of<ZFAppState>(context);
-								if (this.startTimeStr == '开始时间' || this.endTimeStr == '结束时间') {
-									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '请选择时间');
-									return;
-								}
-								
-								// 开始时间
-								DateTime tempStartT = DateTime.parse('${this.startTimeStr} 00:00:00');
-								this.startTime = tempStartT.millisecondsSinceEpoch;
-								
-								// 结束时间
-								DateTime tempEndT = DateTime.parse('${this.endTimeStr}');
-								if (tempEndT.year == now.year &&
-									tempEndT.month == now.month &&
-									tempEndT.day == now.day) {
-									this.endTime = now.millisecondsSinceEpoch;
-								} else {
-									DateTime tempEndT = DateTime.parse('${this.endTimeStr} 23:59:59');
-									this.endTime = tempEndT.millisecondsSinceEpoch;
-								}
-								
-								if (this.startTime > this.endTime) {
-									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '结束时间不能比开始时间早');
-									return;
-								}
-								
-								if (this.startTime > now.millisecondsSinceEpoch || this.endTime > now.millisecondsSinceEpoch) {
-									ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '最早能查看当天数据，请重新选择');
-									return;
-								}
-								
-								tempTimeStr = '${tempStartT.year}年${_addZero(tempStartT.month)}月${_addZero(tempStartT.day)}日-${tempEndT.year}年${_addZero(tempEndT.month)}月${_addZero(tempEndT.day)}日';
+				rightBarBtn: GestureDetector(
+					onTap: () {
+						String tempTimeStr = timeTitle;
+						DateTime now = DateTime.now();
+						if (this.timeTitle == '昨天') {
+							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 00:00:00').millisecondsSinceEpoch;
+							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 23:59:59').millisecondsSinceEpoch;
+						} else if (this.timeTitle == '近七天') {
+							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 6)} 00:00:00').millisecondsSinceEpoch;
+							this.endTime = now.millisecondsSinceEpoch;
+						} else if (this.timeTitle == '本月') {
+							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch;
+							this.endTime = now.millisecondsSinceEpoch;
+						} else if (this.timeTitle == '上月') {
+							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month - 1)}-01 00:00:00').millisecondsSinceEpoch;
+							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch - 1000;
+						} else {
+							Store store = StoreProvider.of<ZFAppState>(context);
+							if (this.startTimeStr == '开始时间' || this.endTimeStr == '结束时间') {
+								ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '请选择时间');
+								return;
 							}
-							Navigator.pop(context, {'timeStr': tempTimeStr, 'startTime': this.startTime, 'endTime': this.endTime});
-						},
-						child: Container(
-							height: 44,
-							alignment: Alignment.center,
-							padding: EdgeInsets.only(right: 15, left: 5),
-							child: Text('完成', style: TextStyle(
-								fontSize: 16,
-								color: Color(0xbf0a1314)
-							))
-						)
-					)
-				]
+							
+							// 开始时间
+							DateTime tempStartT = DateTime.parse('${this.startTimeStr} 00:00:00');
+							this.startTime = tempStartT.millisecondsSinceEpoch;
+							
+							// 结束时间
+							DateTime tempEndT = DateTime.parse('${this.endTimeStr}');
+							if (tempEndT.year == now.year &&
+								tempEndT.month == now.month &&
+								tempEndT.day == now.day) {
+								this.endTime = now.millisecondsSinceEpoch;
+							} else {
+								DateTime tempEndT = DateTime.parse('${this.endTimeStr} 23:59:59');
+								this.endTime = tempEndT.millisecondsSinceEpoch;
+							}
+							
+							if (this.startTime > this.endTime) {
+								ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '结束时间不能比开始时间早');
+								return;
+							}
+							
+							if (this.startTime > now.millisecondsSinceEpoch || this.endTime > now.millisecondsSinceEpoch) {
+								ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '最早能查看当天数据，请重新选择');
+								return;
+							}
+							
+							tempTimeStr = '${tempStartT.year}年${_addZero(tempStartT.month)}月${_addZero(tempStartT.day)}日-${tempEndT.year}年${_addZero(tempEndT.month)}月${_addZero(tempEndT.day)}日';
+						}
+						Navigator.pop(context, {'timeStr': tempTimeStr, 'startTime': this.startTime, 'endTime': this.endTime});
+					},
+					child: Text('完成', style: TextStyle(
+						fontSize: 16,
+						color: Color(0xbf0a1314)
+					))
+				)
 			),
 			body: Column(
 				children: <Widget>[

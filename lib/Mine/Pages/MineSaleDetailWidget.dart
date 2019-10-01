@@ -124,7 +124,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 									),
 									Padding(padding: EdgeInsets.only(bottom: 4)),
 									Text(
-										_manageMoney(widget.model?.saleMoney, showLine: widget.model?.crossMonth),
+										_manageMoney(widget.model?.saleMoney),
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
@@ -179,7 +179,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 										]
 									),
 									Text(
-										_manageMoney(widget.model?.targetMoney),
+										_manageMoney(widget.model?.targetMoney, showLine: widget.model?.crossMonth),
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
