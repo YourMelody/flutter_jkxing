@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugLibraryPage.dart';
 import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
-import 'package:flutter_jkxing/Order/Pages/OrderListPage.dart';
+import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
 import 'Common/ZFAppBar.dart';
 
 class ZFBaseTabBar extends StatefulWidget {
@@ -27,7 +27,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 			)))
 			..add(DrugLibraryPage())
 			..add(InvitationPage())
-			..add(OrderListPage())
+			..add(OrderContentPage())
 			..add(MinePage());
 	}
 	
