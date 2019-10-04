@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 
@@ -13,7 +13,6 @@ class MineRequest {
 			showToast: showToast,
 			context: context
 		).then((data) {
-			print(data);
 			try {
 				return MineDetailModel.fromJson(data);
 			} catch(e) {
@@ -30,7 +29,6 @@ class MineRequest {
 			showToast: showToast,
 			context: context
 		).then((data) {
-			print(data);
 			return data;
 		});
 	}

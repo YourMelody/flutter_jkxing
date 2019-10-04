@@ -70,6 +70,7 @@ flutter:
     - lib/Images/btn_date_select.png
     - lib/Images/login_token_failed.png
     - lib/Images/login_token_loading.png
+    - lib/Images/order_detail_line.png
 
 
 

@@ -42,9 +42,11 @@ class _MinePageState extends State<MinePage> {
 	// 获取业绩、提成等信息
 	_getSaleDetail(bool showToast) {
 		MineRequest.getAgentSalesDetail(this.startTime, this.endTime, context, showToast: showToast).then((response) {
-			setState(() {
-				this.detailModel = response;
-			});
+			if (response != null) {
+				setState(() {
+					this.detailModel = response;
+				});
+			}
 		});
 	}
 	

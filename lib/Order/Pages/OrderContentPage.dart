@@ -50,7 +50,7 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 			body: TabBarView(
 				controller: _tabController,
 				children: [
-					OrderListPage(0),
+					OrderListPage(null),
 					OrderListPage(1),
 					OrderListPage(2),
 					OrderListPage(3)
