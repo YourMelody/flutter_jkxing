@@ -1,16 +1,11 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
-import 'package:flutter_jkxing/Redux/ZFAction.dart';
-import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
-import 'package:redux/redux.dart';
 
 class HttpUtil {
 	static HttpUtil instance;

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/Order/Model/OrderDrugModel.dart';
 import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
+import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 
 class OrderDetailPage extends StatefulWidget {
@@ -17,6 +20,27 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetailPage> {
+	DrugConfigModel drugConfigModel;
+	@override
+	void initState() {
+		super.initState();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
+	}
+	
+	void _initData() {
+		if (PPSession.getInstance().userModel.agentType == 1) {
+			DrugConfigRequest.drugConfigReq().then((response) {
+				if (response != null) {
+					setState(() {
+						this.drugConfigModel = response;
+					});
+				}
+			});
+		}
+	}
+	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
