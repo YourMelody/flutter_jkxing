@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_jkxing/Common/DrugConfiguration.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
@@ -20,7 +21,7 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetailPage> {
-	DrugConfigModel drugConfigModel;
+	DrugConfigModel configModel;
 	@override
 	void initState() {
 		super.initState();
@@ -33,8 +34,9 @@ class _OrderDetailState extends State<OrderDetailPage> {
 		if (PPSession.getInstance().userModel.agentType == 1) {
 			DrugConfigRequest.drugConfigReq().then((response) {
 				if (response != null) {
+					DrugConfiguration.getInstance(response);
 					setState(() {
-						this.drugConfigModel = response;
+						this.configModel = response;
 					});
 				}
 			});
@@ -63,6 +65,27 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	
 	// 药品
 	Widget _createDrugItem(OrderDrugModel drugModel) {
+		// 热度标签
+		String hotImgStr;
+		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
+			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
+				double ratio = 0.0;
+				if (drugModel.salePrice > 0) {
+					ratio = drugModel.doctorPriceCommission / drugModel.salePrice;
+				}
+				
+				if (this.configModel.rateArr.last <= ratio) {
+					for(int i = 0; i < this.configModel.rateArr.length; i++) {
+						int tmpRate = this.configModel.rateArr[i];
+						if (tmpRate < ratio) {
+							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		return Container(
 			height: 48,
 			padding: EdgeInsets.symmetric(horizontal: 15),
@@ -70,6 +93,17 @@ class _OrderDetailState extends State<OrderDetailPage> {
 				children: <Widget>[
 					Expanded(child: Padding(padding: EdgeInsets.zero)),
 					Row(children: <Widget>[
+						// 热度标签
+						Offstage(
+							offstage: hotImgStr == null || hotImgStr?.length == null || hotImgStr.length == 0,
+							child: Container(
+								width: 43,
+								height: 15,
+								padding: EdgeInsets.only(right: 5),
+								child: Image.network(hotImgStr, fit: BoxFit.contain)
+							)
+						),
+						
 						// 药品名字
 						Expanded(child: Text(
 							drugModel?.productName ?? '',
