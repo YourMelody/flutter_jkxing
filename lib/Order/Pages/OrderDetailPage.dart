@@ -11,6 +11,8 @@ import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 
+import 'OrderLogisticsInfoPage.dart';
+
 class OrderDetailPage extends StatefulWidget {
 	final OrderModel model;
 	OrderDetailPage(this.model);
@@ -66,7 +68,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	// 药品
 	Widget _createDrugItem(OrderDrugModel drugModel) {
 		// 热度标签
-		String hotImgStr;
+		String hotImgStr = '';
 		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
 			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
 				double ratio = 0.0;
@@ -95,7 +97,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 					Row(children: <Widget>[
 						// 热度标签
 						Offstage(
-							offstage: hotImgStr == null || hotImgStr?.length == null || hotImgStr.length == 0,
+							offstage: hotImgStr.length == 0,
 							child: Container(
 								width: 43,
 								height: 15,
@@ -273,7 +275,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 							decoration: BoxDecoration(
 								borderRadius: BorderRadius.circular(4),
 								border: Border.all(
-									width: 0.5,
+									width: 1,
 									color: Color(0xff6bcbd7)
 								),
 								color: Color(0x0a6bcbd7)
@@ -318,7 +320,9 @@ class _OrderDetailState extends State<OrderDetailPage> {
 					Padding(padding: EdgeInsets.only(top: 35)),
 					GestureDetector(
 						onTap: () {
-						
+							Navigator.of(context).push(MaterialPageRoute(
+								builder: (context) => OrderLogisticsInfoPage(widget?.model?.orderCode)
+							));
 						},
 						child: Container(
 							width: 125,

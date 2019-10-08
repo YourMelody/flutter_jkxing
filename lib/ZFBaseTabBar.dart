@@ -40,10 +40,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),
 			
-			body: IndexedStack(
-				index: _currentIndex,
-				children: _widgetList
-			),
+			body: _widgetList[this._currentIndex]
 		);
 	}
 	

@@ -79,7 +79,7 @@ class HttpUtil {
 				url,
 				queryParameters: data
 			);
-//			print('-----${response.request.path}-----response-----${response.data}');
+			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
@@ -93,6 +93,7 @@ class HttpUtil {
 					// 请求失败
 					if (showToast && context != null) {
 						String respStr = respMap['msg']['info'];
+						ProgressUtil().dismiss(context);
 						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 					}
 				}
@@ -110,6 +111,7 @@ class HttpUtil {
 				// 请求失败
 				if (showToast && context != null) {
 					String respStr = respMap['msg']['info'];
+					ProgressUtil().dismiss(context);
 					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 				}
 				return null;
@@ -117,6 +119,7 @@ class HttpUtil {
 		} on DioError catch(error){
 			// 网络异常
 			if (showToast && context != null) {
+				ProgressUtil().dismiss(context);
 				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
 			}
 			return null;
@@ -142,7 +145,7 @@ class HttpUtil {
 	}) async {
 		Response<T> response;
 		if (showToast && context != null) {
-			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading);
+			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading, autoDismiss: false);
 		}
 		
 		try{
@@ -151,7 +154,7 @@ class HttpUtil {
 				url,
 				data: data
 			);
-//			print('-----${response.request.path}-----response-----${response.data}');
+			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
@@ -165,6 +168,7 @@ class HttpUtil {
 					// 请求失败
 					if (showToast == true && context != null) {
 						String respStr = respMap['msg']['info'];
+						ProgressUtil().dismiss(context);
 						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 					}
 				}
@@ -182,13 +186,16 @@ class HttpUtil {
 				// 请求失败
 				if (showToast == true && context != null) {
 					String respStr = respMap['msg']['info'];
+					ProgressUtil().dismiss(context);
 					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
 				}
 				return null;
 			}
 		} on DioError catch(error){
+			print('error========$error');
 			// 网络异常
 			if (showToast == true && context != null) {
+				ProgressUtil().dismiss(context);
 				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
 			}
 			return null;
