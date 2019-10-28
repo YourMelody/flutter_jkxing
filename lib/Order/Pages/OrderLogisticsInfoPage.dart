@@ -1,12 +1,13 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:flutter_jkxing/Order/Model/LogisticsInfoModel.dart';
 import 'package:flutter_jkxing/Order/Network/OrderRequest.dart';
+import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 
 class OrderLogisticsInfoPage extends StatefulWidget {
 	final String orderCode;
@@ -124,11 +125,7 @@ class ItemHeader extends StatelessWidget {
 									GestureDetector(
 										onTap: (){
 											Clipboard.setData(ClipboardData(text: numberCode));
-											if (Platform.isAndroid){
-//												Toast.show("物流单号复制成功");
-											} else {
-//												Toast.sucessShow("物流单号复制成功");
-											}
+											ProgressUtil().showWithType(context, ProgressType.ProgressType_Success, title: '复制成功');
 										},
 										child: Container(
 											width: 40,

@@ -1,7 +1,7 @@
 
 class ZFBaseUrl {
 	// 0--开发    1--测试    2--线上
-	static int JK_APP_DEBUG_SETTING = 0;
+	static int JK_APP_DEBUG_SETTING = 1;
 	
 	BjUrl() {
 		switch(JK_APP_DEBUG_SETTING) {

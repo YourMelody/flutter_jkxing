@@ -204,7 +204,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 										Padding(padding: EdgeInsets.only(bottom: 4)),
 										Text(
 											(widget.model?.grossProfitMargin == null || widget.model?.grossProfitMargin?.length == 0) ? '0.00%' :
-											widget.model.grossProfitMargin.length,
+											widget.model.grossProfitMargin,
 											style: TextStyle(
 												fontSize: 16,
 												color: Color(0xff3b4243)
