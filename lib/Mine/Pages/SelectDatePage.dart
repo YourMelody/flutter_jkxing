@@ -62,16 +62,21 @@ class _SelectDateState extends State<SelectDatePage> {
 						String tempTimeStr = timeTitle;
 						DateTime now = DateTime.now();
 						if (this.timeTitle == '昨天') {
-							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 00:00:00').millisecondsSinceEpoch;
-							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 1)} 23:59:59').millisecondsSinceEpoch;
+							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day)} 00:00:00').millisecondsSinceEpoch - 1000;
+							this.startTime = this.endTime - (24 * 60 * 60 - 1) * 1000;
 						} else if (this.timeTitle == '近七天') {
-							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day - 6)} 00:00:00').millisecondsSinceEpoch;
 							this.endTime = now.millisecondsSinceEpoch;
+							int tempTime = DateTime.parse('${now.year}-${_addZero(now.month)}-${_addZero(now.day)} 00:00:00').millisecondsSinceEpoch;
+							this.startTime = tempTime - 24 * 60 * 60 * 1000 * 6;
 						} else if (this.timeTitle == '本月') {
 							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch;
 							this.endTime = now.millisecondsSinceEpoch;
 						} else if (this.timeTitle == '上月') {
-							this.startTime = DateTime.parse('${now.year}-${_addZero(now.month - 1)}-01 00:00:00').millisecondsSinceEpoch;
+							if (now.month == 1) {
+								this.startTime = DateTime.parse('${now.year - 1}-12-01 00:00:00').millisecondsSinceEpoch;
+							} else {
+								this.startTime = DateTime.parse('${now.year}-${_addZero(now.month - 1)}-01 00:00:00').millisecondsSinceEpoch;
+							}
 							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch - 1000;
 						} else {
 							Store store = StoreProvider.of<ZFAppState>(context);
@@ -117,7 +122,7 @@ class _SelectDateState extends State<SelectDatePage> {
 			),
 			body: Column(
 				children: <Widget>[
-					_createCommonItem('昨日'),
+					_createCommonItem('昨天'),
 					_createCommonItem('近七天'),
 					_createCommonItem('本月'),
 					_createCommonItem('上月'),
