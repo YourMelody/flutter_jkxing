@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
 import 'DrugListPage.dart';
@@ -8,7 +9,7 @@ class DrugLibraryPage extends StatefulWidget {
 	_DrugLibraryPageState createState() => _DrugLibraryPageState();
 }
 
-class _DrugLibraryPageState extends State<DrugLibraryPage> {
+class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAliveClientMixin {
 	List<DrugClassModel> dataSource;
 	int _curIndex = 0;
 	
@@ -22,30 +23,36 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> {
 	
 	@override
 	Widget build(BuildContext context) {
-		return Column(
-			children: <Widget>[
-				_searchView(),
-				
-				Expanded(
-					child: Container(
-						child: Row(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: <Widget>[
-								Container(
-									width: 120,
-									child: _leftList(),
-								),
-								
-								Expanded(child: Container(
-									color: Color(0xfff4f6f9),
-									padding: EdgeInsets.only(left: 8),
-									child: _rightList(),
-								))
-							],
-						),
-					)
+		super.build(context);
+		return Scaffold(
+			appBar: ZFAppBar('药品库', showBackBtn: false),
+			body: Container(
+				child: Column(
+					children: <Widget>[
+						_searchView(),
+						
+						Expanded(
+							child: Container(
+								child: Row(
+									crossAxisAlignment: CrossAxisAlignment.start,
+									children: <Widget>[
+										Container(
+											width: 120,
+											child: _leftList()
+										),
+										
+										Expanded(child: Container(
+											color: Color(0xfff4f6f9),
+											padding: EdgeInsets.only(left: 8),
+											child: _rightList()
+										))
+									]
+								)
+							)
+						)
+					]
 				)
-			],
+			)
 		);
 	}
 	
@@ -53,7 +60,6 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> {
 	void _initData() {
 		DrugLibRequest.getDrugClassList('2').then((response) {
 			if (response != null) {
-				// 显示网络异常缺省页
 				setState(() {
 					dataSource = response;
 				});
@@ -237,4 +243,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> {
 	_gotoProductList(DrugClassModel model) {
 		Navigator.of(context).push(MaterialPageRoute(builder: (_) => DrugListPage(model)));
 	}
+
+	@override
+	bool get wantKeepAlive => true;
 }

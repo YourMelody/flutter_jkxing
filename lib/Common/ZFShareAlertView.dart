@@ -37,80 +37,71 @@ class ZFShareAlertView extends StatelessWidget {
 							Padding(padding: EdgeInsets.only(right: 30)),
 							
 							// 朋友圈分享
-							StoreConnector<ZFAppState, VoidCallback>(
-								converter: (Store<ZFAppState> store) {
-									return () => store.dispatch(AppActions.DismissShareView);
-								},
-								builder: (BuildContext context, VoidCallback callback) {
-									return GestureDetector(
-										onTap: () => callback(),
-										child: Column(children: <Widget>[
-											Image.asset('lib/Images/share_btn_moments.png', width: 45, height: 45, fit: BoxFit.contain),
-											Padding(padding: EdgeInsets.only(top: 10)),
-											Text(
-												'朋友圈',
-												style: TextStyle(
-													fontWeight: FontWeight.normal,
-													fontSize: 15,
-													color: Color(0xff999999),
-													decoration: TextDecoration.none
-												)
-											)
-										])
-									);
-								}
+							GestureDetector(
+								onTap: () {
+									if (Navigator.of(context).canPop()) {
+										Navigator.of(context).pop();
+									}
+ 								},
+								child: Column(children: <Widget>[
+									Image.asset('lib/Images/share_btn_moments.png', width: 45, height: 45, fit: BoxFit.contain),
+									Padding(padding: EdgeInsets.only(top: 10)),
+									Text(
+										'朋友圈',
+										style: TextStyle(
+											fontWeight: FontWeight.normal,
+											fontSize: 15,
+											color: Color(0xff999999),
+											decoration: TextDecoration.none
+										)
+									)
+								])
 							),
 							
 							// 微信好友分享
-							Expanded(child: StoreConnector<ZFAppState, VoidCallback>(
-								converter: (Store<ZFAppState> store) {
-									return () => store.dispatch(AppActions.DismissShareView);
+							Expanded(child: GestureDetector(
+								onTap: () {
+									if (Navigator.of(context).canPop()) {
+										Navigator.of(context).pop();
+									}
 								},
-								builder: (BuildContext context, VoidCallback callback) {
-									return GestureDetector(
-										onTap: () => callback(),
-										child: Column(children: <Widget>[
-											Image.asset('lib/Images/share_btn_wechat.png', width: 45, height: 45, fit: BoxFit.contain),
-											Padding(padding: EdgeInsets.only(top: 10)),
-											Text(
-												'微信好友',
-												style: TextStyle(
-													fontWeight: FontWeight.normal,
-													fontSize: 15,
-													color: Color(0xff999999),
-													decoration: TextDecoration.none
-												)
-											)
-										])
-									);
-								}
+								child: Column(children: <Widget>[
+									Image.asset('lib/Images/share_btn_wechat.png', width: 45, height: 45, fit: BoxFit.contain),
+									Padding(padding: EdgeInsets.only(top: 10)),
+									Text(
+										'微信好友',
+										style: TextStyle(
+											fontWeight: FontWeight.normal,
+											fontSize: 15,
+											color: Color(0xff999999),
+											decoration: TextDecoration.none
+										)
+									)
+								])
 							)),
 							Padding(padding: EdgeInsets.only(right: 76))
 						]),
 						Padding(padding: EdgeInsets.only(top: 40)),
 						
 						// 取消
-						StoreConnector<ZFAppState, VoidCallback>(
-							converter: (Store<ZFAppState> store) {
-								return () => store.dispatch(AppActions.DismissShareView);
+						GestureDetector(
+							onTap: () {
+								if (Navigator.of(context).canPop()) {
+									Navigator.of(context).pop();
+								}
 							},
-							builder: (BuildContext context, VoidCallback callback) {
-								return GestureDetector(
-									onTap: () => callback(),
-									child: Container(
-										alignment: Alignment.center,
-										color: Colors.white,
-										child: Text('取消', style: TextStyle(
-											fontSize: 15,
-											color: Color(0xff999999),
-											fontWeight: FontWeight.normal,
-											decoration: TextDecoration.none
-										)),
-										height: 45,
-										width: double.maxFinite
-									)
-								);
-							}
+							child: Container(
+								alignment: Alignment.center,
+								color: Colors.white,
+								child: Text('取消', style: TextStyle(
+									fontSize: 15,
+									color: Color(0xff999999),
+									fontWeight: FontWeight.normal,
+									decoration: TextDecoration.none
+								)),
+								height: 45,
+								width: double.maxFinite
+							)
 						)
 					])
 				)

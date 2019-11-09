@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
@@ -61,12 +61,15 @@ class _MinePageState extends State<MinePage> {
 	
 	@override
 	Widget build(BuildContext context) {
-		return Container(
-			child: ListView.builder(
-				itemCount: 8,
-				itemBuilder: (context, index) => _createItem(index)
-			),
-			color: Color(0xfff4f6f9)
+		return Scaffold(
+			appBar: ZFAppBar('我的', showBackBtn: false),
+			body: Container(
+				child: ListView.builder(
+					itemCount: 8,
+					itemBuilder: (context, index) => _createItem(index)
+				),
+				color: Color(0xfff4f6f9)
+			)
 		);
 	}
 	

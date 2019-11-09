@@ -8,12 +8,6 @@ ZFAppState mainReducer(ZFAppState state, dynamic action) {
 	} else if (action == AppActions.LogoutSuccess) {
 		// 退出登陆
 		state.loginState.isLogin = false;
-	} else if (action == AppActions.ShowShareView) {
-		// 分享
-		state.shareState.showShare = true;
-	} else if (action == AppActions.DismissShareView) {
-		// 收起分享
-		state.shareState.showShare = false;
 	} else if (action == HttpAlertType.HttpAlertType_None) {
 		// 请求无提示
 		state.httpActionState.httpAlertType = HttpAlertType.HttpAlertType_None;

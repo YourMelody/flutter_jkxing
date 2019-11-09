@@ -8,7 +8,6 @@ import 'package:flutter_jkxing/Redux/ZFMainReducer.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Pages/SettingPage.dart';
 import 'Common/UserModel.dart';
-import 'Common/ZFShareAlertView.dart';
 import 'Login/LoginRequest.dart';
 import 'Mine/Pages/ResetPwdPage.dart';
 
@@ -48,23 +47,7 @@ class MyApp extends StatelessWidget {
 					},
 					builder: (BuildContext context, ZFAppState appState) {
 						if (appState.loginState.isLogin) {
-							return Stack(
-								children: <Widget>[
-									ZFBaseTabBar(),
-									
-									// 分享弹框
-									Positioned(
-										top: 0,
-										right: 0,
-										bottom: 0,
-										left: 0,
-										child: Offstage(
-											offstage: appState.shareState.showShare != true,
-											child: ZFShareAlertView()
-										)
-									)
-								]
-							);
+							return ZFBaseTabBar();
 						} else {
 							return LoginPageWidget();
 						}

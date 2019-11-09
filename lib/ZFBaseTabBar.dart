@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_jkxing/Home/Pages/HomePage.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugLibraryPage.dart';
 import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
-import 'Common/ZFAppBar.dart';
 
 class ZFBaseTabBar extends StatefulWidget {
 	@override
@@ -12,19 +12,17 @@ class ZFBaseTabBar extends StatefulWidget {
 }
 
 class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
-	List <String> _appBarTitles;
 	int _currentIndex = 0;
 	List <Widget> _widgetList = List();
+	PageController _controller;
 	
 	@override
 	void initState() {
 		super.initState();
-		_appBarTitles = ['首页', '药品库', '我的邀请', '', '我的'];
+		_controller = PageController(initialPage: 0);
 		
 		_widgetList
-			..add(Container(child: Center(
-				child: Text('首页')
-			)))
+			..add(HomePage())
 			..add(DrugLibraryPage())
 			..add(InvitationPage())
 			..add(OrderContentPage())
@@ -34,22 +32,26 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			// 顶部导航栏
-			appBar: _currentIndex == 3 ? null : ZFAppBar(_appBarTitles[_currentIndex], showBackBtn: false),
-			
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),
 			
-			body: _widgetList[this._currentIndex]
+			body: PageView.builder(
+				itemBuilder: (context, index) {
+					return _widgetList[index];
+				},
+				controller: _controller,
+				physics: NeverScrollableScrollPhysics(),
+				itemCount: _widgetList.length
+			)
 		);
 	}
 	
-	// Cupertino风格的CupertinoTabBar
 	Widget _getCupertinoTabBar() {
 		return CupertinoTabBar(
 			items: _getTabBarItem(),
 			currentIndex: _currentIndex,
 			onTap: (int index) {
+				_controller.jumpToPage(index);
 				setState(() {
 					_currentIndex = index;
 				});
@@ -62,6 +64,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 		);
 	}
 	
+	// 底部5个tab
 	List<BottomNavigationBarItem> _getTabBarItem() {
 		List icons = [
 			{'icon': 'lib/Images/tab_home.png', 'selIcon': 'lib/Images/tab_home_sel.png', 'title': '首页'},

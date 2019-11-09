@@ -1,41 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Common/ZFShareAlertView.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 
-class InvitationPage extends StatefulWidget {
-	@override
-	State<StatefulWidget> createState() {
-		return _InvitationPageState();
-	}
-}
-
-class _InvitationPageState extends State<InvitationPage> {
+class InvitationPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
-		return Container(
-			decoration: BoxDecoration(
-				// 设置渐变色
-				gradient: LinearGradient(
-					begin: Alignment.topCenter,
-					end: Alignment.bottomCenter,
-					colors: [Color(0xff33beff), Color(0x1133beff)],
-					stops: [0.6, 1.0]
-				)
-			),
-			child: Stack(
-				alignment: Alignment.center,
-				children: <Widget>[
-					_getMainContainer(),
-					_getShareBtn()
-				],
-			),
+		return Scaffold(
+			appBar: ZFAppBar('我的邀请', showBackBtn: false),
+			body: Container(
+				decoration: BoxDecoration(
+					// 设置渐变色
+					gradient: LinearGradient(
+						begin: Alignment.topCenter,
+						end: Alignment.bottomCenter,
+						colors: [Color(0xff33beff), Color(0x1133beff)],
+						stops: [0.6, 1.0]
+					)
+				),
+				child: Stack(
+					alignment: Alignment.center,
+					children: <Widget>[
+						_getMainContainer(context),
+						_getShareBtn(context)
+					],
+				),
+			)
 		);
 	}
 	
-	Widget _getMainContainer() {
+	Widget _getMainContainer(BuildContext context) {
 		return Positioned(
 			top: 15,
 			left: 20,
@@ -113,47 +111,59 @@ class _InvitationPageState extends State<InvitationPage> {
 	}
 	
 	// 分享到微信
-	Widget _getShareBtn() {
+	Widget _getShareBtn(BuildContext context) {
 		return Positioned(
 			bottom: 11,
-			child: StoreConnector<ZFAppState, VoidCallback>(
-				converter: (Store<ZFAppState> store) {
-					return () => store.dispatch(AppActions.ShowShareView);
-				},
-				builder: (BuildContext context, VoidCallback callback) {
-					return GestureDetector(
-						onTap: () {
-							callback();
-						},
-						child: Container(
-							width: 210,
-							height: 49,
-							alignment: Alignment.center,
-							decoration: BoxDecoration(
-								color: Color(0xff5aa5ff),
-								borderRadius: BorderRadius.circular(5)
+			child: GestureDetector(
+				onTap: () => _getSharePage(context),
+				child: Container(
+					width: 210,
+					height: 49,
+					alignment: Alignment.center,
+					decoration: BoxDecoration(
+						color: Color(0xff5aa5ff),
+						borderRadius: BorderRadius.circular(5)
+					),
+					child: Row(
+						mainAxisAlignment: MainAxisAlignment.center,
+						children: <Widget>[
+							Image.asset(
+								'lib/Images/icon_invite_wechat.png',
+								width: 30,
+								height: 24,
 							),
-							child: Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: <Widget>[
-									Image.asset(
-										'lib/Images/icon_invite_wechat.png',
-										width: 30,
-										height: 24,
-									),
-									Text(
-										'分享到微信',
-										style: TextStyle(
-											fontSize: 18,
-											color: Colors.white
-										)
-									)
-								]
+							Text(
+								'分享到微信',
+								style: TextStyle(
+									fontSize: 18,
+									color: Colors.white
+								)
 							)
-						)
-					);
-				}
+						]
+					)
+				)
 			)
+		);
+	}
+	
+	void _getSharePage(BuildContext context) {
+		showGeneralDialog(
+			context: context,
+			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+				return ZFShareAlertView();
+			},
+			barrierDismissible: true,
+			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+			transitionDuration: const Duration(milliseconds: 150),
+			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+				return FadeTransition(
+					opacity: CurvedAnimation(
+						parent: animation,
+						curve: Curves.easeOut
+					),
+					child: child
+				);
+			}
 		);
 	}
 }
