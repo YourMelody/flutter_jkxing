@@ -195,6 +195,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_easyrefresh:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "97481405686ff6d1ba294669cdc74626b043ed7d"
+      url: "git://github.com/xuelongqy/flutter_easyrefresh.git"
+    source: git
+    version: "2.0.4"
   flutter_picker:
     dependency: "direct main"
     description:
@@ -210,7 +219,7 @@ packages:
       name: flutter_redux
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.5.3"
+    version: "0.5.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -507,14 +516,7 @@ packages:
       name: url_launcher
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.2.5"
-  url_launcher_platform_interface:
-    dependency: transitive
-    description:
-      name: url_launcher_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.1"
+    version: "5.2.1"
   vector_math:
     dependency: transitive
     description:
@@ -545,4 +547,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.3.0 <3.0.0"
-  flutter: ">=1.9.1+hotfix.4 <2.0.0"
+  flutter: ">=1.6.7 <2.0.0"

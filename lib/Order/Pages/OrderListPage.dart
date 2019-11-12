@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 import 'package:flutter_jkxing/Order/Network/OrderRequest.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderDetailPage.dart';
+import 'package:flutter_jkxing/Common/RefreshListView.dart';
+
 
 class OrderListPage extends StatefulWidget {
 	final int status;
@@ -20,40 +22,47 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 	void initState() {
 		super.initState();
 		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData(true);
+			_initData(false);
 		});
 	}
 	
-	@override
-	bool get wantKeepAlive => true;
-	
-	_initData(bool showToast) {
-		OrderRequest.getOrderList(this.currentPage, context, status: widget.status, showToast: showToast).then((response) {
-			if (response != null) {
-				if (this.currentPage == 1) {
-					setState(() {
-						this.dataSource = response;
-					});
-				} else {
-					setState(() {
-						this.dataSource.addAll(response);
-					});
-				}
-				this.currentPage++;
+	// 请求数据
+	Future<void> _initData(bool showToast) async {
+		var response = await OrderRequest.getOrderList(this.currentPage, context, status: widget.status, showToast: showToast);
+		if (response != null) {
+			if (this.currentPage == 1) {
+				setState(() {
+					this.dataSource = response;
+				});
+			} else {
+				setState(() {
+					this.dataSource.addAll(response);
+				});
 			}
-		});
+			this.currentPage++;
+		}
 	}
 	
 	@override
 	Widget build(BuildContext context) {
 		super.build(context);
-		return ListView.separated(
-			itemBuilder: (context, index) => _createItem(dataSource[index]),
-			itemCount: dataSource == null ? 0 : dataSource.length,
-			padding: EdgeInsets.fromLTRB(12, 15, 12, 15),
-			separatorBuilder: (context, index) {
-				return Container(height: 15, color: Color(0xfff4f6f9));
+		return RefreshListView(
+			child: ListView.separated(
+				itemBuilder: (context, index) => _createItem(dataSource[index]),
+				itemCount: dataSource == null ? 0 : dataSource.length,
+				padding: EdgeInsets.fromLTRB(12, 15, 12, 15),
+				separatorBuilder: (context, index) {
+					return Container(height: 15, color: Color(0xfff4f6f9));
+				},
+			),
+			onRefresh: () {
+				this.currentPage = 1;
+				return _initData(false);
 			},
+			onLoad: () {
+				return _initData(false);
+			},
+			firstRefresh: this.dataSource == null || this?.dataSource?.length == 0
 		);
 	}
 	
@@ -78,7 +87,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 						// 医生姓名  状态
 						Row(children: <Widget>[
 							Expanded(child: Text(
-								model.doctorName,
+								model?.doctorName ?? '',
 								style: TextStyle(
 									fontSize: 16,
 									color: Color(0xff0a1314),
@@ -104,7 +113,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 						
 						// 医院名字
 						Text(
-							model.hospitalName,
+							model?.hospitalName ?? '',
 							style: TextStyle(
 								fontSize: 14,
 								color: Color(0xff0a1314)
@@ -163,6 +172,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		);
 	}
 	
+	// 时间戳转时间，格式 yyyy-MM-dd hh:mm:ss
 	String _getTime(int time) {
 		if (time == null || time == 0) {
 			return '';
@@ -171,6 +181,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		return '${dateTime.year}-${_addZero(dateTime.month)}-${_addZero(dateTime.day)} ${_addZero(dateTime.hour)}:${_addZero(dateTime.minute)}';
 	}
 	
+	// 时间补0
 	String _addZero(int value) {
 		if (value < 10) {
 			return '0' + value.toString();
@@ -178,10 +189,15 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		return value.toString();
 	}
 	
+	// 价钱转换
 	String _getMoney(int value) {
 		if (value == null) {
 			return '';
 		}
 		return '¥' + (value / 100).toStringAsFixed(2);
 	}
+	
+	
+	@override
+	bool get wantKeepAlive => true;
 }

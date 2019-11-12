@@ -8,6 +8,7 @@ import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:flutter_jkxing/Order/Model/LogisticsInfoModel.dart';
 import 'package:flutter_jkxing/Order/Network/OrderRequest.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
+import 'package:flutter_jkxing/Common/RefreshListView.dart';
 
 class OrderLogisticsInfoPage extends StatefulWidget {
 	final String orderCode;
@@ -50,17 +51,19 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 		return Scaffold(
 			appBar: ZFAppBar('订单追踪', context: context),
 			backgroundColor: Colors.white,
-			body: ListView.builder(
-				itemBuilder: (context, index) {
-					if (index == 0) {
-						// 列表头部
-						return ItemHeader(widget.orderCode, this.companeName, this.logisticsCode);
-					} else {
-						return InformationItem(index, this.dataSource[index], this.dataSource.length-1);
-					}
-				},
-				itemCount: this.dataSource.length,
-				padding: EdgeInsets.only(bottom: 15)
+			body: RefreshListView(
+				child: ListView.builder(
+					itemBuilder: (context, index) {
+						if (index == 0) {
+							// 列表头部
+							return ItemHeader(widget.orderCode, this.companeName, this.logisticsCode);
+						} else {
+							return InformationItem(index, this.dataSource[index], this.dataSource.length-1);
+						}
+					},
+					itemCount: this.dataSource.length,
+					padding: EdgeInsets.only(bottom: 15)
+				)
 			)
 		);
 	}

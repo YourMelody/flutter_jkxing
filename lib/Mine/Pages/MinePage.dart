@@ -5,7 +5,6 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
-
 import 'SelectDatePage.dart';
 
 class MinePage extends StatefulWidget {
@@ -15,7 +14,7 @@ class MinePage extends StatefulWidget {
 	}
 }
 
-class _MinePageState extends State<MinePage> {
+class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin {
 	int startTime;
 	int endTime;
 	String timeStr = '本月';
@@ -53,14 +52,17 @@ class _MinePageState extends State<MinePage> {
 	// 获取医生数量信息
 	_getDoctorNum(bool showToast) {
 		MineRequest.getDoctorNumber(this.startTime, this.endTime, context: context, showToast: showToast).then((response) {
-			setState(() {
-				this.doctorNumMap = response;
-			});
+			if (response != null) {
+				setState(() {
+					this.doctorNumMap = response;
+				});
+			}
 		});
 	}
 	
 	@override
 	Widget build(BuildContext context) {
+		super.build(context);
 		return Scaffold(
 			appBar: ZFAppBar('我的', showBackBtn: false),
 			body: Container(
@@ -227,4 +229,7 @@ class _MinePageState extends State<MinePage> {
 			Navigator.pushNamed(context, 'my_setting_page');
 		}
 	}
+
+	@override
+	bool get wantKeepAlive => true;
 }

@@ -3,6 +3,7 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
 import 'DrugListPage.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class DrugLibraryPage extends StatefulWidget {
 	@override
