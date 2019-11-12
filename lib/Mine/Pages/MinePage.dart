@@ -115,7 +115,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 					alignment: Alignment.topLeft,
 					child: Column(children: <Widget>[
 						Text(
-							PPSession.getInstance()?.userModel?.realName == null ? '' : PPSession.getInstance().userModel.realName,
+							PPSession.getInstance()?.userModel?.realName ?? '',
 							style: TextStyle(
 								color: Color(0xff0a1314),
 								fontSize: 18,
@@ -160,7 +160,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 							});
 						},
 						child: Row(children: <Widget>[
-							Text(this.timeStr, style: TextStyle(
+							Text(this?.timeStr ?? '', style: TextStyle(
 								fontSize: 14,
 								color: Color(0xff6c7172)
 							)),

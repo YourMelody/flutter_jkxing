@@ -257,7 +257,7 @@ class _SelectDateState extends State<SelectDatePage> {
 				child: Row(
 					children: <Widget>[
 						Expanded(child: Text(
-							isBeginTime ? this.startTimeStr : this.endTimeStr,
+							isBeginTime == true ? (this?.startTimeStr ?? '') : (this?.endTimeStr ?? ''),
 							style: TextStyle(
 								fontSize: 16,
 								color: isEditable ? Color(0xFF0A1314) : Color(0xffcccccc)

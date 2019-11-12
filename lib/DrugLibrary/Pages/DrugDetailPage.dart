@@ -96,14 +96,14 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						Row(children: <Widget>[
 							Image.asset('lib/Images/rx_flag.png', width: 32, height: 16),
 							Padding(padding: EdgeInsets.only(right: 5)),
-							Text(model.productName,
+							Text(model?.productName ?? '',
 								style: TextStyle(fontSize: 17, color: Color(0xff444444))
 							)
 						]),
 						Padding(padding: EdgeInsets.only(top: 5)),
 						
 						// 规格
-						Text('规格：${model.packing}',
+						Text('规格：${model?.packing ?? ''}',
 							style: TextStyle(fontSize: 13, color: Color(0xff999999)),
 						),
 						Padding(padding: EdgeInsets.only(top: 5)),
@@ -137,14 +137,14 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						
 						// 价格
 						Text(
-							'¥${(model.ourPrice/100.0).toStringAsFixed(2)}',
+							'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
 							style: TextStyle(fontSize: 20, color: Color(0xffe56767), fontWeight: FontWeight.w600),
 						),
 						Padding(padding: EdgeInsets.only(top: 10)),
 						
 						// 描述
 						Text(
-							introduction,
+							introduction ?? '',
 							maxLines: 10,
 							style: TextStyle(fontSize: 13, color: Color(0xff444444))
 						)

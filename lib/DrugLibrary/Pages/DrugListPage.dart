@@ -131,10 +131,10 @@ class _DrugListState extends State<DrugListPage> {
 						Expanded(child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
-								Text(model.productName, style: TextStyle(color: Color(0xff1a191a))),
-								Text(model.manufacturer, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12,color: Color(0xff999999))),
-								Text(model.packing, style: TextStyle(fontSize: 12,color: Color(0xff999999))),
-								Text('¥${(model.ourPrice/100.0).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Color(0xffe56767), fontWeight: FontWeight.bold))
+								Text(model?.productName ?? '', style: TextStyle(color: Color(0xff1a191a))),
+								Text(model?.manufacturer ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12,color: Color(0xff999999))),
+								Text(model?.packing ?? '', style: TextStyle(fontSize: 12,color: Color(0xff999999))),
+								Text('¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Color(0xffe56767), fontWeight: FontWeight.bold))
 							],
 						))
 					],

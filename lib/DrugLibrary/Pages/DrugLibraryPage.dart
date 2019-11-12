@@ -125,7 +125,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 				padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
 				color: index == _curIndex ? Color(0xfff4f6f9) : Colors.white,
 				child: Text(
-					model.categoryName,
+					model?.categoryName ?? '',
 					style: TextStyle(
 						color: index == _curIndex ? Color(0xff6bcbd6) : Color(0xff0a1314),
 						fontSize: 14
@@ -196,7 +196,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 						child: Row(
 							children: <Widget>[
 								Expanded(child: Text(
-									model.categoryName,
+									model?.categoryName ?? '',
 									style: TextStyle(fontSize: 14, color: Colors.black54)
 								)),
 								Icon(Icons.navigate_next, size: 18)
@@ -227,7 +227,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 									width: (MediaQuery.of(context).size.width - 178) * 0.5,
 									alignment: Alignment.center,
 									child: Text(
-										e.categoryName,
+										e?.categoryName ?? '',
 										textAlign: TextAlign.center
 									),
 								),

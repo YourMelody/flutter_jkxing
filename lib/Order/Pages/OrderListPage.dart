@@ -100,7 +100,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 								width: 65,
 								alignment: Alignment.centerRight,
 								child: Text(
-									model.prescriptionStatusShow,
+									model?.prescriptionStatusShow ?? '',
 									style: TextStyle(
 										fontSize: 16,
 										color: Color(0xffff8d41),

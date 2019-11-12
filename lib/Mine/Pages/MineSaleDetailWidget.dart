@@ -102,7 +102,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 					
 					// 个人提成
 					Text(
-						_manageMoney(widget.model?.bonusMoney),
+						_manageMoney(widget?.model?.bonusMoney),
 						style: TextStyle(
 							fontSize: 30,
 							fontWeight: FontWeight.w500,

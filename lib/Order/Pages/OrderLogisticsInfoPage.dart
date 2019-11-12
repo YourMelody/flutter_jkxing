@@ -102,7 +102,7 @@ class ItemHeader extends StatelessWidget {
 									style: TextStyle(color: Color(0xFF999999), fontSize: 14)
 								),
 								Text(
-									this.orderCode,
+									this?.orderCode ?? '',
 									style: TextStyle(color: Color(0xFF0A1314), fontSize: 14)
 								)
 							]
@@ -120,7 +120,7 @@ class ItemHeader extends StatelessWidget {
 										style: TextStyle(color: Color(0xFF999999), fontSize: 14),
 									),
 									Text(
-										numberCode,
+										numberCode ?? '',
 										style: TextStyle(color: Color(0xFF0A1314), fontSize: 14),
 										maxLines: 1,
 										overflow: TextOverflow.ellipsis,
@@ -162,7 +162,7 @@ class ItemHeader extends StatelessWidget {
 										style: TextStyle(color: Color(0xFF999999), fontSize: 14)
 									),
 									Text(
-										name,
+										name ?? '',
 										style: TextStyle(color: Color(0xFF0A1314), fontSize: 14)
 									)
 								]
@@ -254,7 +254,7 @@ class _InformationItemState extends State<InformationItem> {
 									Offstage(
 										offstage: time == null,
 										child: Text(
-											_getTime(widget.infoModel.time),
+											_getTime(widget?.infoModel?.time),
 											style: TextStyle(fontSize: 14, color: Color(0x660A1314)),
 											maxLines: 1
 										)
@@ -275,11 +275,15 @@ class _InformationItemState extends State<InformationItem> {
 	
 	// 时间戳转时间
 	_getTime(timestamp) {
-		try {
-			var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-			return "${dateTime.year}-${_addZero(dateTime.month)}-${_addZero(dateTime.day)} ${_addZero(dateTime.hour)}:${_addZero(dateTime.minute)}:${_addZero(dateTime.second)}";
-		} catch (e) {
+		if (timestamp == null) {
 			return '';
+		} else {
+			try {
+				var dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+				return "${dateTime.year}-${_addZero(dateTime.month)}-${_addZero(dateTime.day)} ${_addZero(dateTime.hour)}:${_addZero(dateTime.minute)}:${_addZero(dateTime.second)}";
+			} catch (e) {
+				return '';
+			}
 		}
 	}
 	
