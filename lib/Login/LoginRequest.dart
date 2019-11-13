@@ -14,7 +14,7 @@ class LoginRequest {
 	* verifyCode： 输入的验证码
 	* authCode： 接口返回的验证码
 	* */
-	static Future<dynamic> loginReq(String account, String password, String inputCode, String token, BuildContext context) {
+	static Future<dynamic> loginReq(String account, String password, String inputCode, String token) {
 		var content = new Utf8Encoder().convert(password);
 		var digest = md5.convert(content);
 		Map params = {
@@ -27,9 +27,8 @@ class LoginRequest {
 		return HttpUtil.getInstance().post(
 			'user/api/user/v2/login',
 			data: params,
-			disposeData: false,
-			showToast: true,
-			context: context
+			showToast: ToastType.ToastTypeNone,
+			disposeData: false
 		).then((data) {
 			return data;
 		});
@@ -41,7 +40,6 @@ class LoginRequest {
 	static Future<dynamic> getImgToken(BuildContext context) {
 		return HttpUtil.getInstance().get(
 			'user/api/sms/getToken',
-			showToast: true,
 			context: context
 		).then((data) {
 			return data;
@@ -51,11 +49,12 @@ class LoginRequest {
 	/*
 	* 获取用户信息
 	* */
-	static Future<dynamic> getUserInfoReq() {
+	static Future<dynamic> getUserInfoReq({BuildContext context}) {
 		return HttpUtil.getInstance().get(
 			'user/api/medicalAgentUser/getAgentInfoWithInvestUrl',
-			data: {'userId': PPSession.getInstance().userId},
-			showToast: true
+			context: context,
+			showToast: ToastType.ToastTypeNormal,
+			data: {'userId': PPSession.getInstance().userId}
 		).then((data) {
 			return data;
 		});

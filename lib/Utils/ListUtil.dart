@@ -13,7 +13,7 @@ class ListUtil {
 			refreshedText: '刷新完成',
 			refreshFailedText: '刷新失败',
 			infoText: '最后更新: %T',
-			completeDuration: Duration(milliseconds: 500),
+			completeDuration: Duration(milliseconds: 200),
 			showInfo: true
 		);
 	}
@@ -25,8 +25,11 @@ class ListUtil {
 			loadReadyText: '松开立即加载更多',
 			loadingText: '正在加载更多的数据...',
 			loadedText: '加载完成',
-			noMoreText: '没有更多数据',
-			showInfo: false
+			noMoreText: '已经全部加载完毕',
+			loadFailedText: '加载失败',
+			completeDuration: Duration(milliseconds: 200),
+			showInfo: false,
+			enableInfiniteLoad: false
 		);
 	}
 	

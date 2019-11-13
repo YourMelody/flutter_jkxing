@@ -12,8 +12,8 @@ class RefreshEmptyHeader extends Header {
 		completeDuration = const Duration(seconds: 0)
 	}): super(
 		float: false,
-		extent: 1.0,
-		triggerDistance: 100.0,
+		extent: 0.0,
+		triggerDistance: 10000.0,
 		completeDuration: Duration(seconds: 0),
 		enableInfiniteRefresh: false
 	);

@@ -3,7 +3,8 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
 import 'DrugListPage.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_jkxing/Common/RefreshListView.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart' as extended;
 
 class DrugLibraryPage extends StatefulWidget {
 	@override
@@ -30,6 +31,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 			body: Container(
 				child: Column(
 					children: <Widget>[
+						// 顶部搜索框
 						_searchView(),
 						
 						Expanded(
@@ -37,11 +39,13 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 								child: Row(
 									crossAxisAlignment: CrossAxisAlignment.start,
 									children: <Widget>[
+										// 左侧主分类列表
 										Container(
 											width: 120,
 											child: _leftList()
 										),
 										
+										// 右侧主分类下细分类列表
 										Expanded(child: Container(
 											color: Color(0xfff4f6f9),
 											padding: EdgeInsets.only(left: 8),
@@ -58,14 +62,13 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	}
 	
 	// 请求数据
-	void _initData() {
-		DrugLibRequest.getDrugClassList('2').then((response) {
-			if (response != null) {
-				setState(() {
-					dataSource = response;
-				});
-			}
-		});
+	Future<void> _initData() async {
+		var response = await DrugLibRequest.getDrugClassList('2');
+		if (response != null) {
+			setState(() {
+				dataSource = response;
+			});
+		}
 	}
 	
 	// 搜索框
@@ -101,6 +104,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 左侧主分类列表
 	_leftList() {
 		if (dataSource == null) return null;
 		return ListView.separated(
@@ -114,6 +118,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 主分类列表item
 	_getLeftItem(DrugClassModel model, int index) {
 		return GestureDetector(
 			onTap: () {
@@ -137,6 +142,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 右侧主分类下细分类列表
 	_rightList() {
 		if (dataSource == null) return null;
 		List<DrugClassModel> data = dataSource[_curIndex].categories;
@@ -158,6 +164,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 名义推荐
 	_getRightFirstItem(String itemName) {
 		return GestureDetector(
 			child: UnconstrainedBox(
@@ -187,6 +194,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 细分类item
 	_getRightItem(DrugClassModel model) {
 		return Column(
 			children: <Widget>[
@@ -241,6 +249,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		);
 	}
 	
+	// 跳转到药品列表页
 	_gotoProductList(DrugClassModel model) {
 		Navigator.of(context).push(MaterialPageRoute(builder: (_) => DrugListPage(model)));
 	}

@@ -3,7 +3,8 @@ import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 import 'package:flutter_jkxing/Order/Network/OrderRequest.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderDetailPage.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
-
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 
 class OrderListPage extends StatefulWidget {
 	final int status;
@@ -17,29 +18,37 @@ class OrderListPage extends StatefulWidget {
 class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClientMixin {
 	List <OrderModel> dataSource = [];
 	int currentPage = 1;
-	
-	@override
-	void initState() {
-		super.initState();
-		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData(false);
-		});
-	}
+	EasyRefreshController controller = EasyRefreshController();
 	
 	// 请求数据
-	Future<void> _initData(bool showToast) async {
-		var response = await OrderRequest.getOrderList(this.currentPage, context, status: widget.status, showToast: showToast);
+	Future<void> _initData() async {
+		var response = await OrderRequest.getOrderList(
+			this.currentPage,
+			context,
+			status: widget.status,
+			showToast: this.dataSource.length == 0 ? ToastType.ToastTypeNone : ToastType.ToastTypeError
+		);
 		if (response != null) {
+			// 请求成功
 			if (this.currentPage == 1) {
-				setState(() {
-					this.dataSource = response;
-				});
+				this.dataSource = response;
 			} else {
-				setState(() {
-					this.dataSource.addAll(response);
-				});
+				this.dataSource.addAll(response);
 			}
+			List tempArr = response;
+			if (tempArr.length < 10) {
+				this.controller.finishLoad(noMore: true);
+			} else {
+				this.controller.finishLoad(success: true);
+			}
+			this.controller.finishRefresh(success: true);
+			setState(() {});
+			
 			this.currentPage++;
+		} else {
+			// 请求失败
+			this.controller.finishRefresh(success: false);
+			this.controller.finishLoad(success: false, noMore: false);
 		}
 	}
 	
@@ -47,6 +56,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 	Widget build(BuildContext context) {
 		super.build(context);
 		return RefreshListView(
+			controller: this.controller,
 			child: ListView.separated(
 				itemBuilder: (context, index) => _createItem(dataSource[index]),
 				itemCount: dataSource == null ? 0 : dataSource.length,
@@ -57,12 +67,11 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 			),
 			onRefresh: () {
 				this.currentPage = 1;
-				return _initData(false);
+				return _initData();
 			},
 			onLoad: () {
-				return _initData(false);
-			},
-			firstRefresh: this.dataSource == null || this?.dataSource?.length == 0
+				return _initData();
+			}
 		);
 	}
 	

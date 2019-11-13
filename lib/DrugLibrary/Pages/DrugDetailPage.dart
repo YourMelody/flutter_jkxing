@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Network/DrugLibRequest.dart';
 
@@ -22,7 +23,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 		_tapGestureRecognizer = TapGestureRecognizer()
 			..onTap = () {
 				// 请求刷新库存
-				getDrugLastCount(null);
+				getDrugLastCount(null, ToastType.ToastTypeNormal);
 			};
 		
 		WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,15 +34,15 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	// 获取药品详细信息
 	_getDrugDetailInfo() {
 		DrugLibRequest.getMedicineDetail(widget.drugModel.productCode).then((response) {
-			getDrugLastCount(response);
+			getDrugLastCount(response, ToastType.ToastTypeError);
 		}).catchError((e) {
 		
 		});
 	}
 	
 	// 获取药品库存
-	getDrugLastCount(Map detailInfo) {
-		DrugLibRequest.getMedicineLastCount(widget.drugModel.productCode).then((response) {
+	getDrugLastCount(Map detailInfo, ToastType showToast) {
+		DrugLibRequest.getMedicineLastCount(widget.drugModel.productCode, context, showToast).then((response) {
 			int count = response[widget.drugModel.productCode.toString()];
 			if (detailInfo != null) {
 				setState(() {

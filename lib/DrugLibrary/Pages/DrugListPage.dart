@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
 import 'DrugDetailPage.dart';
+import 'package:flutter_jkxing/Common/RefreshListView.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class DrugListPage extends StatefulWidget {
 	DrugListPage(this.drugClassModel);
@@ -14,33 +17,58 @@ class DrugListPage extends StatefulWidget {
 
 class _DrugListState extends State<DrugListPage> {
 	List <MedicineItemModel> dataSource = [];
+	int currentPage = 1;
+	EasyRefreshController controller = EasyRefreshController();
 	
-	@override
-	void initState() {
-		super.initState();
-		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData();
-		});
-	}
-	
-	_initData() {
+	Future<void> _initData() async {
 		if (widget.drugClassModel == null) {
-			// 名医推荐药品列表
-			DrugLibRequest.getRecommendMedicineList().then((response) {
-				if (response != null) {
-					setState(() {
-						dataSource = response;
-					});
-				}
-			});
+			// 名医推荐药品列表（不分页）
+			var response = await DrugLibRequest.getRecommendMedicineList();
+			if (response != null) {
+				// 请求成功
+				this.controller.finishLoad(noMore: true);
+				this.dataSource = response;
+				this.setState(() {});
+			} else {
+				// 请求失败
+				this.controller.finishLoad(success: false);
+			}
 		} else {
-			DrugLibRequest.getMedicineList(widget.drugClassModel.categoryCode, widget.drugClassModel.hasNode, 1).then((response) {
-				if (response != null) {
-					setState(() {
-						dataSource = response;
-					});
+			// 其他根据categoryCode获取药品列表（分页）
+			var response = await DrugLibRequest.getMedicineList(
+				widget.drugClassModel.categoryCode,
+				widget.drugClassModel.hasNode,
+				this.currentPage,
+				context,
+				this.dataSource.length == 0 ? ToastType.ToastTypeNone : ToastType.ToastTypeError
+			);
+			if (response != null) {
+				// 请求成功
+				if (this.currentPage == 1) {
+					this.dataSource = response;
+				} else {
+					this.dataSource.addAll(response);
 				}
-			});
+				
+				// 处理刷新尾状态
+				List respArr = response;
+				if (respArr.length < 10) {
+					controller.finishLoad(noMore: true);
+				} else {
+					controller.finishLoad(success: true);
+				}
+				
+				if (this.dataSource.length == 0) {
+					// 展示空数据缺省页
+					
+				}
+				
+				this.setState(() {});
+				this.currentPage++;
+			} else {
+				// 请求失败
+				this.controller.finishLoad(success: false);
+			}
 		}
 	}
 	
@@ -55,18 +83,29 @@ class _DrugListState extends State<DrugListPage> {
 				children: <Widget>[
 					_searchView(),
 					Expanded(
-						child: ListView.separated(
-							itemBuilder: (context, index) {
-								return _itemBuilder(dataSource[index]);
+						child: RefreshListView(
+							controller: this.controller,
+							child: ListView.separated(
+								itemBuilder: (context, index) {
+									return _itemBuilder(dataSource[index]);
+								},
+								separatorBuilder: (BuildContext context, int index) {
+									return Divider(color: Color(0xffe5e5e5), height: 0.5);
+								},
+								itemCount: dataSource == null ? 0 : dataSource.length
+							),
+							showRefreshHeader: false,
+							onRefresh: () {
+								this.currentPage = 1;
+								return _initData();
 							},
-							separatorBuilder: (BuildContext context, int index) {
-								return Divider(color: Color(0xffe5e5e5), height: 0.5);
-							},
-							itemCount: dataSource == null ? 0 : dataSource.length
-						),
+							onLoad: () {
+								return _initData();
+							}
+						)
 					)
-				],
-			),
+				]
+			)
 		);
 	}
 	
@@ -114,7 +153,7 @@ class _DrugListState extends State<DrugListPage> {
 								Positioned(
 									child: FadeInImage.assetNetwork(
 										placeholder: 'lib/Images/img_default_medicine.png',
-										image: model.productImageUrl == null ? '' : 'https://img.jianke.com${model.productImageUrl}',
+										image: model.productImageUrl ?? '',
 										width: 64, height: 64,
 										fadeOutDuration: Duration(milliseconds: 50),
 										fadeInDuration: Duration(milliseconds: 50)
@@ -123,7 +162,7 @@ class _DrugListState extends State<DrugListPage> {
 								Positioned(
 									child: Image.asset('lib/Images/rx_label_flag.png', width: 25, height: 25)
 								)
-							],
+							]
 						),
 						
 						Padding(padding: EdgeInsets.only(left: 10)),

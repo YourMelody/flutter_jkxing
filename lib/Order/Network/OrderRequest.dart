@@ -7,7 +7,7 @@ import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 
 class OrderRequest {
 	// 获取订单列表
-	static Future<dynamic> getOrderList(int page, BuildContext context, {int status, bool showToast: true}) {
+	static Future<dynamic> getOrderList(int page, BuildContext context, {int status, ToastType showToast}) {
 		var param;
 		if (status == null) {
 			param = {'limit': 20, 'page': page};
@@ -30,11 +30,12 @@ class OrderRequest {
 		});
 	}
 	
+	// 获取物流信息
 	static Future<dynamic> getLogisticsInfo(String orderCode, BuildContext context) {
 		return HttpUtil.getInstance().post(
 			'/crm/api/logistics/orderInfoNew',
 			data: {'orderCode': orderCode, 'secondAgentId': PPSession.getInstance().userModel.userId},
-			showToast: false,
+			showToast: ToastType.ToastTypeNone,
 			context: context
 		).then((response) {
 			if (response != null) {

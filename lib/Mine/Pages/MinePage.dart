@@ -5,6 +5,7 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'SelectDatePage.dart';
 
 class MinePage extends StatefulWidget {
@@ -33,13 +34,13 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		// 这么写原因参考 https://www.jianshu.com/p/d1c98b49ab43
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			// 接口请求
-			_getSaleDetail(true);
-			_getDoctorNum(true);
+			_getSaleDetail(ToastType.ToastTypeNormal);
+			_getDoctorNum(ToastType.ToastTypeError);
 		});
 	}
 	
 	// 获取业绩、提成等信息
-	_getSaleDetail(bool showToast) {
+	_getSaleDetail(ToastType showToast) {
 		MineRequest.getAgentSalesDetail(this.startTime, this.endTime, context, showToast: showToast).then((response) {
 			if (response != null) {
 				setState(() {
@@ -50,7 +51,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	}
 	
 	// 获取医生数量信息
-	_getDoctorNum(bool showToast) {
+	_getDoctorNum(ToastType showToast) {
 		MineRequest.getDoctorNumber(this.startTime, this.endTime, context: context, showToast: showToast).then((response) {
 			if (response != null) {
 				setState(() {
@@ -153,8 +154,8 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 									});
 									Timer(Duration(milliseconds: 200), () {
 										// 刷新数据
-										_getSaleDetail(false);
-										_getDoctorNum(false);
+										_getSaleDetail(ToastType.ToastTypeNormal);
+										_getDoctorNum(ToastType.ToastTypeError);
 									});
 								}
 							});
@@ -212,6 +213,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		);
 	}
 	
+	// item 点击事件
 	_tapItem(int index) {
 		if (index == 2) {
 			// 团队业绩

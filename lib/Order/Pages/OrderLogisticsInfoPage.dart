@@ -25,25 +25,17 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 	String companeName;
 	String logisticsCode;
 	
-	@override
-	void initState() {
-		super.initState();
-		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData();
-		});
-	}
-	
-	void _initData() {
-		OrderRequest.getLogisticsInfo(widget.orderCode, context).then((response) {
-			if (response != null) {
-				this.dataSource.clear();
-				this.dataSource.add(response.orderCode);
-				this.dataSource.addAll(response.logisticsList);
-				this.companeName = response.companeName;
-				this.logisticsCode = response.shippingNo;
-				setState(() {});
-			}
-		});
+	// 请求数据
+	Future<void> _initData() async {
+		var response = await OrderRequest.getLogisticsInfo(widget.orderCode, context);
+		if (response != null) {
+			this.dataSource.clear();
+			this.dataSource.add(response.orderCode);
+			this.dataSource.addAll(response.logisticsList);
+			this.companeName = response.companeName;
+			this.logisticsCode = response.shippingNo;
+			setState(() {});
+		}
 	}
 	
 	@override
@@ -63,7 +55,11 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 					},
 					itemCount: this.dataSource.length,
 					padding: EdgeInsets.only(bottom: 15)
-				)
+				),
+				showRefreshHeader: false,
+				onRefresh: () {
+					return _initData();
+				},
 			)
 		);
 	}
@@ -109,7 +105,7 @@ class ItemHeader extends StatelessWidget {
 						),
 					),
 					
-					SizedBox(height: numberCode.length == 0 ? 0 :10.0),
+					SizedBox(height: numberCode.length == 0 ? 0 : 10.0),
 					Offstage(
 						offstage: numberCode.length == 0,
 						child: Container(

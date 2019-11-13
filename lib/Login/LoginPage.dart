@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/UserModel.dart';
 import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
+import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'LoginRequest.dart';
@@ -235,8 +237,12 @@ class _LoginPageState extends State<LoginPageWidget> {
 	
 	// 点击登陆
 	_loginBtnAction(VoidCallback callback) {
-		LoginRequest.loginReq(this.accountStr, this.pwdStr, this.verifyStr, this.tokenStr, context).then((response) {
+		ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading, autoDismiss: false);
+		LoginRequest.loginReq(this.accountStr, this.pwdStr, this.verifyStr, this.tokenStr).then((response) {
+			ProgressUtil().dismiss(context);
 			int respCode = response['msg']['code'];
+			String infoStr = response['msg']['info'];
+			print('$respCode-----$infoStr');
 			if (respCode == 20002) {
 				// 展示图形验证码
 				if (this.tokenStr == null || this.tokenStr.length == 0) {
@@ -248,13 +254,16 @@ class _LoginPageState extends State<LoginPageWidget> {
 				// 输入验证码有误，刷新图形验证码
 				_getImgToken();
 			} else if (respCode == 10002 || respCode == 10001) {
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: infoStr);
 				return;
 			} else if (respCode == 0) {
 				// 登陆成功
 				_saveUserData(response['data'], callback);
+			} else {
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: infoStr);
 			}
 		}).catchError((error) {
-			print('error = $error');
+			ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
 		});
 	}
 	
@@ -293,7 +302,7 @@ class _LoginPageState extends State<LoginPageWidget> {
 				session.userId = userId;
 				session.userToken = userToken;
 				// 请求获取用户信息
-				LoginRequest.getUserInfoReq().then((data) {
+				LoginRequest.getUserInfoReq(context: context).then((data) {
 					if (data != null) {
 						PPSession.getInstance().userModel = UserModel.fromJson(data);
 						callback();

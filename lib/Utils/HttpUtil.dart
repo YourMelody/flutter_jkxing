@@ -7,6 +7,12 @@ import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 
+enum ToastType {
+	ToastTypeNormal,    // 包括加载的loading和失败toast
+	ToastTypeError,     // 只有请求失败的toast
+	ToastTypeNone       // 静默请求，没有toast
+}
+
 class HttpUtil {
 	static HttpUtil instance;
 	static Map<String, dynamic> optHeader;
@@ -59,17 +65,17 @@ class HttpUtil {
 	* baseUrl：请求域名
 	* data：请求参数，默认为ZFBaseUrl().BjUrl()
 	* disposeData：是否处理返回的数据，默认为true
-	* showToast：是否toast提示，默认为false，为true时，需要传context
+	* showToast：toast类型，默认为ToastTypeNormal为true时，只要不为ToastTypeNone，都需要传context
 	* */
 	get<T>(url, {
 		baseUrl,
 		data,
 		bool disposeData: true,
-		bool showToast: false,
+		ToastType showToast: ToastType.ToastTypeNormal,
 		BuildContext context
 	}) async {
 		Response<T> response;
-		if (showToast && context != null) {
+		if (showToast == ToastType.ToastTypeNormal && context != null) {
 			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading, autoDismiss: false);
 		}
 		
@@ -83,49 +89,40 @@ class HttpUtil {
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
+			if (showToast == ToastType.ToastTypeNormal && context != null) {
+				ProgressUtil().dismiss(context);
+			}
 			// 直接返回请求的结果
 			if (disposeData == false) {
-				if (respMap['msg']['code'] == 0) {
-					if (showToast && context != null) {
-						ProgressUtil().dismiss(context);
-					}
-				} else {
+				if (respMap['msg']['code'] != 0) {
 					// 请求失败
-					if (showToast && context != null) {
-						String respStr = respMap['msg']['info'];
-						ProgressUtil().dismiss(context);
-						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
-					}
+					_reqError(respMap, context, showToast);
 				}
 				return response.data;
 			}
 			
 			// 处理返回的数据
 			if (respMap['msg']['code'] == 0) {
-				if (showToast && context != null) {
-					ProgressUtil().dismiss(context);
-				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast && context != null) {
-					String respStr = respMap['msg']['info'];
-					ProgressUtil().dismiss(context);
-					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
-				}
+				_reqError(respMap, context, showToast);
 				return null;
 			}
-		} on DioError catch(error){
+		} on DioError catch(error) {
 			// 网络异常
-			if (showToast && context != null) {
-				ProgressUtil().dismiss(context);
-				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
+			if (context != null) {
+				if (showToast == ToastType.ToastTypeNormal) {
+					ProgressUtil().dismiss(context);
+				}
+				if (showToast != ToastType.ToastTypeNone) {
+					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
+				}
 			}
 			return null;
 		}
 	}
-	
 	
 	
 	
@@ -134,17 +131,17 @@ class HttpUtil {
 	* baseUrl：请求域名
 	* data：请求参数
 	* disposeData：是否处理返回的数据，默认为true
-	* showToast：是否toast提示，默认为false，为true时，需要传context
+	* showToast：toast类型，默认为ToastTypeNormal为true时，只要不为ToastTypeNone，
 	* */
 	post<T>(url, {
 		baseUrl,
 		data,
 		bool disposeData: true,
-		bool showToast: false,
+		ToastType showToast: ToastType.ToastTypeNormal,
 		BuildContext context
 	}) async {
 		Response<T> response;
-		if (showToast && context != null) {
+		if (showToast == ToastType.ToastTypeNormal && context != null) {
 			ProgressUtil().showWithType(context, ProgressType.ProgressType_Loading, autoDismiss: false);
 		}
 		
@@ -158,47 +155,48 @@ class HttpUtil {
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
+			if (showToast == ToastType.ToastTypeNormal && context != null) {
+				ProgressUtil().dismiss(context);
+			}
 			// 直接返回请求的结果
 			if (disposeData == false) {
 				if (respMap['msg']['code'] == 0) {
-					if (showToast && context != null) {
-						ProgressUtil().dismiss(context);
-					}
-				} else {
 					// 请求失败
-					if (showToast == true && context != null) {
-						String respStr = respMap['msg']['info'];
-						ProgressUtil().dismiss(context);
-						ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
-					}
+					_reqError(respMap, context, showToast);
 				}
 				return response.data;
 			}
 			
 			// 处理返回的数据
 			if (respMap['msg']['code'] == 0) {
-				if (showToast && context != null) {
-					ProgressUtil().dismiss(context);
-				}
 				// 请求成功
 				return respMap['data'];
 			} else {
 				// 请求失败
-				if (showToast == true && context != null) {
-					String respStr = respMap['msg']['info'];
-					ProgressUtil().dismiss(context);
-					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
-				}
+				_reqError(respMap, context, showToast);
 				return null;
 			}
 		} on DioError catch(error){
-			print('error========$error');
 			// 网络异常
-			if (showToast == true && context != null) {
-				ProgressUtil().dismiss(context);
-				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
+			if (context != null) {
+				if (showToast == ToastType.ToastTypeNormal) {
+					ProgressUtil().dismiss(context);
+				}
+				if (showToast != ToastType.ToastTypeNone) {
+					ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '网络连接异常，请检查您的网络设置');
+				}
 			}
 			return null;
+		}
+	}
+	
+	
+	_reqError(var respMap, BuildContext context, ToastType showToast) {
+		if (context != null) {
+			String respStr = respMap['msg']['info'];
+			if (showToast != ToastType.ToastTypeNone) {
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respStr);
+			}
 		}
 	}
 }

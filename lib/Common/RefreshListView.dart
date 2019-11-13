@@ -6,8 +6,12 @@ import 'package:flutter_jkxing/Common/RefreshEmptyHeader.dart';
 class RefreshListView extends StatelessWidget {
 	final Widget child;
 	
-	// 下拉刷新事件（注意，当onRefresh为null，则会展示空的刷新header）
+	final EasyRefreshController controller;
+	
+	// 下拉刷新事件
 	final Future<void> Function() onRefresh;
+	// 是否展示下拉刷新组建（当只需要首次加载动画，不需要下拉刷新功能时，传false。默认为true）
+	final bool showRefreshHeader;
 	
 	// 上拉加载事件
 	final Future<void> Function() onLoad;
@@ -19,19 +23,22 @@ class RefreshListView extends StatelessWidget {
 	final Widget emptyWidget;
 	
 	RefreshListView({
-		this.onRefresh,
 		this.onLoad,
 		this.firstRefresh = true,
 		this.emptyWidget,
-		@required this.child,
+		this.showRefreshHeader = true,
+		this.controller,
+		@required this.onRefresh,
+		@required this.child
 	});
 	
 	@override
 	Widget build(BuildContext context) {
 		return EasyRefresh(
+			controller: this.controller,
 			child: this.child,
 			// 下拉刷新的header
-			header: this.onRefresh == null ? RefreshEmptyHeader(): ListUtil().getListHeader(),
+			header: showRefreshHeader ? ListUtil().getListHeader() : RefreshEmptyHeader(),
 			// 上拉加载更多的footer
 			footer: ListUtil().getListFooter(),
 			// 是否展示 firstRefreshWidget
@@ -41,11 +48,7 @@ class RefreshListView extends StatelessWidget {
 			// 数据为空时的缺省页（注意，当emptyWidget不为null时则只展示emptyWidget）
 			emptyWidget: null,
 			// 下拉刷新（缺陷：只有onRefresh不为null，设置的firstRefreshWidget才会生效）
-			onRefresh: this.onRefresh ?? () async {
-				await Future.delayed(Duration(milliseconds: 300), () {
-				
-				});
-			},
+			onRefresh: this.onRefresh,
 			// 上拉加载更多
 			onLoad: this.onLoad
 		);

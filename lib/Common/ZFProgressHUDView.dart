@@ -48,7 +48,7 @@ class ZFProgressHUDView extends StatelessWidget {
 						Icon(Icons.done, color: Colors.white, size: 30),
 						Padding(padding: EdgeInsets.only(top: 8)),
 						Text(
-							this.title == null ? '' : this.title,
+							this?.title ?? '',
 							style: TextStyle(
 								fontSize: 16,
 								height: 1.1,

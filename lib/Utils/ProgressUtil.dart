@@ -25,7 +25,7 @@ class ProgressUtil {
 		);
 
 		if (autoDismiss == true) {
-			Timer(Duration(seconds: 1), () => dismiss(context));
+			Timer(Duration(seconds: 1, milliseconds: 500), () => dismiss(context));
 		}
 	}
 	
