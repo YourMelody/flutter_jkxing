@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
@@ -34,15 +33,75 @@ class ListUtil {
 	}
 	
 	// 列表为空的缺省页
-	Widget getEmptyPage(String imgStr, String title) {
+	Widget getNoDataEmptyPage(String imgStr, String title) {
 		return Container(
 			child: Center(
 				child: Text('空数据'),
-			),
+			)
 		);
 	}
 	
-	// 首次加载时的缺省页
+	// 请求失败的缺省页
+	Widget getNetErrorEmptyPage(VoidCallback refresh) {
+		return Container(
+			color: Colors.white,
+			width: double.infinity,
+			height: double.infinity,
+			padding: EdgeInsets.only(bottom: 20),
+			child: Column(
+				children: <Widget>[
+					// 上边空白
+					Expanded(
+						child: Container(),
+						flex: 1,
+					),
+					
+					// 缺省图片
+					Container(
+						child: Image(
+							width: 144,
+							height: 135,
+							image: AssetImage('lib/Images/net_error_img.png')
+						),
+						padding: EdgeInsets.only(bottom: 15)
+					),
+					
+					// 加载失败
+					Text(
+						'加载失败',
+						style: TextStyle(fontSize: 14, color: Color(0x660a1314))
+					),
+					
+					// 刷新按钮
+					GestureDetector(
+						onTap: () => refresh(),
+						child: Container(
+							margin: EdgeInsets.only(top: 20),
+							width: 144,
+							height: 32,
+							alignment: Alignment.center,
+							decoration: BoxDecoration(
+								borderRadius: BorderRadius.circular(16),
+								color: Color(0xff6bcbd6)
+							),
+							child: Text(
+								'点击重新加载',
+								style: TextStyle(fontSize: 14, color: Colors.white)
+							)
+						)
+					),
+					
+					// 下边空白
+					Expanded(
+						child: Container(),
+						flex: 2
+					)
+				]
+			)
+		);
+	}
+	
+	// 首次加载时的动画
 	Widget getFirstRefreshPage() {
 		return Container(
 			color: Colors.white,
@@ -56,9 +115,10 @@ class ListUtil {
 							child: Image(
 								width: 142,
 								height: 152,
-								image: new AssetImage('lib/Images/loading.gif')
+								image: AssetImage('lib/Images/loading.gif')
 							)
-						)
+						),
+						flex: 2
 					),
 					Padding(padding: EdgeInsets.only(top: 6)),
 					Expanded(
@@ -69,7 +129,7 @@ class ListUtil {
 								decoration: TextDecoration.none
 							)
 						),
-						flex: 2,
+						flex: 3
 					)
 				]
 			)

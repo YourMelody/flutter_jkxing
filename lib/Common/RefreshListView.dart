@@ -3,6 +3,12 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Utils/ListUtil.dart';
 import 'package:flutter_jkxing/Common/RefreshEmptyHeader.dart';
 
+enum EmptyWidgetType {
+	None,       // 没有缺省页
+	NetError,   // 网络异常缺省页
+	NoData      // 空数据缺省页
+}
+
 class RefreshListView extends StatelessWidget {
 	final Widget child;
 	
@@ -19,13 +25,13 @@ class RefreshListView extends StatelessWidget {
 	// 是否展示首次加载的动画页，默认为true
 	final bool firstRefresh;
 	
-	// 空数据缺省页（注意，当emptyWidget不为null时，则只展示emptyWidget）
-	final Widget emptyWidget;
+	// 空数据缺省页类型
+	final EmptyWidgetType type;
 	
 	RefreshListView({
 		this.onLoad,
 		this.firstRefresh = true,
-		this.emptyWidget,
+		this.type,
 		this.showRefreshHeader = true,
 		this.controller,
 		@required this.onRefresh,
@@ -46,8 +52,10 @@ class RefreshListView extends StatelessWidget {
 			// 首次加载时的缺省页
 			firstRefreshWidget: ListUtil().getFirstRefreshPage(),
 			// 数据为空时的缺省页（注意，当emptyWidget不为null时则只展示emptyWidget）
-			emptyWidget: null,
-			// 下拉刷新（缺陷：只有onRefresh不为null，设置的firstRefreshWidget才会生效）
+			emptyWidget: type == EmptyWidgetType.None ? null :
+						 type == EmptyWidgetType.NetError ? ListUtil().getNetErrorEmptyPage(this.onRefresh) :
+						 ListUtil().getNoDataEmptyPage('', ''),
+			// 下拉刷新（注意：只有onRefresh不为null，设置的firstRefreshWidget才会生效）
 			onRefresh: this.onRefresh,
 			// 上拉加载更多
 			onLoad: this.onLoad

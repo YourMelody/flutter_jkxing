@@ -75,6 +75,6 @@ flutter:
     - lib/Images/login_token_loading.png
     - lib/Images/order_detail_line.png
     - lib/Images/loading.gif
-
+    - lib/Images/net_error_img.png
 
 

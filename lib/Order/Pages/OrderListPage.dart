@@ -19,6 +19,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 	List <OrderModel> dataSource = [];
 	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
+	EmptyWidgetType type = EmptyWidgetType.None;
 	
 	// 请求数据
 	Future<void> _initData() async {
@@ -42,13 +43,20 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 				this.controller.finishLoad(success: true);
 			}
 			this.controller.finishRefresh(success: true);
-			setState(() {});
+			setState(() {
+				type = this.dataSource.length == 0 ? EmptyWidgetType.NoData : EmptyWidgetType.None;
+			});
 			
 			this.currentPage++;
 		} else {
 			// 请求失败
 			this.controller.finishRefresh(success: false);
 			this.controller.finishLoad(success: false, noMore: false);
+			if (this.dataSource == null || this.dataSource.length == 0) {
+				this.setState(() {
+					type = EmptyWidgetType.NetError;
+				});
+			}
 		}
 	}
 	
@@ -71,7 +79,8 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 			},
 			onLoad: () {
 				return _initData();
-			}
+			},
+			type: this.type,
 		);
 	}
 	
