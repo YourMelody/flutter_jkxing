@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
-import 'package:flutter_jkxing/Utils/HttpUtil.dart';
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
@@ -9,8 +10,9 @@ import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class DrugListPage extends StatefulWidget {
-	DrugListPage(this.drugClassModel);
+	DrugListPage(this.drugClassModel, this.configModel);
 	final DrugClassModel drugClassModel;
+	final DrugConfigModel configModel;
 	@override
 	_DrugListState createState() => _DrugListState();
 }
@@ -19,19 +21,42 @@ class _DrugListState extends State<DrugListPage> {
 	List <MedicineItemModel> dataSource = [];
 	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
+	EmptyWidgetType type = EmptyWidgetType.Loading;
+	
+	@override
+	void initState() {
+		super.initState();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
+	}
 	
 	Future<void> _initData() async {
 		if (widget.drugClassModel == null) {
 			// 名医推荐药品列表（不分页）
-			var response = await DrugLibRequest.getRecommendMedicineList();
+			var response = await DrugLibRequest.getRecommendMedicineList(context);
 			if (response != null) {
 				// 请求成功
 				this.controller.finishLoad(noMore: true);
 				this.dataSource = response;
+				if (this.dataSource.length == 0) {
+					type = EmptyWidgetType.NoData;
+				} else {
+					type = EmptyWidgetType.None;
+				}
 				this.setState(() {});
 			} else {
 				// 请求失败
 				this.controller.finishLoad(success: false);
+				if (this.dataSource == null || this.dataSource.length == 0) {
+					this.setState(() {
+						type = EmptyWidgetType.NetError;
+					});
+				} else {
+					this.setState(() {
+						type = EmptyWidgetType.NoData;
+					});
+				}
 			}
 		} else {
 			// 其他根据categoryCode获取药品列表（分页）
@@ -39,8 +64,7 @@ class _DrugListState extends State<DrugListPage> {
 				widget.drugClassModel.categoryCode,
 				widget.drugClassModel.hasNode,
 				this.currentPage,
-				context,
-				this.dataSource.length == 0 ? ToastType.ToastTypeNone : ToastType.ToastTypeError
+				context
 			);
 			if (response != null) {
 				// 请求成功
@@ -59,8 +83,9 @@ class _DrugListState extends State<DrugListPage> {
 				}
 				
 				if (this.dataSource.length == 0) {
-					// 展示空数据缺省页
-					
+					type = EmptyWidgetType.NoData;
+				} else {
+					type = EmptyWidgetType.None;
 				}
 				
 				this.setState(() {});
@@ -68,6 +93,15 @@ class _DrugListState extends State<DrugListPage> {
 			} else {
 				// 请求失败
 				this.controller.finishLoad(success: false);
+				if (this.dataSource == null || this.dataSource.length == 0) {
+					this.setState(() {
+						type = EmptyWidgetType.NetError;
+					});
+				} else {
+					this.setState(() {
+						type = EmptyWidgetType.None;
+					});
+				}
 			}
 		}
 	}
@@ -97,11 +131,17 @@ class _DrugListState extends State<DrugListPage> {
 							showRefreshHeader: false,
 							onRefresh: () {
 								this.currentPage = 1;
+								if (this.type == EmptyWidgetType.NetError) {
+									this.setState(() {
+										type = EmptyWidgetType.Loading;
+									});
+								}
 								return _initData();
 							},
 							onLoad: () {
 								return _initData();
-							}
+							},
+							type: this.type
 						)
 					)
 				]
@@ -143,11 +183,32 @@ class _DrugListState extends State<DrugListPage> {
 	}
 	
 	_itemBuilder(MedicineItemModel model) {
+		// 热度标签
+		String hotImgStr = '';
+		if (widget.configModel != null && widget.configModel?.firstBit == '1' && widget.configModel?.thirdBit == '1') {
+			if (widget.configModel?.rateArr?.length != null && widget.configModel.rateArr.length > 0) {
+				double ratio = 0.0;
+				if (model?.ourPrice != null && model.ourPrice > 0 && model?.priceCommission != null) {
+					ratio = (model.priceCommission / model.ourPrice) * 100.0;
+				}
+				if (widget.configModel.rateArr.last <= ratio) {
+					for(int i = 0; i < widget.configModel.rateArr.length; i++) {
+						double tmpRate = widget.configModel.rateArr[i];
+						if (tmpRate <= ratio) {
+							hotImgStr = widget.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
+							break;
+						}
+					}
+				}
+			}
+		}
+		
 		return GestureDetector(
 			child: Container(
 				padding: EdgeInsets.all(15.0),
 				child: Row(
 					children: <Widget>[
+						// 药品图片和Rx标签
 						Stack(
 							children: <Widget>[
 								Positioned(
@@ -160,7 +221,11 @@ class _DrugListState extends State<DrugListPage> {
 									)
 								),
 								Positioned(
-									child: Image.asset('lib/Images/rx_label_flag.png', width: 25, height: 25)
+									// Rx标签：prescriptionType为4（处方药）或5（管制处方药）时才展示
+									child: Offstage(
+										offstage: model?.prescriptionType != 4 && model?.prescriptionType != 5,
+										child: Image.asset('lib/Images/rx_label_flag.png', width: 25, height: 25),
+									)
 								)
 							]
 						),
@@ -170,15 +235,85 @@ class _DrugListState extends State<DrugListPage> {
 						Expanded(child: Column(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
-								Text(model?.productName ?? '', style: TextStyle(color: Color(0xff1a191a))),
-								Text(model?.manufacturer ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12,color: Color(0xff999999))),
-								Text(model?.packing ?? '', style: TextStyle(fontSize: 12,color: Color(0xff999999))),
-								Text('¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Color(0xffe56767), fontWeight: FontWeight.bold))
-							],
+								// 缺货标志（type为4显示）和药品名称
+								Row(
+									children: <Widget>[
+										Offstage(
+											offstage: model?.productStatusType != 4,
+											child: Container(
+												width: 29,
+												height: 13,
+												margin: EdgeInsets.only(right: 5),
+												alignment: Alignment.center,
+												child: Text('缺货', style: TextStyle(color: Colors.white, fontSize: 9)),
+												decoration: BoxDecoration(
+													borderRadius: BorderRadius.circular(6.5),
+													color: Color(0xffcccccc)
+												),
+											),
+										),
+										Text(
+											model?.productName ?? '',
+											maxLines: 1,
+											overflow: TextOverflow.ellipsis,
+											style: TextStyle(color: Color(0xff1a191a), fontSize: 14)
+										)
+									]
+								),
+								
+								Padding(padding: EdgeInsets.only(top: 5)),
+								
+								// 厂商
+								Text(
+									model?.manufacturer ?? '',
+									maxLines: 1,
+									overflow: TextOverflow.ellipsis,
+									style: TextStyle(fontSize: 12,color: Color(0xff999999))
+								),
+								
+								Padding(padding: EdgeInsets.only(top: 3)),
+								
+								// 规格
+								Text(
+									model?.packing ?? '',
+									maxLines: 1,
+									overflow: TextOverflow.ellipsis,
+									style: TextStyle(fontSize: 12,color: Color(0xff999999))
+								),
+								
+								Padding(padding: EdgeInsets.only(top: 3)),
+								
+								// 价格和热度标签
+								Row(
+									children: <Widget>[
+										Text(
+											'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
+											style: TextStyle(fontSize: 15, color: Color(0xffe56767), fontWeight: FontWeight.bold)
+										),
+										Padding(padding: EdgeInsets.only(right: 5)),
+										Offstage(
+											offstage: PPSession.getInstance()?.userModel?.agentType != 1 || widget?.configModel?.firstBit != '1',
+											child:  widget?.configModel?.thirdBit == '1' && hotImgStr.length > 0 ?
+												Container(
+													width: 46,
+													height: 15,
+													padding: EdgeInsets.only(left: 8),
+													child: Image.network(hotImgStr, fit: BoxFit.contain)
+												) : widget?.configModel?.secondBit == '1' ?
+												Container(
+													padding: EdgeInsets.only(left: 8),
+													child: Text(
+														'(药品热度：${(model?.priceCommission ?? 0.0) / 100.0})'
+													),
+												) : Container()
+										)
+									]
+								)
+							]
 						))
-					],
+					]
 				),
-				color: Colors.white,
+				color: Colors.white
 			),
 			
 			onTap: () {

@@ -8,8 +8,8 @@ import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 
 enum ToastType {
-	ToastTypeNormal,    // 包括加载的loading和失败toast
-	ToastTypeError,     // 只有请求失败的toast
+	ToastTypeNormal,    // 包括加载的toast和所有失败toast
+	ToastTypeError,     // 有请求失败的toast和网络异常的toast
 	ToastTypeNone       // 静默请求，没有toast
 }
 
@@ -85,7 +85,7 @@ class HttpUtil {
 				url,
 				queryParameters: data
 			);
-			print('-----${response.request.path}-----response-----${response.data}');
+//			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			
@@ -151,7 +151,7 @@ class HttpUtil {
 				url,
 				data: data
 			);
-			print('-----${response.request.path}-----response-----${response.data}');
+//			print('-----${response.request.path}-----response-----${response.data}');
 			String respStr = json.encode(response.data);
 			Map<dynamic, dynamic> respMap = json.decode(respStr);
 			

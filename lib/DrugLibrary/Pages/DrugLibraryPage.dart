@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_jkxing/Common/DrugConfiguration.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
+import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import '../Model/DrugClassModel.dart';
 import '../Network/DrugLibRequest.dart';
 import 'DrugListPage.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart' as extended;
 
 class DrugLibraryPage extends StatefulWidget {
 	@override
@@ -14,49 +17,70 @@ class DrugLibraryPage extends StatefulWidget {
 class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAliveClientMixin {
 	List<DrugClassModel> dataSource;
 	int _curIndex = 0;
+	EasyRefreshController controller = EasyRefreshController();
+	EmptyWidgetType type = EmptyWidgetType.Loading;
+	DrugConfigModel configModel;
 	
 	@override
 	void initState() {
 		super.initState();
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initData();
+			_getDrugConfig();
 		});
 	}
 	
 	@override
 	Widget build(BuildContext context) {
 		super.build(context);
+		MediaQueryData queryData = MediaQuery.of(context);
 		return Scaffold(
 			appBar: ZFAppBar('药品库', showBackBtn: false),
-			body: Container(
-				child: Column(
-					children: <Widget>[
-						// 顶部搜索框
-						_searchView(),
-						
-						Expanded(
-							child: Container(
-								child: Row(
-									crossAxisAlignment: CrossAxisAlignment.start,
-									children: <Widget>[
-										// 左侧主分类列表
-										Container(
-											width: 120,
-											child: _leftList()
-										),
-										
-										// 右侧主分类下细分类列表
-										Expanded(child: Container(
-											color: Color(0xfff4f6f9),
-											padding: EdgeInsets.only(left: 8),
-											child: _rightList()
-										))
-									]
+			body: RefreshListView(
+				controller: this.controller,
+				child: Container(
+					width: queryData.size.width,
+					height: queryData.size.height - queryData.padding.top - queryData.padding.bottom - 130,
+					child: Column(
+						children: <Widget>[
+							// 顶部搜索框
+							_searchView(),
+							
+							Expanded(
+								child: Container(
+									child: Row(
+										crossAxisAlignment: CrossAxisAlignment.start,
+										children: <Widget>[
+											// 左侧主分类列表
+											Container(
+												width: 120,
+												child: _leftList()
+											),
+											
+											// 右侧主分类下细分类列表
+											Expanded(child: Container(
+												color: Color(0xfff4f6f9),
+												padding: EdgeInsets.only(left: 8),
+												child: _rightList()
+											))
+										]
+									)
 								)
 							)
-						)
-					]
-				)
+						]
+					)
+				),
+				onRefresh: () {
+					if (type == EmptyWidgetType.NetError) {
+						setState(() {
+							type = EmptyWidgetType.Loading;
+						});
+						return _initData();
+					} else {
+						return null;
+					}
+				},
+				type: this.type
 			)
 		);
 	}
@@ -65,10 +89,29 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	Future<void> _initData() async {
 		var response = await DrugLibRequest.getDrugClassList('2');
 		if (response != null) {
+			// 请求成功
 			setState(() {
 				dataSource = response;
+				type = EmptyWidgetType.None;
+			});
+		} else {
+			// 请求失败
+			setState(() {
+				type = EmptyWidgetType.NetError;
 			});
 		}
+	}
+	
+	void _getDrugConfig() {
+		DrugConfigRequest.drugConfigReq().then((response) {
+			if (response != null) {
+				DrugConfiguration.getInstance(response);
+				setState(() {
+					this.configModel = response;
+					print('aaa === ${this.configModel.hotSpecialItems[0].toJson()}');
+				});
+			}
+		});
 	}
 	
 	// 搜索框
@@ -251,7 +294,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	
 	// 跳转到药品列表页
 	_gotoProductList(DrugClassModel model) {
-		Navigator.of(context).push(MaterialPageRoute(builder: (_) => DrugListPage(model)));
+		Navigator.of(context).push(MaterialPageRoute(builder: (_) => DrugListPage(model, this.configModel)));
 	}
 
 	@override

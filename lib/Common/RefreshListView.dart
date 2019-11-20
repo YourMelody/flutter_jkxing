@@ -6,7 +6,8 @@ import 'package:flutter_jkxing/Common/RefreshEmptyHeader.dart';
 enum EmptyWidgetType {
 	None,       // 没有缺省页
 	NetError,   // 网络异常缺省页
-	NoData      // 空数据缺省页
+	NoData,     // 空数据缺省页
+	Loading     // 大白动画
 }
 
 class RefreshListView extends StatelessWidget {
@@ -31,7 +32,7 @@ class RefreshListView extends StatelessWidget {
 	RefreshListView({
 		this.onLoad,
 		this.firstRefresh = true,
-		this.type,
+		this.type = EmptyWidgetType.Loading,
 		this.showRefreshHeader = true,
 		this.controller,
 		@required this.onRefresh,
@@ -47,18 +48,15 @@ class RefreshListView extends StatelessWidget {
 			header: showRefreshHeader ? ListUtil().getListHeader() : RefreshEmptyHeader(),
 			// 上拉加载更多的footer
 			footer: ListUtil().getListFooter(),
-			// 是否展示 firstRefreshWidget
-			firstRefresh: true,
-			// 首次加载时的缺省页
-			firstRefreshWidget: ListUtil().getFirstRefreshPage(),
 			// 数据为空时的缺省页（注意，当emptyWidget不为null时则只展示emptyWidget）
 			emptyWidget: type == EmptyWidgetType.None ? null :
 						 type == EmptyWidgetType.NetError ? ListUtil().getNetErrorEmptyPage(this.onRefresh) :
-						 ListUtil().getNoDataEmptyPage('', ''),
+						 type == EmptyWidgetType.NoData ? ListUtil().getNoDataEmptyPage('', '') :
+						 ListUtil().getFirstRefreshPage(),
 			// 下拉刷新（注意：只有onRefresh不为null，设置的firstRefreshWidget才会生效）
-			onRefresh: this.onRefresh,
+			onRefresh: type == EmptyWidgetType.None ? this.onRefresh : null,
 			// 上拉加载更多
-			onLoad: this.onLoad
+			onLoad: type == EmptyWidgetType.None ? this.onLoad : null
 		);
 	}
 }

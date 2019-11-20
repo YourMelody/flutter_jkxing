@@ -72,15 +72,15 @@ class _OrderDetailState extends State<OrderDetailPage> {
 		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
 			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
 				double ratio = 0.0;
-				if (drugModel.salePrice > 0) {
-					ratio = drugModel.doctorPriceCommission / drugModel.salePrice;
+				if (drugModel?.salePrice != null && drugModel.salePrice > 0) {
+					ratio = (drugModel.doctorPriceCommission / drugModel.salePrice) * 100.0;
 				}
 				
 				if (this.configModel.rateArr.last <= ratio) {
 					for(int i = 0; i < this.configModel.rateArr.length; i++) {
-						int tmpRate = this.configModel.rateArr[i];
+						double tmpRate = this.configModel.rateArr[i];
 						if (tmpRate < ratio) {
-							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl;
+							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
 							break;
 						}
 					}

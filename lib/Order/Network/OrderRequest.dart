@@ -35,7 +35,7 @@ class OrderRequest {
 		return HttpUtil.getInstance().post(
 			'/crm/api/logistics/orderInfoNew',
 			data: {'orderCode': orderCode, 'secondAgentId': PPSession.getInstance().userModel.userId},
-			showToast: ToastType.ToastTypeNone,
+			showToast: ToastType.ToastTypeError,
 			context: context
 		).then((response) {
 			if (response != null) {

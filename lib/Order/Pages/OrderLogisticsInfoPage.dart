@@ -24,17 +24,33 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 	List dataSource = [];
 	String companeName;
 	String logisticsCode;
+	EmptyWidgetType type = EmptyWidgetType.Loading;
+	
+	@override
+	void initState() {
+		super.initState();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
+	}
 	
 	// 请求数据
 	Future<void> _initData() async {
 		var response = await OrderRequest.getLogisticsInfo(widget.orderCode, context);
 		if (response != null) {
+			// 请求成功
 			this.dataSource.clear();
 			this.dataSource.add(response.orderCode);
 			this.dataSource.addAll(response.logisticsList);
 			this.companeName = response.companeName;
 			this.logisticsCode = response.shippingNo;
+			type = EmptyWidgetType.None;
 			setState(() {});
+		} else {
+			// 请求失败
+			setState(() {
+				type = EmptyWidgetType.NetError;
+			});
 		}
 	}
 	
@@ -58,8 +74,14 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 				),
 				showRefreshHeader: false,
 				onRefresh: () {
+					if (type == EmptyWidgetType.NetError) {
+						setState(() {
+							type = EmptyWidgetType.Loading;
+						});
+					}
 					return _initData();
 				},
+				type: this.type
 			)
 		);
 	}

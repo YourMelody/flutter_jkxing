@@ -4,9 +4,9 @@ import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 
 class DrugConfigRequest {
 	static Future<dynamic> drugConfigReq() {
-		return HttpUtil.getInstance().post(
+		return HttpUtil.getInstance().get(
 			'/prescription/api/prescription/config/rateInfo',
-			data: {}
+			showToast: ToastType.ToastTypeNone
 		).then((data) {
 			if (data == null) {
 				return null;

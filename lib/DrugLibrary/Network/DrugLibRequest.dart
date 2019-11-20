@@ -31,10 +31,11 @@ class DrugLibRequest {
 	}
 	
 	// 名医推荐药品列表（不分页）
-	static Future<dynamic> getRecommendMedicineList() {
+	static Future<dynamic> getRecommendMedicineList(BuildContext context) {
 		return HttpUtil.getInstance().get(
 			'product/recommend/productList',
-			showToast: ToastType.ToastTypeNone
+			context: context,
+			showToast: ToastType.ToastTypeError
 		).then((data) {
 				try {
 					return (data as List)?.map((e) {
@@ -48,11 +49,11 @@ class DrugLibRequest {
 	}
 	
 	// 分类药品列表（分页）
-	static Future<dynamic> getMedicineList(String categoryCode, bool hasNode, int page, BuildContext context, ToastType showToast) {
+	static Future<dynamic> getMedicineList(String categoryCode, bool hasNode, int page, BuildContext context) {
 		return HttpUtil().get(
 			'product/category/productList',
 			context: context,
-			showToast: showToast,
+			showToast: ToastType.ToastTypeError,
 			data: {'categoryCode': categoryCode, 'limit': 10, 'hasNode': hasNode, 'page': page}).then((data) {
 				try {
 					return (data['list'] as List)?.map((e) {

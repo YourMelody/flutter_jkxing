@@ -7,7 +7,7 @@ part 'DrugConfigModel.g.dart';
 class HotSpecialModel {
 	HotSpecialModel(this.limitRate, this.detailsPicUrl, this.rateIconUrl);
 	
-	int limitRate;
+	double limitRate;
 	String detailsPicUrl;
 	String rateIconUrl;
 	
@@ -24,7 +24,7 @@ class DrugConfigModel {
 	String firstBit;
 	String secondBit;
 	String thirdBit;
-	List <int> rateArr;
+	List <dynamic> rateArr;
 	
 	factory DrugConfigModel.fromJson(Map<String, dynamic> json) => _$DrugConfigModelFromJson(json);
 	Map<String, dynamic> toJson() => _$DrugConfigModelToJson(this);
