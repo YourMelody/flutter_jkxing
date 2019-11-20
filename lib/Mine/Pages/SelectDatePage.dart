@@ -167,12 +167,15 @@ class _SelectDateState extends State<SelectDatePage> {
 							width: 18, height: 18
 						),
 						Padding(padding: EdgeInsets.only(right: 5)),
-						Text(title, style: TextStyle(
-							fontSize: 16,
-							color: Color(0xff0a1314),
+						Text(
+							title,
+							style: TextStyle(
+								fontSize: 16,
+								color: Color(0xff0a1314),
+							),
 							maxLines: 1,
 							overflow: TextOverflow.ellipsis
-						))
+						)
 					]
 				)
 			)

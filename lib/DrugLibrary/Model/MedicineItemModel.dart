@@ -1,9 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-// DrugClassModel.g.dart文件将在执行生成命令后自动产生
 part "MedicineItemModel.g.dart";
 
-// 这个标注是告诉生成器，这个类是需要生成Model类的
 @JsonSerializable()
 
 class MedicineItemModel {

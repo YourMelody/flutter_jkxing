@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_jkxing/Home/Pages/HomePage.dart';
+import 'package:flutter_jkxing/Home/Pages/HomeContentPage.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugLibraryPage.dart';
 import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
@@ -22,7 +22,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 		_controller = PageController(initialPage: 0);
 		
 		_widgetList
-			..add(HomePage())
+			..add(HomeContentPage())
 			..add(DrugLibraryPage())
 			..add(InvitationPage())
 			..add(OrderContentPage())

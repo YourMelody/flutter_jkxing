@@ -16,6 +16,7 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 		super.initState();
 		_tabController = TabController(length: 4, vsync: this);
 	}
+	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(

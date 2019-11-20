@@ -60,7 +60,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		} else {
 			// 请求失败
 			this.controller.finishRefresh(success: false);
-			this.controller.finishLoad(success: false, noMore: false);
+			this.controller.finishLoad(success: false);
 			if (this.dataSource == null || this.dataSource.length == 0) {
 				this.setState(() {
 					type = EmptyWidgetType.NetError;
@@ -234,7 +234,6 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		}
 		return '¥' + (value / 100).toStringAsFixed(2);
 	}
-	
 	
 	@override
 	bool get wantKeepAlive => true;
