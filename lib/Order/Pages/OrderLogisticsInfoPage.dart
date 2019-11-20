@@ -127,7 +127,9 @@ class ItemHeader extends StatelessWidget {
 								),
 								Text(
 									this?.orderCode ?? '',
-									style: TextStyle(color: Color(0xFF0A1314), fontSize: 14)
+									style: TextStyle(color: Color(0xFF0A1314), fontSize: 14),
+									maxLines: 1,
+									overflow: TextOverflow.ellipsis
 								)
 							]
 						),
@@ -147,7 +149,7 @@ class ItemHeader extends StatelessWidget {
 										numberCode ?? '',
 										style: TextStyle(color: Color(0xFF0A1314), fontSize: 14),
 										maxLines: 1,
-										overflow: TextOverflow.ellipsis,
+										overflow: TextOverflow.ellipsis
 									),
 									GestureDetector(
 										onTap: (){
@@ -187,7 +189,9 @@ class ItemHeader extends StatelessWidget {
 									),
 									Text(
 										name ?? '',
-										style: TextStyle(color: Color(0xFF0A1314), fontSize: 14)
+										style: TextStyle(color: Color(0xFF0A1314), fontSize: 14),
+										maxLines: 1,
+										overflow: TextOverflow.ellipsis
 									)
 								]
 							)
@@ -280,7 +284,8 @@ class _InformationItemState extends State<InformationItem> {
 										child: Text(
 											_getTime(widget?.infoModel?.time),
 											style: TextStyle(fontSize: 14, color: Color(0x660A1314)),
-											maxLines: 1
+											maxLines: 1,
+											overflow: TextOverflow.ellipsis
 										)
 									),
 									Padding(padding: new EdgeInsets.only(bottom: 10)),

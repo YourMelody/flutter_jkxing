@@ -169,7 +169,9 @@ class _SelectDateState extends State<SelectDatePage> {
 						Padding(padding: EdgeInsets.only(right: 5)),
 						Text(title, style: TextStyle(
 							fontSize: 16,
-							color: Color(0xff0a1314)
+							color: Color(0xff0a1314),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						))
 					]
 				)
@@ -261,7 +263,9 @@ class _SelectDateState extends State<SelectDatePage> {
 							style: TextStyle(
 								fontSize: 16,
 								color: isEditable ? Color(0xFF0A1314) : Color(0xffcccccc)
-							)
+							),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						)),
 						Image.asset('lib/Images/date_icon_dropdown.png', width: 16, height: 16)
 					]

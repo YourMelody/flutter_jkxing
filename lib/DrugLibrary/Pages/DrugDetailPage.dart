@@ -97,15 +97,21 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						Row(children: <Widget>[
 							Image.asset('lib/Images/rx_flag.png', width: 32, height: 16),
 							Padding(padding: EdgeInsets.only(right: 5)),
-							Text(model?.productName ?? '',
-								style: TextStyle(fontSize: 17, color: Color(0xff444444))
+							Text(
+								model?.productName ?? '',
+								style: TextStyle(fontSize: 17, color: Color(0xff444444)),
+								maxLines: 1,
+								overflow: TextOverflow.ellipsis
 							)
 						]),
 						Padding(padding: EdgeInsets.only(top: 5)),
 						
 						// 规格
-						Text('规格：${model?.packing ?? ''}',
+						Text(
+							'规格：${model?.packing ?? ''}',
 							style: TextStyle(fontSize: 13, color: Color(0xff999999)),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						),
 						Padding(padding: EdgeInsets.only(top: 5)),
 						

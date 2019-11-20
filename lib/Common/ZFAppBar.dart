@@ -11,7 +11,9 @@ PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, PreferredSizeWid
 		child: AppBar(
 			title: Text(
 				title,
-				style: TextStyle(fontSize: 18, color: Color(0xff1a1a1a), fontWeight: FontWeight.normal)
+				style: TextStyle(fontSize: 18, color: Color(0xff1a1a1a), fontWeight: FontWeight.normal),
+				maxLines: 1,
+				overflow: TextOverflow.ellipsis
 			),
 			actions: [
 				Container(

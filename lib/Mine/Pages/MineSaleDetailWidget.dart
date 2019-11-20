@@ -107,7 +107,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 							fontSize: 30,
 							fontWeight: FontWeight.w500,
 							color: Color(0xff6bcbd7)
-						)
+						),
+						maxLines: 1,
+						overflow: TextOverflow.ellipsis
 					),
 					Padding(padding: EdgeInsets.only(bottom: 18)),
 					
@@ -128,7 +130,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
-										)
+										),
+										maxLines: 1,
+										overflow: TextOverflow.ellipsis
 									),
 									Padding(padding: EdgeInsets.only(bottom: 11)),
 									Row(
@@ -183,7 +187,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 										style: TextStyle(
 											fontSize: 16,
 											color: Color(0xff3b4243)
-										)
+										),
+										maxLines: 1,
+										overflow: TextOverflow.ellipsis
 									)
 								],
 								crossAxisAlignment: CrossAxisAlignment.start
@@ -223,7 +229,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											style: TextStyle(
 												fontSize: 16,
 												color: Color(0xff3b4243)
-											)
+											),
+											maxLines: 1,
+											overflow: TextOverflow.ellipsis
 										)
 									]
 								)
@@ -259,7 +267,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 								fontSize: 36,
 								fontWeight: FontWeight.w500,
 								color: Color(0xff6bcbd7)
-							)
+							),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						),
 						Padding(padding: EdgeInsets.only(bottom: 21)),
 						
@@ -320,7 +330,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											style: TextStyle(
 												fontSize: 16,
 												color: Color.fromRGBO(10, 19, 20, 0.8)
-											)
+											),
+											maxLines: 1,
+											overflow: TextOverflow.ellipsis
 										)
 									],
 									crossAxisAlignment: CrossAxisAlignment.start
@@ -344,7 +356,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 												style: TextStyle(
 													fontSize: 16,
 													color: Color(0xffe75d5b)
-												)
+												),
+												maxLines: 1,
+												overflow: TextOverflow.ellipsis
 											)
 										]
 									)
@@ -375,7 +389,9 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 								fontSize: 36,
 								fontWeight: FontWeight.w500,
 								color: Color(0xff6bcbd7)
-							)
+							),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						)
 					]
 				)

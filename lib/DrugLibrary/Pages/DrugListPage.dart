@@ -290,7 +290,6 @@ class _DrugListState extends State<DrugListPage> {
 											'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
 											style: TextStyle(fontSize: 15, color: Color(0xffe56767), fontWeight: FontWeight.bold)
 										),
-										Padding(padding: EdgeInsets.only(right: 5)),
 										Offstage(
 											offstage: PPSession.getInstance()?.userModel?.agentType != 1 || widget?.configModel?.firstBit != '1',
 											child:  widget?.configModel?.thirdBit == '1' && hotImgStr.length > 0 ?

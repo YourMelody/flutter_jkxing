@@ -141,7 +141,9 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 										fontSize: 16,
 										color: Color(0xffff8d41),
 										fontWeight: FontWeight.w500
-									)
+									),
+									maxLines: 1,
+									overflow: TextOverflow.ellipsis
 								)
 							)
 						]),
