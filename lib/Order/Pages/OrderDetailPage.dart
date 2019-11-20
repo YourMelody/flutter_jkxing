@@ -112,7 +112,9 @@ class _OrderDetailState extends State<OrderDetailPage> {
 							style: TextStyle(
 								fontSize: 16,
 								color: Color(0xff1a1a1a)
-							)
+							),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
 						)),
 						Padding(padding: EdgeInsets.only(right: 15)),
 						// 药品价格
@@ -142,8 +144,8 @@ class _OrderDetailState extends State<OrderDetailPage> {
 							)
 						)
 					])
-				],
-			),
+				]
+			)
 		);
 	}
 	
@@ -232,7 +234,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 						overflow: TextOverflow.ellipsis
 					)
 				]
-			),
+			)
 		);
 	}
 	

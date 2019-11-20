@@ -320,7 +320,7 @@ class _DrugListState extends State<DrugListPage> {
 				Navigator.of(context).push(MaterialPageRoute(
 					builder: (_) => DrugDetailPage(model)
 				));
-			},
+			}
 		);
 	}
 }

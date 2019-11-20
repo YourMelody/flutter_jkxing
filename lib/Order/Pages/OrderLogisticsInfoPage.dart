@@ -36,12 +36,18 @@ class _OrderLogisticsInfoState extends State<OrderLogisticsInfoPage> {
 	
 	// 请求数据
 	Future<void> _initData() async {
-		var response = await OrderRequest.getLogisticsInfo(widget.orderCode, context);
+		LogisticsInfoModel response = await OrderRequest.getLogisticsInfo(widget.orderCode, context);
 		if (response != null) {
 			// 请求成功
 			this.dataSource.clear();
-			this.dataSource.add(response.orderCode);
-			this.dataSource.addAll(response.logisticsList);
+			if (response?.orderCode != null) {
+				this.dataSource.add(response.orderCode);
+			} else if (widget?.orderCode != null) {
+				this.dataSource.add(widget.orderCode);
+			}
+			if (response?.logisticsList != null) {
+				this.dataSource.addAll(response.logisticsList);
+			}
 			this.companeName = response.companeName;
 			this.logisticsCode = response.shippingNo;
 			type = EmptyWidgetType.None;
