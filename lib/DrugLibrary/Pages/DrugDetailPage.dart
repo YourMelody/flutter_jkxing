@@ -4,11 +4,13 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFBaseUrl.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
 import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Network/DrugLibRequest.dart';
 
@@ -28,6 +30,8 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	
 	EasyRefreshController controller = EasyRefreshController();
 	EmptyWidgetType type = EmptyWidgetType.Loading;
+	WebViewController _controller;
+	double webHeight = 500.0;
 	
 	@override
 	void initState() {
@@ -98,7 +102,31 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						// 头部药品信息
 						_drugDetailHeader(this.model),
 						// 分割线
-						Container(height: 10, color: Colors.grey[100])
+						Container(height: 10, color: Colors.grey[100]),
+						// 说明书
+						Container(
+							width: MediaQuery.of(context).size.width,
+							height: this.webHeight,
+							margin: EdgeInsets.only(top: 10),
+							child: WebView(
+								initialUrl: this.model?.productCode == null ? '' :
+								'${ZFBaseUrl().InstructionsUrl()}/product/instructionBook/${this.model.productCode}',
+								javascriptMode: JavascriptMode.unrestricted,
+								
+								// web创建完成调用
+								onWebViewCreated: (controller) {
+									_controller = controller;
+								},
+								// web加载结束调用
+								onPageFinished: (url) {
+									_controller.evaluateJavascript("document.body.scrollHeight").then((result){
+										setState(() {
+											webHeight = double.parse(result) + 55;
+										});
+									});
+								},
+							)
+						)
 					]
 				),
 				onRefresh: () {
@@ -263,7 +291,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 				child: Container(
 					padding: EdgeInsets.only(right: 5, left: 1),
 					child: Text(
-						'药品热度：${(model?.priceCommission ?? 0.0) / 100.0}',
+						'药品热度：${(model?.priceCommission ?? 0) / 100}',
 						style: TextStyle(fontSize: 14, color: Color(0xffff781e))
 					),
 					decoration: BoxDecoration(

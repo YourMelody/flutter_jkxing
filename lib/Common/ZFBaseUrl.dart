@@ -36,4 +36,16 @@ class ZFBaseUrl {
 				return "https://bj-acgi.jianke.com/product/detail/mainData/";
 		}
 	}
+	
+	// 药品说明书
+	InstructionsUrl() {
+		switch(JK_APP_DEBUG_SETTING) {
+			case 0:
+				return "http://app-hybrid.tst.jianke.com";
+			case 1:
+				return "http://app-hybrid.tst.jianke.com";
+			case 2:
+				return "https://app-hybrid.jianke.com";
+		}
+	}
 }
