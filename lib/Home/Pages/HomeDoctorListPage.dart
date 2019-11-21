@@ -155,17 +155,19 @@ class _HomeDoctorListPageState extends State<HomeDoctorListPage> with AutomaticK
 				child: Row(
 					children: <Widget>[
 						// 医院名称
-						Text(
+						Expanded(child: Text(
 							model?.hospitalName ?? '',
 							style: TextStyle(fontSize: 16, color: Color(0xff0a1314)),
 							maxLines: 1,
 							overflow: TextOverflow.ellipsis
-						),
+						)),
 						Padding(padding: EdgeInsets.only(right: 15)),
+						
 						// 医生个数
 						Text(
 							'${model?.doctorCount ?? 0}名'
-						)
+						),
+						Image.asset('lib/Images/btn_arrow.png', width: 18, height: 18)
 					],
 				),
 			),
@@ -174,7 +176,112 @@ class _HomeDoctorListPageState extends State<HomeDoctorListPage> with AutomaticK
 	
 	// 待认证的item
 	Widget _createPendingItem(PendingAuthenticationModel model) {
-		return null;
+		return GestureDetector(
+			onTap: () {
+			
+			},
+			child: model.userStatus == 1 ? _phoneCell(model) : _infoCell(model)
+		);
+	}
+	
+	// 待认证，userStatus为1，只展示手机号
+	Widget _phoneCell(PendingAuthenticationModel model) {
+		return Container(
+			height: 54,
+			padding: EdgeInsets.only(left: 15, right: 33),
+			alignment: Alignment.center,
+			child: Row(
+				children: <Widget>[
+					Expanded(child: Text(
+						_getSecretPhoneNum(model.userPhone),
+						style: TextStyle(fontSize: 18, color: Color(0xbf0a1314)),
+					)),
+					Text('未认证', style: TextStyle(fontSize: 14, color: Color(0xfff5a623)))
+				],
+			),
+		);
+	}
+	
+	String _getSecretPhoneNum(String phoneNum) {
+		if (phoneNum == null || phoneNum.length == 0) {
+			return '';
+		} else if (phoneNum.length > 7) {
+			return phoneNum.replaceRange(3, 7, '****');
+		}
+		return phoneNum;
+	}
+	
+	// 待认证，userStatus不为1，展示医生信息
+	Widget _infoCell(PendingAuthenticationModel model) {
+		return Container(
+			height: 66,
+			padding: EdgeInsets.symmetric(horizontal: 15),
+			child: Row(
+				children: <Widget>[
+					Expanded(
+						child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: <Widget>[
+								RichText(text: TextSpan(
+									text: model?.realName ?? '',
+									style: TextStyle(fontSize: 18, color: Color(0xbf0a1314), fontWeight: FontWeight.w500),
+									children: <TextSpan>[
+										TextSpan(
+											text: model?.departmentName != null && model.departmentName.length > 0 ?
+												'      ${model.departmentName}' : '',
+											style: TextStyle(fontSize: 14, color: Color(0xbf0a1314))
+										),
+										TextSpan(
+											text: model?.doctorTitle != null && model.doctorTitle.length > 0 ?
+												'      ${model.doctorTitle}' : '',
+											style: TextStyle(fontSize: 14, color: Color(0xbf0a1314))
+										)
+									]
+								), maxLines: 1, overflow: TextOverflow.ellipsis),
+								
+								Padding(padding: EdgeInsets.only(bottom: 2)),
+								
+								Text(
+									model?.hospitalName ?? '',
+									style: TextStyle(fontSize: 14, color: Color(0xbf0a1314)),
+									maxLines: 1,
+									overflow: TextOverflow.ellipsis
+								)
+							]
+						)
+					),
+					Padding(padding: EdgeInsets.only(right: 15)),
+					
+					// 状态标签
+					_getStatusLabel(model),
+					
+					Image.asset('lib/Images/btn_arrow.png', width: 18, height: 18)
+				]
+			)
+		);
+	}
+	
+	Widget _getStatusLabel(PendingAuthenticationModel model) {
+		if (model.userStatus == 1) {
+			return Text('未认证', style: TextStyle(fontSize: 14, color: Color(0xfff5a623)));
+		} else if (model.userStatus == 2) {
+			return Text('审核中', style: TextStyle(fontSize: 14, color: Color(0x660a1314)));
+		} else if (model.userStatus == 3) {
+			// 认证通过，需要判断资料是否完整
+			if (model.dataAuditStatus == 1) {
+				// 我要达标
+				return Text('我要达标', style: TextStyle(fontSize: 14, color: Color(0xffe55e5e)));
+			} else if (model.dataAuditStatus == 2) {
+				return Text('去完善', style: TextStyle(fontSize: 14, color: Color(0xff6bcbd6)));
+			} else {
+				return Text('');
+			}
+		} else if (model.userStatus == 7) {
+			return Text('去认证', style: TextStyle(fontSize: 14, color: Color(0xfff56262)));
+		} else {
+			return Text('');
+		}
 	}
 	
 	@override

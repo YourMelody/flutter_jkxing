@@ -24,4 +24,16 @@ class ZFBaseUrl {
 				return "https://acgi.jianke.com/";
 		}
 	}
+	
+	// 药品详情
+	ProductDetailUrl() {
+		switch(JK_APP_DEBUG_SETTING) {
+			case 0:
+				return "http://bj-acgi.d.jianke.com/product/detail/mainData/";
+			case 1:
+				return "https://bj-acgi-test.jianke.com/product/detail/mainData/";
+			case 2:
+				return "https://bj-acgi.jianke.com/product/detail/mainData/";
+		}
+	}
 }

@@ -1,13 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
+import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
+import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Network/DrugLibRequest.dart';
 
 class DrugDetailPage extends StatefulWidget {
-	DrugDetailPage(this.drugModel);
+	DrugDetailPage(this.drugModel, this.configModel);
 	final MedicineItemModel drugModel;
+	final DrugConfigModel configModel;
 	@override
 	_DrugDetailState createState() => _DrugDetailState();
 }
@@ -16,14 +24,18 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	int lastCount;    //库存
 	TapGestureRecognizer _tapGestureRecognizer;
 	String introduction = '';   //药品介绍
-	String imgStr = '';         //药品图片
+	MedicineItemModel model;
+	
+	EasyRefreshController controller = EasyRefreshController();
+	EmptyWidgetType type = EmptyWidgetType.Loading;
+	
 	@override
 	void initState() {
 		super.initState();
 		_tapGestureRecognizer = TapGestureRecognizer()
 			..onTap = () {
 				// 请求刷新库存
-				getDrugLastCount(null, ToastType.ToastTypeNormal);
+				_getDrugLastCount(ToastType.ToastTypeNormal);
 			};
 		
 		WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -32,29 +44,42 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	}
 	
 	// 获取药品详细信息
-	_getDrugDetailInfo() {
-		DrugLibRequest.getMedicineDetail(widget.drugModel.productCode).then((response) {
-			getDrugLastCount(response, ToastType.ToastTypeError);
-		}).catchError((e) {
-		
-		});
+	Future<void> _getDrugDetailInfo() async {
+		var response = await DrugLibRequest.getMedicineDetail(widget.drugModel.productCode);
+		if (response != null) {
+			int respCode = response['msg']['code'];
+			if (respCode == 0) {
+				// 请求成功
+				Map respMap = response['data']['product'];
+				MedicineItemModel respModel = MedicineItemModel.fromJson(respMap);
+				respModel.priceCommission = widget.drugModel.priceCommission;
+				respModel.ourPrice = widget.drugModel.ourPrice;
+				respModel.productImageUrl = 'https://img.jianke.com' + respModel.productImageUrl;
+				this.setState(() {
+					model = respModel;
+					introduction = respMap['introduction'];
+					type = EmptyWidgetType.None;
+				});
+				
+				_getDrugLastCount(ToastType.ToastTypeError);
+			} else {
+				// 请求失败
+				String respInfo = response['msg']['info'];
+				ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: respInfo);
+				this.setState(() {
+					type = EmptyWidgetType.NetError;
+				});
+			}
+		}
 	}
 	
 	// 获取药品库存
-	getDrugLastCount(Map detailInfo, ToastType showToast) {
+	_getDrugLastCount(ToastType showToast) {
 		DrugLibRequest.getMedicineLastCount(widget.drugModel.productCode, context, showToast).then((response) {
 			int count = response[widget.drugModel.productCode.toString()];
-			if (detailInfo != null) {
-				setState(() {
-					lastCount = count;
-					introduction = detailInfo['product']['introduction'];
-					imgStr = 'https://img.jianke.com' + detailInfo['product']['productImageUrl'];
-				});
-			} else {
-				setState(() {
-					lastCount = count;
-				});
-			}
+			setState(() {
+				lastCount = count;
+			});
 		}).catchError((e) {
 			setState(() {
 				lastCount = -1;
@@ -66,12 +91,30 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: ZFAppBar('药品详情', context: context),
-			body: Column(children: <Widget>[
-				// 头部药品信息
-				_drugDetailHeader(widget.drugModel),
-				// 分割线
-				Container(height: 10, color: Colors.grey[100])
-			])
+			body: RefreshListView(
+				controller: this.controller,
+				child: Column(
+					children: <Widget>[
+						// 头部药品信息
+						_drugDetailHeader(this.model),
+						// 分割线
+						Container(height: 10, color: Colors.grey[100])
+					]
+				),
+				onRefresh: () {
+					if (type == EmptyWidgetType.NetError) {
+						setState(() {
+							type = EmptyWidgetType.Loading;
+						});
+						return _getDrugDetailInfo();
+					} else {
+						return null;
+					}
+				},
+				type: this.type,
+				showRefreshHeader: false
+			),
+			backgroundColor: Colors.white
 		);
 	}
 	
@@ -85,24 +128,29 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						// 图片
 						Center(child: FadeInImage.assetNetwork(
 							placeholder: 'lib/Images/img_default_medicine.png',
-							image: imgStr,
+							image: model?.productImageUrl ?? '',
 							height: 170,
 							fit: BoxFit.fitHeight,
 							fadeOutDuration: Duration(milliseconds: 50),
-							fadeInDuration: Duration(milliseconds: 50)
+							fadeInDuration: Duration(milliseconds: 50),
 						)),
 						Padding(padding: EdgeInsets.only(top: 12)),
 						
 						// 药品名字
 						Row(children: <Widget>[
-							Image.asset('lib/Images/rx_flag.png', width: 32, height: 16),
-							Padding(padding: EdgeInsets.only(right: 5)),
-							Text(
+							Offstage(
+								offstage: model?.prescriptionType != 4 && model?.prescriptionType != 5,
+								child: Container(
+									margin: EdgeInsets.only(right: 5),
+									child: Image.asset('lib/Images/rx_flag.png', width: 32, height: 16),
+								)
+							),
+							Expanded(child: Text(
 								model?.productName ?? '',
 								style: TextStyle(fontSize: 17, color: Color(0xff444444)),
 								maxLines: 1,
 								overflow: TextOverflow.ellipsis
-							)
+							))
 						]),
 						Padding(padding: EdgeInsets.only(top: 5)),
 						
@@ -127,7 +175,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 									text: '剩余',
 									children: <TextSpan>[
 										TextSpan(
-											text: lastCount <= 99 ? lastCount.toString() : '99+',
+											text: lastCount <= 299 ? lastCount.toString() : '299+',
 											style: TextStyle(color: Color(0xffff781e))
 										),
 										TextSpan(text: '件')
@@ -142,10 +190,19 @@ class _DrugDetailState extends State<DrugDetailPage> {
 						)),
 						Padding(padding: EdgeInsets.only(top: 5)),
 						
+						// 药品ID
+						Text(
+							'药品ID：${model?.productCode ?? ''}',
+							style: TextStyle(fontSize: 13, color: Color(0xff999999)),
+							maxLines: 1,
+							overflow: TextOverflow.ellipsis
+						),
+						Padding(padding: EdgeInsets.only(top: 5)),
+						
 						// 价格
 						Text(
 							'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
-							style: TextStyle(fontSize: 20, color: Color(0xffe56767), fontWeight: FontWeight.w600),
+							style: TextStyle(fontSize: 20, color: Color(0xffe56767), fontWeight: FontWeight.w600)
 						),
 						Padding(padding: EdgeInsets.only(top: 10)),
 						
@@ -156,22 +213,71 @@ class _DrugDetailState extends State<DrugDetailPage> {
 							style: TextStyle(fontSize: 13, color: Color(0xff444444))
 						)
 					]
-				),
+				)
 			),
 			
 			// 热度标签
-			Positioned(left: -1, top: 5, child: Container(
-				padding: EdgeInsets.only(right: 5), height: 17,
-				child: Center(child: Text('药品热度：20', style: TextStyle(fontSize: 14, color: Color(0xffff781e), height: 0.84))),
-				decoration: BoxDecoration(
-					border: Border.all(color: Color(0xffff781e)),
-					borderRadius: BorderRadius.only(
-						topRight: Radius.circular(10),
-						bottomRight: Radius.circular(10)
-					)
-				),
-			)),
+			_createHotLabel(model)
 		]);
+	}
+	
+	// 热度标签
+	Widget _createHotLabel(MedicineItemModel model) {
+		String hotImgStr = '';
+		if (widget.configModel != null && widget.configModel?.firstBit == '1' && widget.configModel?.thirdBit == '1') {
+			if (widget.configModel?.rateArr?.length != null && widget.configModel.rateArr.length > 0) {
+				double ratio = 0.0;
+				if (model?.ourPrice != null && model.ourPrice > 0 && model?.priceCommission != null) {
+					ratio = (model.priceCommission / model.ourPrice) * 100.0;
+				}
+				if (widget.configModel.rateArr.last <= ratio) {
+					for(int i = 0; i < widget.configModel.rateArr.length; i++) {
+						double tmpRate = widget.configModel.rateArr[i];
+						if (tmpRate <= ratio) {
+							hotImgStr = widget.configModel?.hotSpecialItems[i]?.detailsPicUrl ?? '';
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if (PPSession.getInstance()?.userModel?.agentType != 1 || widget?.configModel?.firstBit != '1') {
+			return Container();
+		} else if (widget?.configModel?.thirdBit == '1') {
+			return Positioned(
+				left: 6, top: 11,
+				child: Container(
+					width: 57,
+					height: 56,
+					padding: EdgeInsets.only(left: 8),
+					child: Image.network(
+						hotImgStr ?? '',
+						fit: BoxFit.contain
+					)
+				)
+			);
+		} else if (widget?.configModel?.secondBit == '1') {
+			return Positioned(
+				left: -1, top: 5,
+				child: Container(
+					padding: EdgeInsets.only(right: 5, left: 1),
+					child: Text(
+						'药品热度：${(model?.priceCommission ?? 0.0) / 100.0}',
+						style: TextStyle(fontSize: 14, color: Color(0xffff781e))
+					),
+					decoration: BoxDecoration(
+						border: Border.all(color: Color(0xffff781e)),
+						borderRadius: BorderRadius.only(
+							topRight: Radius.circular(10),
+							bottomRight: Radius.circular(10)
+						)
+					)
+				)
+			);
+		} else {
+			return Container();
+		}
 	}
 	
 	@override

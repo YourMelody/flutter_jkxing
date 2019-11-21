@@ -54,7 +54,7 @@ class DrugLibRequest {
 			'product/category/productList',
 			context: context,
 			showToast: ToastType.ToastTypeError,
-			data: {'categoryCode': categoryCode, 'limit': 10, 'hasNode': hasNode, 'page': page}).then((data) {
+			data: {'categoryCode': categoryCode, 'limit': 10, 'hasNode': hasNode == true ? 1 : 0, 'page': page}).then((data) {
 				try {
 					return (data['list'] as List)?.map((e) {
 						return e == null ? null : MedicineItemModel.fromJson(e);
@@ -69,10 +69,10 @@ class DrugLibRequest {
 	// 药品详情
 	static Future<dynamic> getMedicineDetail(int drugCode) {
 		return HttpUtil().get(
-			'details/api/app/mainData/$drugCode',
+			'$drugCode?filterOnlyMall=true',
 			showToast: ToastType.ToastTypeNone,
 			disposeData: false,
-			baseUrl: ZFBaseUrl().GDUrl()).then((data) {
+			baseUrl: ZFBaseUrl().ProductDetailUrl()).then((data) {
 				return data;
 			}
 		);

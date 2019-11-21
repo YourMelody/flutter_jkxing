@@ -22,7 +22,6 @@ MedicineItemModel _$MedicineItemModelFromJson(Map<String, dynamic> json) {
     json['ourPrice'] as int,
     json['prescriptionType'] as int,
     json['dosage'] as String,
-    json['merchantManageCode'] as String,
     json['priceCommission'] as int,
     json['productImageUrl'] as String,
   );
@@ -44,7 +43,6 @@ Map<String, dynamic> _$MedicineItemModelToJson(MedicineItemModel instance) =>
       'ourPrice': instance.ourPrice,
       'prescriptionType': instance.prescriptionType,
       'dosage': instance.dosage,
-      'merchantManageCode': instance.merchantManageCode,
       'priceCommission': instance.priceCommission,
       'productImageUrl': instance.productImageUrl,
     };

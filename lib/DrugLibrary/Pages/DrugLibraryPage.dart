@@ -80,7 +80,8 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 						return null;
 					}
 				},
-				type: this.type
+				type: this.type,
+				showRefreshHeader: false
 			)
 		);
 	}
@@ -108,7 +109,6 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 				DrugConfiguration.getInstance(response);
 				setState(() {
 					this.configModel = response;
-					print('aaa === ${this.configModel.hotSpecialItems[0].toJson()}');
 				});
 			}
 		});

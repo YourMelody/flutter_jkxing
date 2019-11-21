@@ -302,7 +302,8 @@ class _DrugListState extends State<DrugListPage> {
 												Container(
 													padding: EdgeInsets.only(left: 8),
 													child: Text(
-														'(药品热度：${(model?.priceCommission ?? 0.0) / 100.0})'
+														'(药品热度：${(model?.priceCommission ?? 0.0) / 100.0})',
+														style: TextStyle(fontSize: 12, color: Color(0xff999999))
 													),
 												) : Container()
 										)
@@ -317,7 +318,7 @@ class _DrugListState extends State<DrugListPage> {
 			
 			onTap: () {
 				Navigator.of(context).push(MaterialPageRoute(
-					builder: (_) => DrugDetailPage(model)
+					builder: (_) => DrugDetailPage(model, widget.configModel)
 				));
 			}
 		);
