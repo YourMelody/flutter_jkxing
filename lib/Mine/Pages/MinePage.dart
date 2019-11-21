@@ -6,6 +6,7 @@ import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
 import 'SelectDatePage.dart';
 
 class MinePage extends StatefulWidget {
@@ -89,7 +90,16 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			if (session?.userModel?.agentLevel == 2) {
 				return null;
 			}
-			return _createCommonItem('团队业绩', index, teamM: this?.detailModel?.teamSaleMoney, showTopBorder: true);
+			String value;
+			if (this?.detailModel?.teamSaleMoney != null) {
+				value = (this.detailModel.teamSaleMoney / 100).toStringAsFixed(2);
+			}
+			return _createCommonItem(
+				'团队业绩',
+				index,
+				teamM: Util().formatNum(value),
+				showTopBorder: true
+			);
 		} else if (index == 3) {
 			// 兼职（一级和二级）都不展示
 			if (session?.userModel?.agentType == 2) {
@@ -174,7 +184,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		);
 	}
 	
-	Widget _createCommonItem(String titleStr, int index, {int teamM, bool showTopBorder: false}) {
+	Widget _createCommonItem(String titleStr, int index, {String teamM, bool showTopBorder: false}) {
 		return GestureDetector(
 			onTap: () => _tapItem(index),
 			child: Container(
@@ -197,14 +207,11 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 							color: Color(0xff4d4d4d)
 						)
 					)),
-					Offstage(
-						offstage: teamM == null,
-						child: Text(
-							teamM == null ? '' : (teamM / 100).toStringAsFixed(2),
-							style: TextStyle(
-								fontSize: 16,
-								color: Color(0xffe75d5b)
-							),
+					Text(
+						teamM ?? '',
+						style: TextStyle(
+							fontSize: 16,
+							color: Color(0xffe75d5b)
 						)
 					),
 					Image.asset('lib/Images/home_btn_more.png', width: 18, height: 18)

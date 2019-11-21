@@ -103,6 +103,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 		}
 	}
 	
+	// 获取药品配置信息，药品热度/标签显示需要用到
 	void _getDrugConfig() {
 		DrugConfigRequest.drugConfigReq().then((response) {
 			if (response != null) {
@@ -131,15 +132,15 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 						Icon(
 							Icons.search,
 							color: Colors.grey,
-							size: 18,
+							size: 18
 						),
 						Padding(padding: EdgeInsets.only(left: 5)),
 						Text(
 							'搜索药品',
-							style: TextStyle(color: Colors.grey, fontSize: 14),
+							style: TextStyle(color: Colors.grey, fontSize: 14)
 						)
-					],
-				),
+					]
+				)
 			),
 			onTap: () {
 				print('tap search view');
@@ -179,9 +180,9 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 						fontSize: 14
 					),
 					textAlign: TextAlign.center,
-					maxLines: 2,
+					maxLines: 2
 				)
-			),
+			)
 		);
 	}
 	
@@ -228,7 +229,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 								textAlign: TextAlign.center,
 								style: TextStyle(fontSize: 14, color: Colors.black54)
 							)
-						],
+						]
 					)
 				)
 			),
@@ -251,11 +252,11 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 									style: TextStyle(fontSize: 14, color: Colors.black54)
 								)),
 								Icon(Icons.navigate_next, size: 18)
-							],
-						),
+							]
+						)
 					),
 					
-					onTap: () => _gotoProductList(model),
+					onTap: () => _gotoProductList(model)
 				),
 				
 				model.categories.length == 0 ? Padding(padding: EdgeInsets.only()) :
@@ -280,15 +281,15 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 									child: Text(
 										e?.categoryName ?? '',
 										textAlign: TextAlign.center
-									),
+									)
 								),
 								
-								onTap: () => _gotoProductList(e),
+								onTap: () => _gotoProductList(e)
 							);
-						}).toList(),
-					),
+						}).toList()
+					)
 				)
-			],
+			]
 		);
 	}
 	

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
 
 /* *
  * 显示规则：
@@ -182,6 +183,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											)
 										]
 									),
+									Padding(padding: EdgeInsets.only(bottom: 4)),
 									Text(
 										_manageMoney(widget.model?.targetMoney, showLine: widget.model?.crossMonth),
 										style: TextStyle(
@@ -224,11 +226,12 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 												color: Color(0xff9da1a1)
 											)
 										),
+										Padding(padding: EdgeInsets.only(bottom: 4)),
 										Text(
-											_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth),
+											_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth, addM: true),
 											style: TextStyle(
 												fontSize: 16,
-												color: Color(0xff3b4243)
+												color: Color(0xffe75d5b)
 											),
 											maxLines: 1,
 											overflow: TextOverflow.ellipsis
@@ -352,7 +355,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											),
 											Padding(padding: EdgeInsets.only(bottom: 2)),
 											Text(
-												_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth),
+												_manageMoney(widget.model?.floatMoney, showLine: widget.model?.crossMonth, addM: true),
 												style: TextStyle(
 													fontSize: 16,
 													color: Color(0xffe75d5b)
@@ -421,7 +424,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 				children: <Widget>[
 					Text('医生数', style: TextStyle(fontSize: 16, color: Color(0xff3b4243))),
 					Padding(padding: EdgeInsets.only(top: 2)),
-					Text(allNum, style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7))),
+					Text(allNum, style: TextStyle(fontSize: 30, color: Color(0xff6bcbd7), fontWeight: FontWeight.w500)),
 					Padding(padding: EdgeInsets.only(top: isType1 ? 18 : 8)),
 					Container(
 						height: 78,
@@ -442,7 +445,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text(auditPassNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+										Text(auditPassNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500))
 									]
 								),
 							)),
@@ -463,7 +466,7 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text(waitAuthNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243)))
+										Text(waitAuthNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500))
 									]
 								)
 							))
@@ -474,11 +477,16 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 		);
 	}
 	
-	String _manageMoney(int money, {bool showLine}) {
+	String _manageMoney(int money, {bool showLine, bool addM: false}) {
+		
 		String resultMoney = money == null ? '0.00' : (money/100).toStringAsFixed(2);
 		if (resultMoney == '0.00' && showLine == true) {
 			resultMoney = '--';
+		} else if (addM) {
+			if (double.parse(resultMoney) > 0) {
+				resultMoney = '+$resultMoney';
+			}
 		}
-		return resultMoney;
+		return '${Util().formatNum(resultMoney)}';
 	}
 }
