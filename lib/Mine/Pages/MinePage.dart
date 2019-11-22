@@ -4,6 +4,7 @@ import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
+import 'package:flutter_jkxing/Mine/Pages/DoctorReportPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
@@ -229,6 +230,9 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			// 药品明细
 		} else if (index == 4) {
 			// 医生报表
+			Navigator.of(context).push(MaterialPageRoute(
+				builder: (_) => DoctorReportPage()
+			));
 		} else if (index == 5) {
 			// 上传执业证，可提现
 		} else if (index == 6) {

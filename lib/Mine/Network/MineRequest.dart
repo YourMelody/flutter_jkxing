@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
+import 'package:flutter_jkxing/Mine/Model/DoctorReportDataModel.dart';
 
 class MineRequest {
 	// 获取销售业绩、指标、提成等
@@ -30,6 +31,23 @@ class MineRequest {
 			context: context
 		).then((data) {
 			return data;
+		});
+	}
+	
+	// 获取医生报表详情
+	static Future<dynamic> getDoctorReportDetailData(int endTime, int startTime, BuildContext context) {
+		return HttpUtil.getInstance().post(
+			'crm/api/doctorDetail/allData',
+			data: {'endTime': endTime, 'startTime': startTime},
+			context: context
+		).then((data) {
+			if (data != null && data['list'] != null) {
+				return (data['list'] as List)?.map((e) {
+					return e == null ? null : DoctorReportDataModel.fromJson(e);
+				})?.toList();
+			} else {
+				return null;
+			}
 		});
 	}
 	

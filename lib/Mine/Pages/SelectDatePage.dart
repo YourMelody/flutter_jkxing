@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
-import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_picker/flutter_picker.dart';
@@ -79,7 +77,6 @@ class _SelectDateState extends State<SelectDatePage> {
 							}
 							this.endTime = DateTime.parse('${now.year}-${_addZero(now.month)}-01 00:00:00').millisecondsSinceEpoch - 1000;
 						} else {
-							Store store = StoreProvider.of<ZFAppState>(context);
 							if (this.startTimeStr == '开始时间' || this.endTimeStr == '结束时间') {
 								ProgressUtil().showWithType(context, ProgressType.ProgressType_Error, title: '请选择时间');
 								return;
@@ -214,12 +211,14 @@ class _SelectDateState extends State<SelectDatePage> {
 							type: 7,
 							isNumberMonth: true,
 							yearBegin: 2000,
+							yearEnd: DateTime.now().year,
 							yearSuffix: '年',
 							monthSuffix: '月',
 							daySuffix: '日',
 							value: isBeginTime ?
 								DateTime.fromMillisecondsSinceEpoch(this.startTime) :
-								DateTime.fromMillisecondsSinceEpoch(this.endTime)
+								DateTime.fromMillisecondsSinceEpoch(this.endTime),
+							maxValue: DateTime.now()
 						),
 						title: Text('选择日期'),
 						textAlign: TextAlign.right,
@@ -228,7 +227,7 @@ class _SelectDateState extends State<SelectDatePage> {
 						cancelTextStyle: TextStyle(fontSize: 16, color: Color(0xff999999)),
 						confirmText: '确定',
 						confirmTextStyle: TextStyle(fontSize: 16, color: Color(0xff6bcbd6)),
-						onSelect: (Picker picker, int index, List<int> selecteds) {
+						onSelect: (Picker picker, int index, List<int> selected) {
 							setState(() {});
 						},
 						onConfirm: (Picker picker, List<int> selected) {
