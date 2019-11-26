@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 
+// 我的-->设置-->重设密码
 class ResetPwdPage extends StatefulWidget {
 	@override
 	State<StatefulWidget> createState() {

@@ -8,10 +8,15 @@ class DrugConfigRequest {
 			'/prescription/api/prescription/config/rateInfo',
 			showToast: ToastType.ToastTypeNone
 		).then((data) {
-			if (data == null) {
+			try {
+				if (data == null) {
+					return null;
+				} else {
+					return DrugConfigModel.fromJson(data);
+				}
+			} catch(e) {
 				return null;
 			}
-			return DrugConfigModel.fromJson(data);
 		});
 	}
 }

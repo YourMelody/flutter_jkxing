@@ -11,6 +11,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// 我的-->设置
 class SettingPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) {
