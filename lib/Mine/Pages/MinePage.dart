@@ -6,6 +6,7 @@ import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/DoctorReportPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
+import 'package:flutter_jkxing/Mine/Pages/TeamSalesPerformancePage.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 import 'SelectDatePage.dart';
@@ -225,7 +226,9 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	_tapItem(int index) {
 		if (index == 2) {
 			// 团队业绩
-			
+			Navigator.of(context).push(MaterialPageRoute(
+				builder: (_) => TeamSalesPerformancePage(this.detailModel.teamCode)
+			));
 		} else if (index == 3) {
 			// 药品明细
 		} else if (index == 4) {

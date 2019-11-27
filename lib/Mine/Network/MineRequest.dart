@@ -57,7 +57,7 @@ class MineRequest {
 	}
 	
 	// 获取团队业绩
-	static Future<dynamic> getTeamSalesDetail(int startTime, int endTime, int teamCode, BuildContext context) {
+	static Future<dynamic> getTeamSalesDetail(int startTime, int endTime, String teamCode, BuildContext context) {
 		return HttpUtil.getInstance().get(
 			'crm/api/agentTeam/teamSalesPerformanceDetail',
 			data: {'startTime': startTime, 'endTime': endTime, 'teamCode': teamCode},
