@@ -159,11 +159,10 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 								MaterialPageRoute(builder: (_) => SelectDatePage(this.timeStr))
 							).then((backValue) {
 								if (backValue != null) {
-									setState(() {
-										this.timeStr = backValue['timeStr'];
-										this.startTime = backValue['startTime'];
-										this.endTime = backValue['endTime'];
-									});
+									this.timeStr = backValue['timeStr'];
+									this.startTime = backValue['startTime'];
+									this.endTime = backValue['endTime'];
+									setState(() {});
 									Timer(Duration(milliseconds: 200), () {
 										// 刷新数据
 										_getSaleDetail(ToastType.ToastTypeNormal);

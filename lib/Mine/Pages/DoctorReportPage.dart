@@ -344,7 +344,7 @@ class _DoctorReportState extends State<DoctorReportPage> {
 					color: Color(0xff6bcbd6),
 				),
 				Expanded(child: Text(
-					model.num ?? '',
+					model.num ?? '0',
 					style: TextStyle(
 						fontSize: 14,
 						color: Color(0xcd0a1314)
