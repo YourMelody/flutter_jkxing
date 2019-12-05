@@ -226,7 +226,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		if (index == 2) {
 			// 团队业绩
 			Navigator.of(context).push(MaterialPageRoute(
-				builder: (_) => TeamSalesPerformancePage(this.detailModel.teamCode)
+				builder: (_) => TeamSalesPerformancePage(this.detailModel.teamCode, this.startTime, this.endTime, this.timeStr)
 			));
 		} else if (index == 3) {
 			// 药品明细

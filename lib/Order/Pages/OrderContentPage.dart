@@ -43,7 +43,7 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 						labelColor: Color(0xff6bcbd6),
 						labelStyle: TextStyle(fontSize: 16),
 						unselectedLabelColor: Color(0xff484848),
-						unselectedLabelStyle: TextStyle(fontSize: 16),
+						unselectedLabelStyle: TextStyle(fontSize: 16)
 					)
 				),
 				height: 91
@@ -51,10 +51,10 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 			body: TabBarView(
 				controller: _tabController,
 				children: [
-					OrderListPage(null),
-					OrderListPage(1),
-					OrderListPage(2),
-					OrderListPage(3)
+					OrderListPage(),
+					OrderListPage(status: 1),
+					OrderListPage(status: 2),
+					OrderListPage(status: 3)
 				]
 			)
 		);
