@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
-import 'package:flutter_jkxing/Home/Pages/HomeDoctorListPage.dart';
+import 'package:flutter_jkxing/Home/Pages/HomeHospitalListPage.dart';
 
 class HomeContentPage extends StatefulWidget {
 	@override
@@ -49,28 +50,15 @@ class _HomeContentPageState extends State<HomeContentPage> with SingleTickerProv
 					child: Column(
 						children: <Widget>[
 							// 搜索框
-							GestureDetector(
-								onTap: () {
-									// 跳转到搜索页
-									
-								},
-								child: Container(
-									height: 30,
-									alignment: Alignment.center,
-									margin: EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-									padding: EdgeInsets.only(left: 15),
-									decoration: BoxDecoration(
-										borderRadius: BorderRadius.circular(15),
-										color: Color(0xfff4f6f9)
-									),
-									child: Text(
-										'请输入医院/医生姓名',
-										style: TextStyle(
-											fontSize: 14,
-											color: Color(0xffc4c4c4)
-										),
-									),
-								),
+							ZFSearchBar(
+								placeholder: '医院名称/医生姓名',
+								paddingH: 15,
+								paddingV: 7,
+								height: 44,
+								showSearchIcon: false,
+								onTapSearchBar: () {
+								
+								}
 							),
 							
 							Container(
@@ -97,8 +85,8 @@ class _HomeContentPageState extends State<HomeContentPage> with SingleTickerProv
 											this.doctorNumMap != null ? '${this.doctorNumMap['todayDoctors'] ?? 0}名' : '0名',
 											style: TextStyle(fontSize: 14, color: Color(0xffe55e5e))
 										)
-									],
-								),
+									]
+								)
 							),
 							
 							Container(
@@ -115,7 +103,7 @@ class _HomeContentPageState extends State<HomeContentPage> with SingleTickerProv
 									labelColor: Color(0xff6bcbd6),
 									labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 									unselectedLabelColor: Color(0xff0a1314),
-									unselectedLabelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+									unselectedLabelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)
 								)
 							)
 						]
@@ -126,8 +114,8 @@ class _HomeContentPageState extends State<HomeContentPage> with SingleTickerProv
 			body: TabBarView(
 				controller: _tabController,
 				children: [
-					HomeDoctorListPage(DoctorStatus.Authentication),
-					HomeDoctorListPage(DoctorStatus.PendingAuthentication)
+					HomeHospitalListPage(DoctorStatus.Authentication),
+					HomeHospitalListPage(DoctorStatus.PendingAuthentication)
 				]
 			),
 			backgroundColor: Colors.white

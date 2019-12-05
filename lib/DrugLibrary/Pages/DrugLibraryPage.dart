@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/DrugConfiguration.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import '../Model/DrugClassModel.dart';
@@ -44,7 +45,12 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 					child: Column(
 						children: <Widget>[
 							// 顶部搜索框
-							_searchView(),
+							ZFSearchBar(
+								placeholder: '搜索药品',
+								onTapSearchBar: () {
+								
+								},
+							),
 							
 							Expanded(
 								child: Container(
@@ -113,39 +119,6 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 				});
 			}
 		});
-	}
-	
-	// 搜索框
-	_searchView() {
-		return GestureDetector(
-			child: Container(
-				margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-				height: 30,
-				decoration: BoxDecoration(
-					borderRadius: BorderRadius.all(Radius.circular(18.0)),
-					color: Color(0xfff5f5f5)
-				),
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.start,
-					children: <Widget>[
-						Padding(padding: EdgeInsets.only(left: 10)),
-						Icon(
-							Icons.search,
-							color: Colors.grey,
-							size: 18
-						),
-						Padding(padding: EdgeInsets.only(left: 5)),
-						Text(
-							'搜索药品',
-							style: TextStyle(color: Colors.grey, fontSize: 14)
-						)
-					]
-				)
-			),
-			onTap: () {
-				print('tap search view');
-			}
-		);
 	}
 	
 	// 左侧主分类列表

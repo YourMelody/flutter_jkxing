@@ -21,12 +21,10 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 	Widget build(BuildContext context) {
 		return Scaffold(
 			appBar: ZFAppBar('订单', showBackBtn: false,
-				rightBarBtn: GestureDetector(
-					onTap: () {
-						
-					},
-					child: Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)),
-				),
+				rightBarBtn: Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)),
+				rightBarBtnAction: () {
+					// 搜索
+				},
 				bottom: PreferredSize(
 					preferredSize: Size.fromHeight(47),
 					child: TabBar(

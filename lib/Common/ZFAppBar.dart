@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 /*
 * title：标题
 * rightBarBtn：导航栏右侧按钮
-* showBackBtn：是否显示返回按钮
-* context：只有当showBackBtn为true才需要传
+* rightBarBtnAction：导航栏右侧按钮点击事件
+* showBackBtn：是否显示返回按钮，默认为true
+* context：当showBackBtn为true时必须传
 * */
-PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, PreferredSizeWidget bottom, double height : 44, bool showBackBtn: true, BuildContext context}) {
+PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, Function rightBarBtnAction,PreferredSizeWidget bottom, double height : 44, bool showBackBtn: true, BuildContext context}) {
 	return PreferredSize(
 		child: AppBar(
 			title: Text(
@@ -16,11 +17,21 @@ PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, PreferredSizeWid
 				overflow: TextOverflow.ellipsis
 			),
 			actions: [
-				Container(
-					height: 44,
-					alignment: Alignment.center,
-					padding: EdgeInsets.only(right: 15, left: 5),
-					child: rightBarBtn
+				Offstage(
+					offstage: rightBarBtn == null,
+					child: GestureDetector(
+						onTap: () {
+							if (rightBarBtnAction != null) {
+								rightBarBtnAction();
+							}
+						},
+						child: Container(
+							height: 44,
+							alignment: Alignment.center,
+							padding: EdgeInsets.only(right: 15, left: 5),
+							child: rightBarBtn
+						)
+					)
 				)
 			],
 			bottom: bottom,
