@@ -46,9 +46,10 @@ class _HomeContentPageState extends State<HomeContentPage> with SingleTickerProv
 				'首页',
 				showBackBtn: false,
 				bottom: PreferredSize(
-					preferredSize: Size.fromHeight(131),
+					preferredSize: Size.fromHeight(132),
 					child: Column(
 						children: <Widget>[
+							Divider(color: Color(0xffbbbbbb), height: 1),
 							// 搜索框
 							ZFSearchBar(
 								placeholder: '医院名称/医生姓名',

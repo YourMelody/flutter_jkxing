@@ -18,8 +18,22 @@ class DoctorListOfHospitalPage extends StatefulWidget {
 
 class _DoctorListOfHospitalState extends State<DoctorListOfHospitalPage> {
 	
+	List dataSource = [];
+	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
 	EmptyWidgetType type = EmptyWidgetType.Loading;
+	
+	@override
+	void initState() {
+		super.initState();
+		WidgetsBinding.instance.addPostFrameCallback((_) {
+			_initData();
+		});
+	}
+	
+	Future<void> _initData() async {
+	
+	}
 	
 	@override
 	Widget build(BuildContext context) {
@@ -28,10 +42,10 @@ class _DoctorListOfHospitalState extends State<DoctorListOfHospitalPage> {
 				widget.agentName != null && widget.agentName.length > 0 ?
 				'${widget.agentName}的医生' : '我的医生',
 				rightBarBtn: widget.showSearch ? Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)) : null,
-				rightBarBtnAction: widget.showSearch ? () {
+				rightBarBtnAction: () {
 					// 搜索
 					
-				} : null,
+				},
 				context: context
 			),
 			body: Column(

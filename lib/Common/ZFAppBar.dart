@@ -37,7 +37,7 @@ PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, Function rightBa
 			bottom: bottom,
 			backgroundColor: Colors.white,
 			centerTitle: true,
-			elevation: 0.5,
+			elevation: 1,
 			leading: showBackBtn ? GestureDetector(
 				onTap: () {
 					if (Navigator.canPop(context)) {
