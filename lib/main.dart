@@ -20,7 +20,6 @@ void main() {
 				PPSession.getInstance().userModel = UserModel.fromJson(respData);
 			}
 		}
-		ZFLoginState loginState = ZFLoginState(isLogin: value == true);
 		Store<ZFAppState> store = Store<ZFAppState>(
 			mainReducer,
 			initialState: ZFAppState.getInstance(value)

@@ -8,6 +8,7 @@ import '../Network/DrugLibRequest.dart';
 import 'DrugDetailPage.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 
 class DrugListPage extends StatefulWidget {
 	DrugListPage(this.drugClassModel, this.configModel);
@@ -115,7 +116,12 @@ class _DrugListState extends State<DrugListPage> {
 			),
 			body: Column(
 				children: <Widget>[
-					_searchView(),
+					ZFSearchBar(
+						placeholder: '搜索药品',
+						onTapSearchBar: () {
+						
+						},
+					),
 					Expanded(
 						child: RefreshListView(
 							controller: this.controller,
@@ -146,39 +152,6 @@ class _DrugListState extends State<DrugListPage> {
 					)
 				]
 			)
-		);
-	}
-	
-	// 搜索框
-	_searchView() {
-		return GestureDetector(
-			child: Container(
-				margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-				height: 30,
-				decoration: BoxDecoration(
-					borderRadius: BorderRadius.all(Radius.circular(18.0)),
-					color: Color(0xfff5f5f5)
-				),
-				child: Row(
-					mainAxisAlignment: MainAxisAlignment.start,
-					children: <Widget>[
-						Padding(padding: EdgeInsets.only(left: 10)),
-						Icon(
-							Icons.search,
-							color: Colors.grey,
-							size: 18,
-						),
-						Padding(padding: EdgeInsets.only(left: 5)),
-						Text(
-							'搜索药品',
-							style: TextStyle(color: Colors.grey, fontSize: 14),
-						)
-					],
-				),
-			),
-			onTap: () {
-				print('tap search view');
-			}
 		);
 	}
 	

@@ -445,7 +445,10 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text(auditPassNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500))
+										Text(
+											int.parse(auditPassNum) > 0 ? auditPassNum : '--',
+											style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500)
+										)
 									]
 								),
 							)),
@@ -466,7 +469,10 @@ class _MineSaleDetailState extends State<MineSaleDetailWidget> {
 											mainAxisAlignment: MainAxisAlignment.center
 										),
 										Padding(padding: EdgeInsets.only(top: 8)),
-										Text(waitAuthNum, style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500))
+										Text(
+											int.parse(waitAuthNum) > 0 ? waitAuthNum : '--',
+											style: TextStyle(fontSize: 20, color: Color(0xff3b4243), fontWeight: FontWeight.w500)
+										)
 									]
 								)
 							))

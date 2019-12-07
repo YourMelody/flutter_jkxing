@@ -9,10 +9,13 @@ import 'SelectDatePage.dart';
 
 class TeamSalesPerformancePage extends StatefulWidget {
 	final String teamCode;
-	TeamSalesPerformancePage(this.teamCode);
+	final int startTime;
+	final int endTime;
+	final String timeStr;
+	TeamSalesPerformancePage(this.teamCode, this.startTime, this.endTime, this.timeStr);
 	@override
 	State<StatefulWidget> createState() {
-		return _TeamSalesPerformanceState();
+		return _TeamSalesPerformanceState(startTime, endTime, timeStr);
 	}
 }
 
@@ -26,18 +29,22 @@ class _TeamSalesPerformanceState extends State<TeamSalesPerformancePage> {
 	TeamSalesDetailModel detailModel;
 	int startTime;
 	int endTime;
-	String timeStr = '本月';
+	String timeStr;
 	bool crossMonth = false;
+	_TeamSalesPerformanceState(this.startTime, this.endTime, this.timeStr);
 	int agentType = PPSession.getInstance().userModel.agentType;
 	
 	@override
 	void initState() {
 		super.initState();
-		var now = DateTime.now();
-		// 本月开始时间
-		this.startTime = DateTime(now.year, now.month).millisecondsSinceEpoch;
-		// 当前时间
-		this.endTime = now.millisecondsSinceEpoch;
+		DateTime startDate = DateTime.fromMillisecondsSinceEpoch(startTime);
+		DateTime endDate = DateTime.fromMillisecondsSinceEpoch(endTime);
+		if (startDate.year != endDate.year ||
+			(startDate.year == endDate.year && startDate.month != endDate.month)) {
+			this.crossMonth = true;
+		} else {
+			this.crossMonth = false;
+		}
 		
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initData();

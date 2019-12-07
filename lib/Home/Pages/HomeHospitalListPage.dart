@@ -5,22 +5,23 @@ import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
 import 'package:flutter_jkxing/Home/Model/PendingAuthenticationModel.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
+import 'package:flutter_jkxing/Home/Pages/DoctorListOfHospitalPage.dart';
 
 enum DoctorStatus {
 	Authentication,         // 已通过
 	PendingAuthentication   // 待认证
 }
 
-class HomeDoctorListPage extends StatefulWidget {
+class HomeHospitalListPage extends StatefulWidget {
 	final DoctorStatus doctorStatus;
-	HomeDoctorListPage(this.doctorStatus);
+	HomeHospitalListPage(this.doctorStatus);
 	@override
 	State<StatefulWidget> createState() {
-		return _HomeDoctorListPageState();
+		return _HomeHospitalListState();
 	}
 }
 
-class _HomeDoctorListPageState extends State<HomeDoctorListPage> with AutomaticKeepAliveClientMixin {
+class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticKeepAliveClientMixin {
 	List <AuthenticationDoctorModel> authDataSource = [];       // 已通过数据源
 	List <PendingAuthenticationModel> pendingDataSource = [];   // 待认证数据源
 	
@@ -147,7 +148,9 @@ class _HomeDoctorListPageState extends State<HomeDoctorListPage> with AutomaticK
 	Widget _createAuthItem(AuthenticationDoctorModel model) {
 		return GestureDetector(
 			onTap: () {
-			
+				Navigator.of(context).push(MaterialPageRoute(
+					builder: (_) => DoctorListOfHospitalPage()
+				));
 			},
 			child: Container(
 				height: 54,
