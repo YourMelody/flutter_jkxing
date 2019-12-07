@@ -11,6 +11,7 @@ class OrderContentPage extends StatefulWidget {
 
 class _OrderContentState extends State<OrderContentPage> with SingleTickerProviderStateMixin {
 	TabController _tabController;
+	String searchDocName;
 	@override
 	void initState() {
 		super.initState();
@@ -51,12 +52,36 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 			body: TabBarView(
 				controller: _tabController,
 				children: [
-					OrderListPage(null),
-					OrderListPage(1),
-					OrderListPage(2),
-					OrderListPage(3)
+					OrderListPage(null, this.searchDocName),
+					OrderListPage(1, this.searchDocName),
+					OrderListPage(2, this.searchDocName),
+					OrderListPage(3, this.searchDocName)
 				]
 			)
+		);
+	}
+	
+	// 点击搜索
+	void _searchAction() {
+		showGeneralDialog(
+			context: context,
+			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+				return SafeArea(child: Container(
+					color: Color.fromARGB(140, 0, 0, 0),
+				));
+			},
+			barrierDismissible: true,
+			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+			transitionDuration: const Duration(milliseconds: 150),
+			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+				return FadeTransition(
+					opacity: CurvedAnimation(
+						parent: animation,
+						curve: Curves.easeOut
+					),
+					child: child
+				);
+			}
 		);
 	}
 }

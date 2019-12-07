@@ -8,7 +8,8 @@ import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 
 class OrderListPage extends StatefulWidget {
 	final int status;
-	OrderListPage(this.status);
+	final String searchDocName;
+	OrderListPage(this.status, this.searchDocName);
 	@override
 	State<StatefulWidget> createState() {
 		return _OrderListState();
