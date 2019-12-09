@@ -22,8 +22,8 @@ class HomeHospitalListPage extends StatefulWidget {
 }
 
 class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticKeepAliveClientMixin {
-	List <AuthenticationDoctorModel> authDataSource = [];       // 已通过数据源
-	List <PendingAuthenticationModel> pendingDataSource = [];   // 待认证数据源
+	List <AuthenticationDoctorModel> authDataSource = [];       // 已通过数据源，不分页
+	List <PendingAuthenticationModel> pendingDataSource = [];   // 待认证数据源，分页
 	
 	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
@@ -100,14 +100,11 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 		super.build(context);
 		return RefreshListView(
 			controller: this.controller,
-			child: ListView.separated(
+			child: ListView.builder(
 				itemBuilder: (context, index) => _createItem(index),
 				itemCount: widget.doctorStatus == DoctorStatus.Authentication ?
 					(authDataSource == null ? 0 : authDataSource.length) :
-					(pendingDataSource == null ? 0 : pendingDataSource.length),
-				separatorBuilder: (context, index) {
-					return Container(height: 1, color: Color(0xffe5e5e5));
-				},
+					(pendingDataSource == null ? 0 : pendingDataSource.length)
 			),
 			onRefresh: () {
 				if (widget.doctorStatus == DoctorStatus.PendingAuthentication) {
@@ -121,12 +118,9 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 				}
 				return _initData();
 			},
-			onLoad: () {
-				if (widget.doctorStatus == DoctorStatus.PendingAuthentication) {
-					return _initData();
-				}
-				return null;
-			},
+			onLoad: widget.doctorStatus == DoctorStatus.PendingAuthentication ? () {
+				return _initData();
+			} : null,
 			type: this.type
 		);
 	}
@@ -149,12 +143,15 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 		return GestureDetector(
 			onTap: () {
 				Navigator.of(context).push(MaterialPageRoute(
-					builder: (_) => DoctorListOfHospitalPage()
+					builder: (_) => DoctorListOfHospitalPage(doctorModel: model)
 				));
 			},
 			child: Container(
 				height: 54,
 				padding: EdgeInsets.symmetric(horizontal: 15),
+				decoration: BoxDecoration(
+					border: Border(bottom: BorderSide(color: Color(0xffe5e5e5), width: 0.5))
+				),
 				child: Row(
 					children: <Widget>[
 						// 医院名称
@@ -193,6 +190,9 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 			height: 54,
 			padding: EdgeInsets.only(left: 15, right: 33),
 			alignment: Alignment.center,
+			decoration: BoxDecoration(
+				border: Border(bottom: BorderSide(color: Color(0xffe5e5e5), width: 0.5))
+			),
 			child: Row(
 				children: <Widget>[
 					Expanded(child: Text(
@@ -219,6 +219,9 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 		return Container(
 			height: 66,
 			padding: EdgeInsets.symmetric(horizontal: 15),
+			decoration: BoxDecoration(
+				border: Border(bottom: BorderSide(color: Color(0xffe5e5e5), width: 0.5))
+			),
 			child: Row(
 				children: <Widget>[
 					Expanded(

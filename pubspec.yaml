@@ -77,5 +77,8 @@ flutter:
     - lib/Images/order_detail_line.png
     - lib/Images/loading.gif
     - lib/Images/net_error_img.png
+    - lib/Images/hospital_avatar_default.png
+    - lib/Images/btn_doctor_more.png
+    - lib/Images/btn_phone.png
 
 

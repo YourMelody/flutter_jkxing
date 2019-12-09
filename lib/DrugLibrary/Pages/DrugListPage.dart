@@ -197,7 +197,7 @@ class _DrugListState extends State<DrugListPage> {
 									// Rx标签：prescriptionType为4（处方药）或5（管制处方药）时才展示
 									child: Offstage(
 										offstage: model?.prescriptionType != 4 && model?.prescriptionType != 5,
-										child: Image.asset('lib/Images/rx_label_flag.png', width: 25, height: 25),
+										child: Image.asset('lib/Images/rx_label_flag.png', width: 25, height: 25)
 									)
 								)
 							]

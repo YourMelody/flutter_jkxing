@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorStatisticModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
 import 'package:flutter_jkxing/Home/Model/PendingAuthenticationModel.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 
 class HomeRequest {
 	// 获取新增医生数和总医生数
@@ -47,6 +49,42 @@ class HomeRequest {
 				return (data as List)?.map((e) {
 					return e == null ? null : PendingAuthenticationModel.fromJson(e);
 				})?.toList();
+			} catch(e) {
+				return null;
+			}
+		});
+	}
+	
+	// 获取某个医院的医生列表
+	static Future<dynamic> getDoctorListOfHospital(BuildContext context, int hospitalId, String agentId, int page) {
+		return HttpUtil().get(
+			'crm/api/agentInvitation/v2/getHospitalDoctorsInfo',
+			context: context,
+			showToast: ToastType.ToastTypeNone,
+			data: {'hospitalId': hospitalId, 'agentId': agentId, 'page': page, 'limit': 20}
+		).then((data) {
+			try {
+				return (data as List)?.map((e) {
+					return e == null ? null : DoctorInfoOfHospitalModel.fromJson(e);
+				})?.toList();
+			} catch(e) {
+				return null;
+			}
+		});
+	}
+	
+	// 获取医生统计详情
+	static Future<dynamic> getDoctorStatisticRequest(BuildContext context, int startTime, int endTime, String doctorId) {
+		return HttpUtil().post(
+			'crm/api/doctorDetail/statisData',
+			context: context,
+			data: {'startTime': startTime, 'endTime': endTime, 'doctorId': doctorId}
+		).then((data) {
+			try {
+				if (data != null) {
+					return DoctorStatisticModel.fromJson(data);
+				}
+				return null;
 			} catch(e) {
 				return null;
 			}
