@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'OrderListPage.dart';
@@ -23,9 +24,7 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 		return Scaffold(
 			appBar: ZFAppBar('订单', showBackBtn: false,
 				rightBarBtn: Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)),
-				rightBarBtnAction: () {
-					// 搜索
-				},
+				rightBarBtnAction: () => _searchAction(),
 				bottom: PreferredSize(
 					preferredSize: Size.fromHeight(47),
 					child: TabBar(
@@ -64,8 +63,72 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 		showGeneralDialog(
 			context: context,
 			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-				return SafeArea(child: Container(
-					color: Color.fromARGB(140, 0, 0, 0),
+				return SafeArea(child: GestureDetector(
+					onTap: () {
+						if (Navigator.of(context).canPop()) {
+							Navigator.of(context).pop();
+						}
+					},
+					child: Container(
+						color: Color.fromRGBO(0, 0, 0, 0),
+						child: Column(children: <Widget>[
+							// 搜索输入框
+							Container(
+								color: Colors.white,
+								padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+								child: Row(children: <Widget>[
+									Expanded(child: CupertinoTextField(
+										maxLines: 1,
+										autofocus: true,
+										autocorrect: false,
+										textAlign: TextAlign.left,
+										style: TextStyle(fontSize: 16, color: Color(0xff3b4243)),
+										placeholder: '医生姓名',
+										clearButtonMode: OverlayVisibilityMode.editing,
+										cursorColor: Color(0xff6bcbd6),
+										decoration: BoxDecoration(
+											border: Border.all(width: 0, color: Colors.white),
+											borderRadius: BorderRadius.circular(16),
+											color: Color(0xfff4f6f9)
+										),
+										prefix: Container(
+											padding: EdgeInsets.only(left: 6),
+											child: Icon(
+												Icons.search,
+												color: Colors.grey,
+												size: 18
+											)
+										),
+										onSubmitted: (text) {
+											this.setState(() {
+												searchDocName = text;
+											});
+											if (Navigator.of(context).canPop()) {
+												Navigator.of(context).pop();
+											}
+										},
+										onChanged: (text) {
+											this.searchDocName = text;
+										}
+									)),
+									Padding(padding: EdgeInsets.only(right: 10)),
+									GestureDetector(
+										onTap: () {
+											this.setState(() {});
+											if (Navigator.of(context).canPop()) {
+												Navigator.of(context).pop();
+											}
+										},
+										child: Text(
+											'搜索',
+											style: TextStyle(fontSize: 16, color: Color(0xc00a1314), fontWeight: FontWeight.w400, decoration: TextDecoration.none)
+										)
+									)
+								])
+							),
+							Expanded(child: Container(color: Color(0x80000000)))
+						])
+					)
 				));
 			},
 			barrierDismissible: true,

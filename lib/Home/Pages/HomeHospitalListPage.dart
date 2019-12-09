@@ -121,7 +121,9 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 			onLoad: widget.doctorStatus == DoctorStatus.PendingAuthentication ? () {
 				return _initData();
 			} : null,
-			type: this.type
+			type: this.type,
+			emptyImagePath: 'lib/Images/default_pic_doctor.png',
+			emptyTitle: widget.doctorStatus == DoctorStatus.Authentication ? '暂无已通过的医生' : '暂无待认证的医生'
 		);
 	}
 	

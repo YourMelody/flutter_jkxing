@@ -35,8 +35,33 @@ class ListUtil {
 	// 列表为空的缺省页
 	Widget getNoDataEmptyPage(String imgStr, String title) {
 		return Container(
-			child: Center(
-				child: Text('空数据'),
+			alignment: Alignment.center,
+			padding: EdgeInsets.symmetric(horizontal: 20),
+			child: Column(
+				children: <Widget>[
+					Expanded(
+						child: Container(),
+						flex: 5
+					),
+					
+					Image.asset(
+						imgStr ?? '',
+						width: 143,
+						height: 135
+					),
+					Padding(padding: EdgeInsets.only(top: 14)),
+					Text(
+						title ?? '',
+						style: TextStyle(fontSize: 14, color: Color(0x660a1314)),
+						maxLines: 2,
+						overflow: TextOverflow.ellipsis
+					),
+					
+					Expanded(
+						child: Container(),
+						flex: 9
+					)
+				]
 			)
 		);
 	}

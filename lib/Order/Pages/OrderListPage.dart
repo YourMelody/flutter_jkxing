@@ -36,6 +36,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 		var response = await OrderRequest.getOrderList(
 			this.currentPage,
 			context,
+			searchKey: widget.searchDocName,
 			status: widget.status,
 			showToast: this.dataSource.length == 0 ? ToastType.ToastTypeNone : ToastType.ToastTypeError
 		);
@@ -99,7 +100,9 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 			onLoad: () {
 				return _initData();
 			},
-			type: this.type
+			type: this.type,
+			emptyImagePath: 'lib/Images/img_orders_empty.png',
+			emptyTitle: '暂无订单'
 		);
 	}
 	

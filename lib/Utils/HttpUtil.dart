@@ -111,6 +111,7 @@ class HttpUtil {
 				return null;
 			}
 		} on DioError catch(error) {
+			print('请求异常-----$error');
 			// 网络异常
 			if (context != null) {
 				if (showToast == ToastType.ToastTypeNormal) {

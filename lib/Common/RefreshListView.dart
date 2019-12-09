@@ -29,12 +29,20 @@ class RefreshListView extends StatelessWidget {
 	// 空数据缺省页类型
 	final EmptyWidgetType type;
 	
+	// 空数据缺省页图片路径
+	final String emptyImagePath;
+	
+	// 空数据缺省页文本
+	final String emptyTitle;
+	
 	RefreshListView({
 		this.onLoad,
 		this.firstRefresh = true,
 		this.type = EmptyWidgetType.Loading,
 		this.showRefreshHeader = true,
 		this.controller,
+		this.emptyImagePath,
+		this.emptyTitle,
 		@required this.onRefresh,
 		@required this.child
 	});
@@ -51,7 +59,7 @@ class RefreshListView extends StatelessWidget {
 			// 数据为空时的缺省页（注意，当emptyWidget不为null时则只展示emptyWidget）
 			emptyWidget: type == EmptyWidgetType.None ? null :
 						 type == EmptyWidgetType.NetError ? ListUtil().getNetErrorEmptyPage(this.onRefresh) :
-						 type == EmptyWidgetType.NoData ? ListUtil().getNoDataEmptyPage('', '') :
+						 type == EmptyWidgetType.NoData ? ListUtil().getNoDataEmptyPage(this.emptyImagePath, this.emptyTitle) :
 						 ListUtil().getFirstRefreshPage(),
 			// 下拉刷新（注意：只有onRefresh不为null，设置的firstRefreshWidget才会生效）
 			onRefresh: type == EmptyWidgetType.None ? this.onRefresh : null,

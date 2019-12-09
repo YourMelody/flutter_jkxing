@@ -8,15 +8,22 @@ import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 class OrderRequest {
 	// 获取订单列表
 	static Future<dynamic> getOrderList(int page, BuildContext context, {int status, ToastType showToast, String searchKey}) {
-		Map param;
+		var param;
 		if (status == null) {
-			param = {'limit': 20, 'page': page};
+			if (searchKey != null && searchKey.length > 0) {
+				param = {'limit': 20, 'page': page, 'doctorName': searchKey};
+			} else {
+				param = {'limit': 20, 'page': page};
+			}
 		} else {
-			param = {'status': status, 'limit': 20, 'page': page};
+			if (searchKey != null && searchKey.length > 0) {
+				param = {'status': status, 'limit': 20, 'page': page, 'doctorName': searchKey};
+			} else {
+				param = {'status': status, 'limit': 20, 'page': page};
+			}
 		}
-		if (searchKey != null && searchKey.length > 0) {
-			param['doctorName'] = searchKey;
-		}
+		
+		print('param-----$param');
 		return HttpUtil.getInstance().get(
 			'/crm/api/prescription/list',
 			data: param,
