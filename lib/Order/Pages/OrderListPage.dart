@@ -5,11 +5,14 @@ import 'package:flutter_jkxing/Order/Pages/OrderDetailPage.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
+import 'package:event_bus/event_bus.dart';
+import 'OrderSearchEvent.dart';
 
 class OrderListPage extends StatefulWidget {
 	final int status;
-	final String searchDocName;
-	OrderListPage(this.status, this.searchDocName);
+	final EventBus eventBus;
+	final String searchKey;
+	OrderListPage(this.eventBus, {Key key, this.status, this.searchKey}) : super(key: key);
 	@override
 	State<StatefulWidget> createState() {
 		return _OrderListState();
@@ -21,24 +24,33 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
 	EmptyWidgetType type = EmptyWidgetType.Loading;
+	String searchKey;
 	
 	@override
 	void initState() {
 		super.initState();
 		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData();
+			_initData(ToastType.ToastTypeNone);
+		});
+		this.searchKey = widget.searchKey ?? '';
+		widget.eventBus.on<OrderSearchEvent>().listen((event) {
+			this.currentPage = 1;
+			this.searchKey = event.searchKey;
+			if (event.selectIndex == 0 && widget.status == null || event.selectIndex == widget.status) {
+				_initData(ToastType.ToastTypeNormal);
+			}
 		});
 	}
 	
 	
 	// 请求数据
-	Future<void> _initData() async {
+	Future<void> _initData(ToastType toastType) async {
 		var response = await OrderRequest.getOrderList(
 			this.currentPage,
 			context,
-			searchKey: widget.searchDocName,
+			searchKey: this.searchKey,
 			status: widget.status,
-			showToast: this.dataSource.length == 0 ? ToastType.ToastTypeNone : ToastType.ToastTypeError
+			showToast: toastType
 		);
 		if (response != null) {
 			// 请求成功
@@ -95,10 +107,10 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 						type = EmptyWidgetType.Loading;
 					});
 				}
-				return _initData();
+				return _initData(ToastType.ToastTypeError);
 			},
 			onLoad: () {
-				return _initData();
+				return _initData(ToastType.ToastTypeError);
 			},
 			type: this.type,
 			emptyImagePath: 'lib/Images/img_orders_empty.png',

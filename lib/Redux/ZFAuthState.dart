@@ -1,6 +1,4 @@
 // 管理登陆状态的state
-import 'dart:math';
-
 class ZFLoginState {
 	bool isLogin;
 	ZFLoginState({this.isLogin:false});

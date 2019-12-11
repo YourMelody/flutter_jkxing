@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 * showBackBtn：是否显示返回按钮，默认为true
 * context：当showBackBtn为true时必须传
 * */
-PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, Function rightBarBtnAction,PreferredSizeWidget bottom, double height : 44, bool showBackBtn: true, BuildContext context}) {
+PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, Function rightBarBtnAction, PreferredSizeWidget bottom, double height : 44, bool showBackBtn: true, Function leftBarBtnAction, BuildContext context}) {
 	return PreferredSize(
 		child: AppBar(
 			title: Text(
@@ -40,7 +40,9 @@ PreferredSizeWidget ZFAppBar(String title, {Widget rightBarBtn, Function rightBa
 			elevation: 1,
 			leading: showBackBtn ? GestureDetector(
 				onTap: () {
-					if (Navigator.canPop(context)) {
+					if (leftBarBtnAction != null) {
+						leftBarBtnAction();
+					} else if (Navigator.canPop(context)) {
 						Navigator.pop(context);
 					}
 				},

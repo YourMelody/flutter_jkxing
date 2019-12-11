@@ -23,7 +23,6 @@ class OrderRequest {
 			}
 		}
 		
-		print('param-----$param');
 		return HttpUtil.getInstance().get(
 			'/crm/api/prescription/list',
 			data: param,
