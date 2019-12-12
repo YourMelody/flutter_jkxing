@@ -5,12 +5,14 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Pages/DoctorReportPage.dart';
+import 'package:flutter_jkxing/Mine/Pages/MineActivePage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 import 'package:flutter_jkxing/Mine/Pages/TeamSalesPerformancePage.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 import 'SelectDatePage.dart';
 
+// 我的
 class MinePage extends StatefulWidget {
 	@override
 	State<StatefulWidget> createState() {
@@ -25,6 +27,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	
 	MineDetailModel detailModel;
 	Map doctorNumMap;
+	var activeData;
 	@override
 	void initState() {
 		super.initState();
@@ -39,6 +42,11 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			// 接口请求
 			_getSaleDetail(ToastType.ToastTypeNormal);
 			_getDoctorNum(ToastType.ToastTypeError);
+			
+			if (PPSession.getInstance()?.userModel?.agentType ==1) {
+				// 获取医生活跃度
+				_getDoctorActivePerMonthTime();
+			}
 		});
 	}
 	
@@ -59,6 +67,18 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			if (response != null) {
 				setState(() {
 					this.doctorNumMap = response;
+				});
+			}
+		});
+	}
+	
+	// 获取医生活跃度
+	_getDoctorActivePerMonthTime() {
+		MineRequest.getDoctorActiveRequest(DateTime.now().millisecondsSinceEpoch).then((response) {
+			if (response != null) {
+				// activeBase活跃百分比及格线  activePer活跃百分比
+				setState(() {
+					this.activeData = response;
 				});
 			}
 		});
@@ -107,14 +127,21 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			}
 			return _createCommonItem('药品明细', index);
 		} else if (index == 4) {
-			return _createCommonItem('医生报表', index);
+			// 全职有活跃度，兼职没有
+			if (session?.userModel?.agentType == 2) {
+				return null;
+			}
+			return _createCommonItem('活跃度', index);
 		} else if (index == 5) {
-			return _createCommonItem('上传执业证，可提现', index);
+			return _createCommonItem('医生报表', index);
 		} else if (index == 6) {
+			return _createCommonItem('上传执业证，可提现', index);
+		} else if (index == 7) {
 			return _createCommonItem('医生在线情况', index);
-		} else {
+		} else if (index == 8) {
 			return _createCommonItem('设置', index, showTopBorder: true);
 		}
+		return null;
 	}
 	
 	// 头部信息和选择日期
@@ -228,16 +255,24 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			));
 		} else if (index == 3) {
 			// 药品明细
+			
 		} else if (index == 4) {
+			// 活跃度
+			Navigator.of(context).push(MaterialPageRoute(
+				builder: (_) => MineActivePage()
+			));
+		} else if (index == 5) {
 			// 医生报表
 			Navigator.of(context).push(MaterialPageRoute(
 				builder: (_) => DoctorReportPage()
 			));
-		} else if (index == 5) {
-			// 上传执业证，可提现
 		} else if (index == 6) {
-			// 医生在线情况
+			// 上传执业证，可提现
+			
 		} else if (index == 7) {
+			// 医生在线情况
+			
+		} else if (index == 8) {
 			// 设置
 			Navigator.pushNamed(context, 'my_setting_page');
 		}

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Mine/Model/TeamSalesDetailModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
@@ -30,6 +31,17 @@ class MineRequest {
 			data: {'startTime': startTime, 'endTime': endTime, 'agentId': agentId == null? '' : agentId},
 			showToast: showToast,
 			context: context
+		).then((data) {
+			return data;
+		});
+	}
+	
+	// 获取医生活跃度
+	static Future<dynamic> getDoctorActiveRequest(int monthTime) {
+		return HttpUtil.getInstance().get(
+			'/crm/api/agent/doctorActivePer',
+			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': monthTime, 'periodFlag': 1},
+			showToast: ToastType.ToastTypeNone
 		).then((data) {
 			return data;
 		});

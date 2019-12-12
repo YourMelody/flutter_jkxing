@@ -10,6 +10,7 @@ class LogisticsInfoModel {
   LogisticsInfoModel(this.logisticsList,this.orderCode,this.shippingNo,this.companeName);
 
   factory LogisticsInfoModel.fromJson(Map<String, dynamic> json) => _$LogisticsInfoModelFromJson(json);
+  Map<String, dynamic> toJson() => _$LogisticsInfoModelToJson(this);
 }
 
 @JsonSerializable()
@@ -21,4 +22,5 @@ class LogisticsInfoDesModel {
 	LogisticsInfoDesModel(this.description, this.time, this.orderStatus);
 
 	factory LogisticsInfoDesModel.fromJson(Map<String, dynamic> json) => _$LogisticsInfoDesModelFromJson(json);
+	Map<String, dynamic> toJson() => _$LogisticsInfoDesModelToJson(this);
 }
