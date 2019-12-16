@@ -47,7 +47,7 @@ class _MineActiveState extends State<MineActivePage> {
 											color: Color(0xff6bcbd6),
 											borderRadius: BorderRadius.circular(4)
 										),
-										child: Text('本期', style: TextStyle(fontSize: 14, color: Colors.white)),
+										child: Text('本期', style: TextStyle(fontSize: 14, color: Colors.white))
 									)
 								),
 								Padding(padding: EdgeInsets.only(right: 10)),
@@ -62,7 +62,7 @@ class _MineActiveState extends State<MineActivePage> {
 											color:  Color(0xfff0f2f5),
 											borderRadius: BorderRadius.circular(4)
 										),
-										child: Text('上期', style: TextStyle(fontSize: 14, color: Color(0xff909399))),
+										child: Text('上期', style: TextStyle(fontSize: 14, color: Color(0xff909399)))
 									)
 								)
 							],
