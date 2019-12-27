@@ -5,6 +5,7 @@ import 'package:flutter_jkxing/Mine/Model/TeamSalesDetailModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Model/DoctorReportDataModel.dart';
+import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
 
 class MineRequest {
 	// 获取销售业绩、指标、提成等
@@ -43,7 +44,11 @@ class MineRequest {
 			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': monthTime, 'periodFlag': 1},
 			showToast: ToastType.ToastTypeNone
 		).then((data) {
-			return data;
+			try {
+				return ActivePerModel.fromJson(data);
+			} catch (e) {
+				return null;
+			}
 		});
 	}
 	

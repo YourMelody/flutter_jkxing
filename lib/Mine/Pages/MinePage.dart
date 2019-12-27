@@ -8,6 +8,7 @@ import 'package:flutter_jkxing/Mine/Pages/DoctorReportPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineActivePage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MineSaleDetailWidget.dart';
 import 'package:flutter_jkxing/Mine/Pages/TeamSalesPerformancePage.dart';
+import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 import 'SelectDatePage.dart';
@@ -27,7 +28,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	
 	MineDetailModel detailModel;
 	Map doctorNumMap;
-	var activeData;
+	ActivePerModel activeData;
 	@override
 	void initState() {
 		super.initState();
@@ -76,7 +77,6 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	_getDoctorActivePerMonthTime() {
 		MineRequest.getDoctorActiveRequest(DateTime.now().millisecondsSinceEpoch).then((response) {
 			if (response != null) {
-				// activeBase活跃百分比及格线  activePer活跃百分比
 				setState(() {
 					this.activeData = response;
 				});
@@ -131,7 +131,15 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			if (session?.userModel?.agentType == 2) {
 				return null;
 			}
-			return _createCommonItem('活跃度', index);
+			String valueStr = '';
+			if (this?.activeData != null) {
+				if (this.activeData.activePer < this.activeData.activeBase) {
+					valueStr = '未达标';
+				} else {
+					valueStr = '${this.activeData.activePer}%';
+				}
+			}
+			return _createCommonItem('活跃度', index, teamM: valueStr);
 		} else if (index == 5) {
 			return _createCommonItem('医生报表', index);
 		} else if (index == 6) {
@@ -235,9 +243,12 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 					)),
 					Text(
 						teamM ?? '',
-						style: TextStyle(
+						style: index == 2 ? TextStyle(
 							fontSize: 16,
 							color: Color(0xffe75d5b)
+						) : TextStyle(
+							fontSize: 14,
+							color: teamM == '未达标' ? Color(0xffe75d5b) : Color(0xff6c7172)
 						)
 					),
 					Image.asset('lib/Images/home_btn_more.png', width: 18, height: 18)
@@ -259,7 +270,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		} else if (index == 4) {
 			// 活跃度
 			Navigator.of(context).push(MaterialPageRoute(
-				builder: (_) => MineActivePage()
+				builder: (_) => MineActivePage(this.activeData)
 			));
 		} else if (index == 5) {
 			// 医生报表

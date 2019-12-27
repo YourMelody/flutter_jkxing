@@ -83,5 +83,6 @@ flutter:
     - lib/Images/btn_phone.png
     - lib/Images/default_pic_doctor.png
     - lib/Images/img_orders_empty.png
+    - lib/Images/progress_bubble.png
 
 
