@@ -75,7 +75,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 	
 	// 获取医生活跃度
 	_getDoctorActivePerMonthTime() {
-		MineRequest.getDoctorActiveRequest(DateTime.now().millisecondsSinceEpoch).then((response) {
+		MineRequest.getDoctorActiveRequest(1).then((response) {
 			if (response != null) {
 				setState(() {
 					this.activeData = response;
@@ -90,7 +90,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		return Scaffold(
 			appBar: ZFAppBar('我的', showBackBtn: false),
 			body: ListView.builder(
-				itemCount: 8,
+				itemCount: 9,
 				itemBuilder: (context, index) => _createItem(index)
 			),
 			backgroundColor: Color(0xfff4f6f9)
@@ -108,7 +108,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		} else if (index == 2) {
 			// 二级（全职和兼职）都不展示
 			if (session?.userModel?.agentLevel == 2) {
-				return null;
+				return Container();
 			}
 			String value;
 			if (this?.detailModel?.teamSaleMoney != null) {
@@ -123,13 +123,13 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		} else if (index == 3) {
 			// 兼职（一级和二级）都不展示
 			if (session?.userModel?.agentType == 2) {
-				return null;
+				return Container();
 			}
 			return _createCommonItem('药品明细', index);
 		} else if (index == 4) {
 			// 全职有活跃度，兼职没有
 			if (session?.userModel?.agentType == 2) {
-				return null;
+				return Container();
 			}
 			String valueStr = '';
 			if (this?.activeData != null) {
@@ -149,7 +149,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		} else if (index == 8) {
 			return _createCommonItem('设置', index, showTopBorder: true);
 		}
-		return null;
+		return Container();
 	}
 	
 	// 头部信息和选择日期
@@ -270,7 +270,7 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 		} else if (index == 4) {
 			// 活跃度
 			Navigator.of(context).push(MaterialPageRoute(
-				builder: (_) => MineActivePage(this.activeData)
+				builder: (_) => MineActivePage()
 			));
 		} else if (index == 5) {
 			// 医生报表

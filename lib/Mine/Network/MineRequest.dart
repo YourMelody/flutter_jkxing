@@ -38,10 +38,10 @@ class MineRequest {
 	}
 	
 	// 获取医生活跃度
-	static Future<dynamic> getDoctorActiveRequest(int monthTime) {
+	static Future<dynamic> getDoctorActiveRequest(int periodFlag) {
 		return HttpUtil.getInstance().get(
 			'/crm/api/agent/doctorActivePer',
-			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': monthTime, 'periodFlag': 1},
+			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': DateTime.now().millisecondsSinceEpoch, 'periodFlag': periodFlag},
 			showToast: ToastType.ToastTypeNone
 		).then((data) {
 			try {
@@ -89,6 +89,17 @@ class MineRequest {
 			} catch(e) {
 				return null;
 			}
+		});
+	}
+	
+	// 获取未活跃医生列表
+	static Future<dynamic> getNonActiveDoctorList(int periodFlag, int page, BuildContext context) {
+		return HttpUtil.getInstance().get(
+			'crm/api/agent/doctorNonActiveInfo',
+			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': DateTime.now().millisecondsSinceEpoch, 'periodFlag': periodFlag, 'page': page, 'limit': 20},
+			showToast: ToastType.ToastTypeNone
+		).then((data) {
+			return data;
 		});
 	}
 	

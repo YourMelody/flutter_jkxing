@@ -1,16 +1,15 @@
-import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
-import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
-import 'package:flutter_jkxing/DrugLibrary/Network/DrugLibRequest.dart';
-import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart' as extended;
+import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
+import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
+import 'package:flutter_jkxing/Home/Pages/DoctorStatisticPage.dart';
 
 class MineActivePage extends StatefulWidget {
-	final ActivePerModel activeData;
-	MineActivePage(this.activeData);
 	@override
 	State<StatefulWidget> createState() {
 		return _MineActiveState();
@@ -18,11 +17,15 @@ class MineActivePage extends StatefulWidget {
 }
 
 class _MineActiveState extends State<MineActivePage> {
-	List <MedicineItemModel> dataSource = [];
-	int selectIndex = 0;
+	ActivePerModel activeData;
+	List <DoctorInfoOfHospitalModel> dataSource = [];
+	int selectIndex = 1;
+	int currentPage = 1;
+	int totalCount = 0;
 	ScrollController _scrollViewController;
 	EasyRefreshController controller = EasyRefreshController();
 	EmptyWidgetType type = EmptyWidgetType.Loading;
+	bool reqFail = false;
 	
 	@override
 	void initState() {
@@ -30,24 +33,42 @@ class _MineActiveState extends State<MineActivePage> {
 		_scrollViewController = ScrollController(initialScrollOffset: 0.0);
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initData();
+			_getDoctorActive(1);
 		});
 	}
 	
 	Future<void> _initData() async {
 		// 名医推荐药品列表（不分页）
-		var response = await DrugLibRequest.getRecommendMedicineList(context);
+		var response = await MineRequest.getNonActiveDoctorList(this.selectIndex, this.currentPage, context);
 		if (response != null) {
+			if (this.currentPage == 1) {
+				this.totalCount = response['nonActiveDoctorCount'];
+			}
 			// 请求成功
-			this.controller.finishLoad(noMore: true);
-			this.dataSource = response;
+			var respList = (response['nonActiveDoctorList'] as List)?.map((e) {
+				return e == null ? null : DoctorInfoOfHospitalModel.fromJson(e);
+			})?.toList();
+			if (this.currentPage == 1) {
+				this.dataSource = respList;
+			} else {
+				this.dataSource.addAll(respList);
+			}
+			if (this.dataSource.length == this.totalCount) {
+				this.controller.finishLoad(success: true, noMore: true);
+			} else {
+				this.controller.finishLoad(success: true, noMore: false);
+			}
 			if (this.dataSource.length == 0) {
 				type = EmptyWidgetType.NoData;
 			} else {
 				type = EmptyWidgetType.None;
 			}
+			this.reqFail = false;
+			this.currentPage++;
 			this.setState(() {});
 		} else {
 			// 请求失败
+			this.reqFail = true;
 			this.controller.finishLoad(success: false);
 			if (this.dataSource == null || this.dataSource.length == 0) {
 				this.setState(() {
@@ -55,10 +76,24 @@ class _MineActiveState extends State<MineActivePage> {
 				});
 			} else {
 				this.setState(() {
-					type = EmptyWidgetType.NoData;
+					type = EmptyWidgetType.None;
 				});
 			}
 		}
+	}
+	
+	// 获取医生活跃度
+	_getDoctorActive(int period) {
+		MineRequest.getDoctorActiveRequest(period).then((response) {
+			if (response != null) {
+				setState(() {
+					this.activeData = response;
+					this.reqFail = false;
+				});
+			} else {
+				this.reqFail = true;
+			}
+		});
 	}
 	
 	@override
@@ -66,6 +101,41 @@ class _MineActiveState extends State<MineActivePage> {
 		return Scaffold(
 			appBar: ZFAppBar(
 				'活跃度',
+				rightBarBtnAction: () {
+					showDialog(
+						context: context,
+						builder: (context) {
+							return CupertinoAlertDialog(
+								content: Padding(
+									padding: EdgeInsets.only(top: 5),
+									child: Text(
+										'2次有效问诊或1次处方发送数视为该医生活跃，每个考核周期为某月1号至次月15号',
+										style: TextStyle(fontSize: 16, color: Color(0xff3b4243), height: 1.3),
+										textAlign: TextAlign.left
+									)
+								),
+								actions: <Widget>[
+									CupertinoButton(
+										onPressed: () {
+											Navigator.pop(context);
+										},
+										child: Text('知道了', style: TextStyle(fontSize: 16, color: Color(0xff6bcbd6))),
+										pressedOpacity: 0.9
+									)
+								],
+							);
+						}
+					);
+				},
+				rightBarBtn: Container(
+					height: 44,
+					alignment: Alignment.centerRight,
+					padding: EdgeInsets.only(left: 15),
+					child: Image.asset(
+						'lib/Images/icon_system_help.png',
+						width: 18, height: 18
+					),
+				),
 				context: context
 			),
 			body: extended.NestedScrollView(
@@ -106,24 +176,27 @@ class _MineActiveState extends State<MineActivePage> {
 							GestureDetector(
 								onTap: () {
 									// 本期
-									if (this.selectIndex == 1) {
-										setState(() {
-											selectIndex = 0;
-										});
+									if (this.selectIndex == 2 || this.reqFail) {
+										this.selectIndex = 1;
+										this.currentPage = 1;
+										this.type = EmptyWidgetType.Loading;
+										_initData();
+										_getDoctorActive(1);
+										setState(() {});
 									}
 								},
 								child: Container(
 									width: 56, height: 26,
 									alignment: Alignment.center,
 									decoration: BoxDecoration(
-										color: this.selectIndex == 0 ? Color(0xff6bcbd6) : Color(0xfff0f2f5),
+										color: this.selectIndex == 1 ? Color(0xff6bcbd6) : Color(0xfff0f2f5),
 										borderRadius: BorderRadius.circular(4)
 									),
 									child: Text(
 										'本期',
 										style: TextStyle(
 											fontSize: 14,
-											color: this.selectIndex == 0 ? Colors.white : Color(0xff909399)
+											color: this.selectIndex == 1 ? Colors.white : Color(0xff909399)
 										)
 									)
 								)
@@ -132,24 +205,27 @@ class _MineActiveState extends State<MineActivePage> {
 							GestureDetector(
 								onTap: () {
 									// 上期
-									if (this.selectIndex == 0) {
-										setState(() {
-											selectIndex = 1;
-										});
+									if (this.selectIndex == 1 || this.reqFail) {
+										this.selectIndex = 2;
+										this.currentPage = 1;
+										this.type = EmptyWidgetType.Loading;
+										_initData();
+										_getDoctorActive(2);
+										setState(() {});
 									}
 								},
 								child: Container(
 									width: 56, height: 26,
 									alignment: Alignment.center,
 									decoration: BoxDecoration(
-										color:  this.selectIndex == 1 ? Color(0xff6bcbd6) : Color(0xfff0f2f5),
+										color:  this.selectIndex == 2 ? Color(0xff6bcbd6) : Color(0xfff0f2f5),
 										borderRadius: BorderRadius.circular(4)
 									),
 									child: Text(
 										'上期',
 										style: TextStyle(
 											fontSize: 14,
-											color: this.selectIndex == 1 ? Colors.white : Color(0xff909399)
+											color: this.selectIndex == 2 ? Colors.white : Color(0xff909399)
 										)
 									)
 								)
@@ -179,9 +255,9 @@ class _MineActiveState extends State<MineActivePage> {
 	// 进度百分比
 	Widget _createPercent() {
 		double marginLeft = 9;
-		if (widget?.activeData?.activePer != null) {
+		if (this?.activeData?.activePer != null) {
 			double deviceW = MediaQuery.of(context).size.width;
-			marginLeft = (deviceW - 66) * (widget.activeData.activePer / 100) + 9;
+			marginLeft = (deviceW - 66) * (this.activeData.activePer / 100) + 9;
 			if (marginLeft > deviceW - 57) {
 				marginLeft = deviceW - 57;
 			} else if (marginLeft < 9) {
@@ -203,8 +279,8 @@ class _MineActiveState extends State<MineActivePage> {
 						width: 48,
 						alignment: Alignment.center,
 						child: Text(
-							widget?.activeData?.activePer != null ?
-							'${widget.activeData.activePer}%' : '0.0%',
+							this?.activeData?.activePer != null ?
+							'${this.activeData.activePer}%' : '0.0%',
 							style: TextStyle(fontSize: 12, color: Colors.white),
 							maxLines: 1,
 							overflow: TextOverflow.ellipsis
@@ -221,16 +297,16 @@ class _MineActiveState extends State<MineActivePage> {
 		double marginLeft = 0;
 		// 进度条宽度
 		double colorWidth = 5;
-		if (widget?.activeData?.activeBase != null) {
+		if (this?.activeData?.activeBase != null) {
 			double deviceW = MediaQuery.of(context).size.width;
-			marginLeft = (deviceW - 48) * (widget.activeData.activeBase / 100);
+			marginLeft = (deviceW - 48) * (this.activeData.activeBase / 100);
 			if (marginLeft < 0) {
 				marginLeft = 0;
 			} else if (marginLeft > deviceW - 48) {
 				marginLeft = deviceW - 48;
 			}
 			
-			colorWidth = (deviceW - 66) * (widget.activeData.activePer / 100) + 5;
+			colorWidth = (deviceW - 66) * (this.activeData.activePer / 100) + 5;
 			if (colorWidth < 5) {
 				colorWidth = 5;
 			} else if (colorWidth >= deviceW - 61) {
@@ -268,7 +344,7 @@ class _MineActiveState extends State<MineActivePage> {
 					decoration: BoxDecoration(
 						border: Border.all(
 							width: 5,
-							color: widget?.activeData?.activePer != null && widget.activeData.activePer > 0 ?
+							color: this?.activeData?.activePer != null && this.activeData.activePer > 0 ?
 								   Color(0xffffc637) : Color(0xffe6e6e6)
 						),
 						borderRadius: BorderRadius.circular(9),
@@ -285,9 +361,9 @@ class _MineActiveState extends State<MineActivePage> {
 						decoration: BoxDecoration(
 							border: Border.all(
 								width: 5,
-								color: widget?.activeData?.activePer != null &&
-									widget?.activeData?.activeBase != null &&
-									widget.activeData.activePer >= widget.activeData.activeBase ?
+								color: this?.activeData?.activePer != null &&
+									this?.activeData?.activeBase != null &&
+									this.activeData.activePer >= this.activeData.activeBase ?
 									Color(0xffffab29) : Color(0xffe6e6e6)
 							),
 							borderRadius: BorderRadius.circular(9),
@@ -305,7 +381,7 @@ class _MineActiveState extends State<MineActivePage> {
 						decoration: BoxDecoration(
 							border: Border.all(
 								width: 5,
-								color: widget?.activeData?.activePer == 100 ? Color(0xffffab29) : Color(0xffe6e6e6)
+								color: this?.activeData?.activePer == 100 ? Color(0xffffab29) : Color(0xffe6e6e6)
 							),
 							borderRadius: BorderRadius.circular(9),
 							color: Colors.white
@@ -321,9 +397,9 @@ class _MineActiveState extends State<MineActivePage> {
 	// 分段百分比
 	Widget _createProgressPercent() {
 		double marginLeft = 25;
-		if (widget?.activeData?.activeBase != null) {
+		if (this?.activeData?.activeBase != null) {
 			double deviceW = MediaQuery.of(context).size.width;
-			marginLeft = (deviceW - 48) * (widget.activeData.activeBase / 100) - 34;
+			marginLeft = (deviceW - 48) * (this.activeData.activeBase / 100) - 34;
 			if (marginLeft < 22) {
 				marginLeft = 22;
 			} else if (marginLeft > deviceW - 145) {
@@ -352,8 +428,8 @@ class _MineActiveState extends State<MineActivePage> {
 					child: Container(
 						alignment: Alignment.center,
 						child: Text(
-							widget?.activeData?.activeBase == null ? '' :
-							'达标 ${widget.activeData.activeBase}%',
+							this?.activeData?.activeBase == null ? '' :
+							'达标 ${this.activeData.activeBase}%',
 							style: TextStyle(fontSize: 14, color: Color(0xff6c7172))
 						),
 						width: 86
@@ -370,7 +446,7 @@ class _MineActiveState extends State<MineActivePage> {
 				height: 50,
 				alignment: Alignment.center,
 				child: Text(
-					'未活跃医生（0）',
+					'未活跃医生（${this?.totalCount ?? ''}）',
 					style: TextStyle(color: Color(0xff3b4243), fontSize: 17, fontWeight: FontWeight.w500)
 				),
 				decoration: BoxDecoration(
@@ -401,6 +477,7 @@ class _MineActiveState extends State<MineActivePage> {
 				itemCount: dataSource == null ? 0 : dataSource.length
 			),
 			onRefresh: () {
+				this.currentPage = 1;
 				if (this.type == EmptyWidgetType.NetError) {
 					this.setState(() {
 						type = EmptyWidgetType.Loading;
@@ -411,128 +488,68 @@ class _MineActiveState extends State<MineActivePage> {
 			onLoad: () {
 				return _initData();
 			},
-			type: this.type
+			type: this.type,
+			emptyImagePath: 'lib/Images/default_pic_doctor.png',
+			emptyTitle: '暂无未活跃医生'
 		);
 	}
 	
-	_itemBuilder(MedicineItemModel model) {
+	_itemBuilder(DoctorInfoOfHospitalModel model) {
 		return GestureDetector(
 			child: Container(
-				padding: EdgeInsets.all(15.0),
+				height: 80,
+				alignment: Alignment.center,
+				padding: EdgeInsets.symmetric(horizontal: 15),
 				child: Row(
 					children: <Widget>[
-						// 药品图片和Rx标签
-						Stack(
-							children: <Widget>[
-								Positioned(
-									child: FadeInImage.assetNetwork(
-										placeholder: 'lib/Images/img_default_medicine.png',
-										image: model.productImageUrl ?? '',
-										width: 64,
-										height: 64,
-										fadeOutDuration: Duration(
-											milliseconds: 50),
-										fadeInDuration: Duration(
-											milliseconds: 50)
-									)
-								),
-								Positioned(
-									// Rx标签：prescriptionType为4（处方药）或5（管制处方药）时才展示
-									child: Offstage(
-										offstage: model?.prescriptionType !=
-											4 && model?.prescriptionType != 5,
-										child: Image.asset(
-											'lib/Images/rx_label_flag.png',
-											width: 25, height: 25)
-									)
-								)
-							]
+						ClipRRect(
+							child: FadeInImage.assetNetwork(
+								placeholder: 'lib/Images/img_default_medicine.png',
+								image: model?.headImgShowPath ?? '',
+								height: 48,
+								width: 48,
+								fadeOutDuration: Duration(milliseconds: 50),
+								fadeInDuration: Duration(milliseconds: 50)
+							),
+							borderRadius: BorderRadius.circular(24)
 						),
-						
-						Padding(padding: EdgeInsets.only(left: 10)),
-						
+						Padding(padding: EdgeInsets.only(right: 10)),
 						Expanded(child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
-								// 缺货标志（type为4显示）和药品名称
-								Row(
-									children: <Widget>[
-										Offstage(
-											offstage: model
-												?.productStatusType != 4,
-											child: Container(
-												width: 29,
-												height: 13,
-												margin: EdgeInsets.only(
-													right: 5),
-												alignment: Alignment.center,
-												child: Text(
-													'缺货', style: TextStyle(
-													color: Colors.white,
-													fontSize: 9)),
-												decoration: BoxDecoration(
-													borderRadius: BorderRadius
-														.circular(6.5),
-													color: Color(0xffcccccc)
-												),
-											),
-										),
-										Text(
-											model?.productName ?? '',
-											maxLines: 1,
-											overflow: TextOverflow.ellipsis,
-											style: TextStyle(
-												color: Color(0xff1a191a),
-												fontSize: 14)
-										)
-									]
-								),
-								
-								Padding(padding: EdgeInsets.only(top: 5)),
-								
-								// 厂商
 								Text(
-									model?.manufacturer ?? '',
+									model?.realName ?? '',
+									style: TextStyle(fontSize: 18, color: Color(0xff0a1314), fontWeight: FontWeight.w500),
 									maxLines: 1,
-									overflow: TextOverflow.ellipsis,
-									style: TextStyle(
-										fontSize: 12, color: Color(0xff999999))
+									overflow: TextOverflow.ellipsis
 								),
-								
-								Padding(padding: EdgeInsets.only(top: 3)),
-								
-								// 规格
+								Padding(padding: EdgeInsets.only(top: 2)),
 								Text(
-									model?.packing ?? '',
+									'${model?.departmentName ?? ''} ${model?.doctorTitle ?? ''}',
+									style: TextStyle(fontSize: 14, color: Color(0xff4d4d4d)),
 									maxLines: 1,
-									overflow: TextOverflow.ellipsis,
-									style: TextStyle(
-										fontSize: 12, color: Color(0xff999999))
-								),
-								
-								Padding(padding: EdgeInsets.only(top: 3)),
-								
-								// 价格和热度标签
-								Row(
-									children: <Widget>[
-										Text(
-											'¥${((model?.ourPrice ?? 0) / 100.0)
-												.toStringAsFixed(2)}',
-											style: TextStyle(fontSize: 15,
-												color: Color(0xffe56767),
-												fontWeight: FontWeight.bold)
-										)
-									]
+									overflow: TextOverflow.ellipsis
 								)
 							]
-						))
-					]
+						)),
+						Padding(padding: EdgeInsets.only(right: 10)),
+						Image.asset('lib/Images/btn_arrow.png', width: 15, height: 15)
+					],
 				),
-				color: Colors.white
+				decoration: BoxDecoration(
+					color: Colors.white,
+					border: Border(bottom: BorderSide(
+						width: 1,
+						color: Color(0xffe5e5e5)
+					))
+				),
 			),
 			
 			onTap: () {
-			
+				Navigator.of(context).push(MaterialPageRoute(
+					builder: (_) => DoctorStatisticPage(model)
+				));
 			}
 		);
 	}

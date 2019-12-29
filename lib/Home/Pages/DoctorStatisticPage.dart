@@ -401,7 +401,7 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 		return Container(
 			padding: EdgeInsets.only(left: 15, bottom: 14),
 			child: Text(
-				'该医生入驻：天',
+				'该医生入驻：${statisticModel?.enterDays ?? ''}天',
 				style: TextStyle(fontSize: 14, color: Color(0xff0a1314))
 			),
 		);
