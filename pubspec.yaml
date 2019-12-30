@@ -86,5 +86,10 @@ flutter:
     - lib/Images/progress_bubble.png
     - lib/Images/icon_system_help.png
     - lib/Images/doctor_qr_share.png
+    - lib/Images/time_down_icon.png
+    - lib/Images/up_slight_icon.png
+    - lib/Images/up_deep_icon.png
+    - lib/Images/down_light_icon.png
+    - lib/Images/down_deep_icon.png
 
 

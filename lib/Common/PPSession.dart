@@ -1,3 +1,5 @@
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
+
 import 'UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +22,8 @@ class PPSession {
 		this.userId = null;
 		this.userToken = null;
 		this.userModel = null;
+		instance = null;
+		HttpUtil().removeInfo();
 		SharedPreferences pref = await SharedPreferences.getInstance();
 		pref.remove('kSessionAccess_userId');
 		pref.remove('kSessionAccess_userToken');

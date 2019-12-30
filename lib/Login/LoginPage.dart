@@ -295,6 +295,7 @@ class _LoginPageState extends State<LoginPageWidget> {
 		pref.setString('loginPhoneNum', this.accountStr);
 		String userId = respData['userId'].toString();
 		String userToken = respData['userToken'];
+		print('respData = $respData}');
 		// 保存userId/userToken
 		pref.setString('kSessionAccess_userId', userId).then((value) {
 			pref.setString('kSessionAccess_userToken', userToken).then((tokenValue) {

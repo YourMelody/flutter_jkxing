@@ -12,6 +12,7 @@ import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 import 'SelectDatePage.dart';
+import 'AgentSaleProductDetailPage.dart';
 
 // 我的
 class MinePage extends StatefulWidget {
@@ -266,7 +267,9 @@ class _MinePageState extends State<MinePage> with AutomaticKeepAliveClientMixin 
 			));
 		} else if (index == 3) {
 			// 药品明细
-			
+			Navigator.of(context).push(MaterialPageRoute(
+				builder: (_) => AgentSaleProductDetailPage()
+			));
 		} else if (index == 4) {
 			// 活跃度
 			Navigator.of(context).push(MaterialPageRoute(
