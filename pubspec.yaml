@@ -85,5 +85,6 @@ flutter:
     - lib/Images/img_orders_empty.png
     - lib/Images/progress_bubble.png
     - lib/Images/icon_system_help.png
+    - lib/Images/doctor_qr_share.png
 
 

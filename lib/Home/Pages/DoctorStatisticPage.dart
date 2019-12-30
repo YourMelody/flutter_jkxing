@@ -5,6 +5,8 @@ import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorStatisticModel.dart';
+import 'InvitationQRCodePage.dart';
+import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
 
 class DoctorStatisticPage extends StatefulWidget {
 	final DoctorInfoOfHospitalModel doctorModel;
@@ -118,8 +120,8 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 							height: 64,
 							width: 64,
 							fit: BoxFit.fitHeight,
-							fadeOutDuration: Duration(milliseconds: 50),
-							fadeInDuration: Duration(milliseconds: 50)
+							fadeOutDuration: Duration(milliseconds: 20),
+							fadeInDuration: Duration(milliseconds: 20)
 						),
 						borderRadius: BorderRadius.circular(32)
 					),
@@ -496,7 +498,9 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 			child: Row(children: <Widget>[
 				GestureDetector(
 					onTap: () {
-					
+						Navigator.of(context).push(MaterialPageRoute(
+							builder: (_) => OrderContentPage(doctorModel: widget.doctorModel)
+						));
 					},
 					child: Container(
 						height: 36,
@@ -517,7 +521,9 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 				
 				GestureDetector(
 					onTap: () {
-					
+						Navigator.of(context).push(MaterialPageRoute(
+							builder: (_) => InvitationQRCodePage(widget.doctorModel)
+						));
 					},
 					child: Container(
 						height: 36,

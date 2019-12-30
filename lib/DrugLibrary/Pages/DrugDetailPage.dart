@@ -159,8 +159,8 @@ class _DrugDetailState extends State<DrugDetailPage> {
 							image: model?.productImageUrl ?? '',
 							height: 170,
 							fit: BoxFit.fitHeight,
-							fadeOutDuration: Duration(milliseconds: 50),
-							fadeInDuration: Duration(milliseconds: 50),
+							fadeOutDuration: Duration(milliseconds: 20),
+							fadeInDuration: Duration(milliseconds: 20),
 						)),
 						Padding(padding: EdgeInsets.only(top: 12)),
 						

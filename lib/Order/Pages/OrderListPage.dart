@@ -12,7 +12,8 @@ class OrderListPage extends StatefulWidget {
 	final int status;
 	final EventBus eventBus;
 	final String searchKey;
-	OrderListPage(this.eventBus, {Key key, this.status, this.searchKey}) : super(key: key);
+	final int doctorId;
+	OrderListPage(this.eventBus, {Key key, this.status, this.searchKey, this.doctorId}) : super(key: key);
 	@override
 	State<StatefulWidget> createState() {
 		return _OrderListState();
@@ -50,6 +51,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 			context,
 			searchKey: this.searchKey,
 			status: widget.status,
+			doctorId: widget?.doctorId,
 			showToast: toastType
 		);
 		if (response != null) {

@@ -6,6 +6,7 @@ import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
 import 'package:flutter_jkxing/Home/Model/PendingAuthenticationModel.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
+import 'package:flutter_jkxing/Home/Model/InviteShareModel.dart';
 
 class HomeRequest {
 	// 获取新增医生数和总医生数
@@ -83,6 +84,35 @@ class HomeRequest {
 			try {
 				if (data != null) {
 					return DoctorStatisticModel.fromJson(data);
+				}
+				return null;
+			} catch(e) {
+				return null;
+			}
+		});
+	}
+	
+	// 邀请患者二维码
+	static Future<dynamic> getInvitationQRCodeReq(BuildContext context, int userId) {
+		return HttpUtil().get(
+			'user/api/hospitalUser/jkWalkUserInfo',
+			data: {'userId': userId},
+			context: context
+		).then((data) {
+			return data;
+		});
+	}
+	
+	// 分享信息
+	static Future<dynamic> getShareInfoReq(BuildContext context, int userId) {
+		return HttpUtil().post(
+			'core/api/doctor/inviteDoctorShare',
+			data: {'doctorId': userId.toString(), 'type': '2'},
+			context: context
+		).then((data) {
+			try {
+				if (data != null) {
+					return InviteShareModel.fromJson(data);
 				}
 				return null;
 			} catch(e) {

@@ -5,8 +5,11 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderSearchEvent.dart';
 import 'OrderListPage.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 
 class OrderContentPage extends StatefulWidget {
+	final DoctorInfoOfHospitalModel doctorModel;
+	OrderContentPage({this.doctorModel});
 	@override
 	State<StatefulWidget> createState() {
 		return _OrderContentState();
@@ -40,8 +43,8 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 		return Scaffold(
 			appBar: ZFAppBar(
 				'订单',
-				showBackBtn: this.showBackBtn,
-				leftBarBtnAction: () {
+				showBackBtn: this.showBackBtn || widget?.doctorModel != null,
+				leftBarBtnAction: widget?.doctorModel != null ? null : () {
 					setState(() {
 						showBackBtn = false;
 						searchDocName = '';
@@ -49,36 +52,75 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 						eventBus.fire(OrderSearchEvent('', this.selectIndex));
 					});
 				},
-				rightBarBtn: Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)),
+				rightBarBtn: widget?.doctorModel != null ? null : Icon(Icons.search, size: 24, color: Color(0xff6bcbd6)),
 				rightBarBtnAction: () => _searchAction(),
 				bottom: PreferredSize(
-					preferredSize: Size.fromHeight(47),
-					child: TabBar(
-						controller: _tabController,
-						tabs: <Widget>[
-							Tab(text: '全部'),
-							Tab(text: '已支付'),
-							Tab(text: '已签收'),
-							Tab(text: '已取消')
-						],
-						isScrollable: false,
-						indicatorColor: Color(0xff6bcbd6),
-						indicatorWeight: 4,
-						labelColor: Color(0xff6bcbd6),
-						labelStyle: TextStyle(fontSize: 16),
-						unselectedLabelColor: Color(0xff484848),
-						unselectedLabelStyle: TextStyle(fontSize: 16)
-					)
+					preferredSize: widget?.doctorModel != null ? Size.fromHeight(101) : Size.fromHeight(47),
+					child: _headerWidget()
 				),
-				height: 91
+				height: widget?.doctorModel != null ? 145 : 91,
+				context: context
 			),
 			body: TabBarView(
 				controller: _tabController,
 				children: [
-					OrderListPage(this.eventBus, searchKey: this.searchDocName),
-					OrderListPage(this.eventBus, status: 1, searchKey: this.searchDocName),
-					OrderListPage(this.eventBus, status: 2, searchKey: this.searchDocName),
-					OrderListPage(this.eventBus, status: 3, searchKey: this.searchDocName)
+					OrderListPage(this.eventBus, searchKey: this.searchDocName, doctorId: widget?.doctorModel?.userId),
+					OrderListPage(this.eventBus, status: 1, searchKey: this.searchDocName, doctorId: widget?.doctorModel?.userId),
+					OrderListPage(this.eventBus, status: 2, searchKey: this.searchDocName, doctorId: widget?.doctorModel?.userId),
+					OrderListPage(this.eventBus, status: 3, searchKey: this.searchDocName, doctorId: widget?.doctorModel?.userId)
+				]
+			)
+		);
+	}
+	
+	Widget _headerWidget() {
+		return Container(
+			child: Column(
+				children: <Widget>[
+					Offstage(
+						offstage: widget?.doctorModel == null,
+						child: Container(
+							height: 54,
+							color: Color(0xfff4f6f9),
+							alignment: Alignment.centerLeft,
+							padding: EdgeInsets.symmetric(horizontal: 15),
+							child: RichText(
+								text: TextSpan(
+									text: widget?.doctorModel?.realName ?? '',
+									style: TextStyle(fontSize: 18, color: Color(0xff1a1a1a), fontWeight: FontWeight.w500),
+									children: <TextSpan>[
+										TextSpan(text: widget?.doctorModel?.realName != null && widget.doctorModel.realName.length > 0 ? '  ' : ''),
+										TextSpan(
+											text: widget?.doctorModel?.hospitalName ?? '',
+											style: TextStyle(fontSize: 14, color: Color(0xff4d4d4d))
+										)
+									]
+								),
+								maxLines: 1,
+								overflow: TextOverflow.ellipsis
+							)
+						)
+					),
+					
+					PreferredSize(
+						preferredSize:  Size.fromHeight(47),
+						child: TabBar(
+							controller: _tabController,
+							tabs: <Widget>[
+								Tab(text: '全部'),
+								Tab(text: '已支付'),
+								Tab(text: '已签收'),
+								Tab(text: '已取消')
+							],
+							isScrollable: false,
+							indicatorColor: Color(0xff6bcbd6),
+							indicatorWeight: 4,
+							labelColor: Color(0xff6bcbd6),
+							labelStyle: TextStyle(fontSize: 16),
+							unselectedLabelColor: Color(0xff484848),
+							unselectedLabelStyle: TextStyle(fontSize: 16)
+						)
+					)
 				]
 			)
 		);
@@ -86,6 +128,9 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 	
 	// 点击搜索
 	void _searchAction() {
+		if (widget?.doctorModel != null) {
+			return;
+		}
 		TextEditingController _editingController = TextEditingController(text: this.searchDocName ?? '');
 		showGeneralDialog(
 			context: context,

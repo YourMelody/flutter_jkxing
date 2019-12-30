@@ -508,8 +508,8 @@ class _MineActiveState extends State<MineActivePage> {
 								image: model?.headImgShowPath ?? '',
 								height: 48,
 								width: 48,
-								fadeOutDuration: Duration(milliseconds: 50),
-								fadeInDuration: Duration(milliseconds: 50)
+								fadeOutDuration: Duration(milliseconds: 20),
+								fadeInDuration: Duration(milliseconds: 20)
 							),
 							borderRadius: BorderRadius.circular(24)
 						),
@@ -526,7 +526,7 @@ class _MineActiveState extends State<MineActivePage> {
 								),
 								Padding(padding: EdgeInsets.only(top: 2)),
 								Text(
-									'${model?.departmentName ?? ''} ${model?.doctorTitle ?? ''}',
+									'${model?.departmentName ?? ''}${model?.departmentName != null && model.departmentName.length != 0 ? '  ' : ''}${model?.doctorTitle ?? ''}',
 									style: TextStyle(fontSize: 14, color: Color(0xff4d4d4d)),
 									maxLines: 1,
 									overflow: TextOverflow.ellipsis

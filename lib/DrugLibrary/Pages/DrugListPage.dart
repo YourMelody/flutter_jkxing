@@ -189,8 +189,8 @@ class _DrugListState extends State<DrugListPage> {
 										placeholder: 'lib/Images/img_default_medicine.png',
 										image: model.productImageUrl ?? '',
 										width: 64, height: 64,
-										fadeOutDuration: Duration(milliseconds: 50),
-										fadeInDuration: Duration(milliseconds: 50)
+										fadeOutDuration: Duration(milliseconds: 20),
+										fadeInDuration: Duration(milliseconds: 20)
 									)
 								),
 								Positioned(

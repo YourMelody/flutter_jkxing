@@ -12,7 +12,7 @@ class MineRequest {
 	static Future<dynamic> getAgentSalesDetail(int startTime, int endTime, BuildContext context, {ToastType showToast}) {
 		print('startTime = $startTime, endTime = $endTime');
 		return HttpUtil.getInstance().get(
-			'/crm/api/agentMine/agentSalesPerformanceDetail',
+			'crm/api/agentMine/agentSalesPerformanceDetail',
 			data: {'startTime': startTime, 'endTime': endTime},
 			showToast: showToast,
 			context: context
@@ -28,7 +28,7 @@ class MineRequest {
 	// 获取医生数、已通过数、待认证数
 	static Future<dynamic> getDoctorNumber(int startTime, int endTime,{String agentId, BuildContext context, ToastType showToast}) {
 		return HttpUtil.getInstance().get(
-			'/crm/api/agentMine/getDoctorNum',
+			'crm/api/agentMine/getDoctorNum',
 			data: {'startTime': startTime, 'endTime': endTime, 'agentId': agentId == null? '' : agentId},
 			showToast: showToast,
 			context: context
@@ -40,7 +40,7 @@ class MineRequest {
 	// 获取医生活跃度
 	static Future<dynamic> getDoctorActiveRequest(int periodFlag) {
 		return HttpUtil.getInstance().get(
-			'/crm/api/agent/doctorActivePer',
+			'crm/api/agent/doctorActivePer',
 			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': DateTime.now().millisecondsSinceEpoch, 'periodFlag': periodFlag},
 			showToast: ToastType.ToastTypeNone
 		).then((data) {
@@ -106,7 +106,7 @@ class MineRequest {
 	// 退出登陆
 	static Future<dynamic> logoutRequest(String userId, String deviceId,BuildContext context) {
 		return HttpUtil.getInstance().post(
-			'/user/api/user/logout',
+			'user/api/user/logout',
 			data: {'userId': userId, 'deviceUuid': deviceId},
 			context: context
 		).then((data) {

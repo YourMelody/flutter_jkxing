@@ -181,8 +181,8 @@ class _DoctorListOfHospitalState extends State<DoctorListOfHospitalPage> {
 							height: 48,
 							width: 48,
 							fit: BoxFit.fitHeight,
-							fadeOutDuration: Duration(milliseconds: 50),
-							fadeInDuration: Duration(milliseconds: 50)
+							fadeOutDuration: Duration(milliseconds: 20),
+							fadeInDuration: Duration(milliseconds: 20)
 						),
 						borderRadius: BorderRadius.circular(24)
 					),
