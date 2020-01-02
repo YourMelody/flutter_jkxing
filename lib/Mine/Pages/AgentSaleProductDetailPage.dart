@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
+import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import 'package:flutter_picker/Picker.dart';
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 
 class AgentSaleProductDetailPage extends StatefulWidget {
 	@override
@@ -14,6 +17,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 	String timeStr;
 	int selectedIndex = 1;
 	bool sortDown = true;
+	DrugConfigModel configModel;
 	
 	@override
 	void initState() {
@@ -24,7 +28,23 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 		timeStr = '${nowTime.year}年${nowTime.month}月';
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initDate();
+			_getDrugConfig();
 		});
+	}
+	
+	// 获取药品配置信息，药品热度/标签显示需要用到
+	void _getDrugConfig() {
+		PPSession session = PPSession.getInstance();
+		if (session.userModel.agentType == 1 && session.configModel == null) {
+			DrugConfigRequest.drugConfigReq().then((response) {
+				if (response != null) {
+					session.configModel = response;
+					setState(() {
+						this.configModel = response;
+					});
+				}
+			});
+		}
 	}
 	
 	Future<void> _initDate() async {

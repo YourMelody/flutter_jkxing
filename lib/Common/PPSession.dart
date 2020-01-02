@@ -1,11 +1,12 @@
+import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
-
 import 'UserModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PPSession {
 	static PPSession instance;
 	UserModel userModel;
+	DrugConfigModel configModel;
 	String userId;
 	String userToken;
 	int logOutType;     // 1用户在其它设备登陆  2用户被禁用
@@ -22,6 +23,7 @@ class PPSession {
 		this.userId = null;
 		this.userToken = null;
 		this.userModel = null;
+		this.configModel = null;
 		instance = null;
 		HttpUtil().removeInfo();
 		SharedPreferences pref = await SharedPreferences.getInstance();

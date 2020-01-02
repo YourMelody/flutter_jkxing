@@ -8,9 +8,9 @@ import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
 
 enum ToastType {
-	ToastTypeNormal,    // 包括加载的toast和所有失败toast
-	ToastTypeError,     // 有请求失败的toast和网络异常的toast
-	ToastTypeNone       // 静默请求，没有toast
+	ToastTypeNormal,    // 包括加载的loading和所有失败toast
+	ToastTypeError,     // 有请求失败的toast和网络异常的toast，没有loading
+	ToastTypeNone       // 静默请求
 }
 
 class HttpUtil {
@@ -22,7 +22,7 @@ class HttpUtil {
 	BaseOptions options;
 	
 	static HttpUtil getInstance() {
-		if(instance == null || userId == null || userToken == null){
+		if (instance == null || userId == null || userToken == null) {
 			PPSession tempSession = PPSession.getInstance();
 			userId = tempSession.userId;
 			userToken = tempSession.userToken;
@@ -60,7 +60,7 @@ class HttpUtil {
 		(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
 			// 设置代理
 			client.findProxy = (uri) {
-				return 'PROXY 192.168.1.100:8888';
+				return 'PROXY 192.168.36.77:8888';
 			};
 		};
 	}

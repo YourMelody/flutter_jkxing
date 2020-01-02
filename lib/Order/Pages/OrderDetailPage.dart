@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_jkxing/Common/DrugConfiguration.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFProgressHUDView.dart';
@@ -33,10 +32,11 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	}
 	
 	void _initData() {
-		if (PPSession.getInstance().userModel.agentType == 1) {
+		PPSession session = PPSession.getInstance();
+		if (session.userModel.agentType == 1 && session.configModel == null) {
 			DrugConfigRequest.drugConfigReq().then((response) {
 				if (response != null) {
-					DrugConfiguration.getInstance(response);
+					session.configModel = response;
 					setState(() {
 						this.configModel = response;
 					});

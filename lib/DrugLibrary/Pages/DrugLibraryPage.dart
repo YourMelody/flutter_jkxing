@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_jkxing/Common/DrugConfiguration.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
@@ -111,14 +111,17 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	
 	// 获取药品配置信息，药品热度/标签显示需要用到
 	void _getDrugConfig() {
-		DrugConfigRequest.drugConfigReq().then((response) {
-			if (response != null) {
-				DrugConfiguration.getInstance(response);
-				setState(() {
-					this.configModel = response;
-				});
-			}
-		});
+		PPSession session = PPSession.getInstance();
+		if (session.userModel.agentType == 1 && session.configModel == null) {
+			DrugConfigRequest.drugConfigReq().then((response) {
+				if (response != null) {
+					session.configModel = response;
+					setState(() {
+						this.configModel = response;
+					});
+				}
+			});
+		}
 	}
 	
 	// 左侧主分类列表
