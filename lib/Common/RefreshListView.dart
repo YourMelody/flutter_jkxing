@@ -41,8 +41,8 @@ class RefreshListView extends StatelessWidget {
 		this.type = EmptyWidgetType.Loading,
 		this.showRefreshHeader = true,
 		this.controller,
-		this.emptyImagePath,
-		this.emptyTitle,
+		this.emptyImagePath = 'lib/Images/img_orders_empty.png',
+		this.emptyTitle = '暂无数据',
 		@required this.onRefresh,
 		@required this.child
 	});

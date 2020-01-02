@@ -6,6 +6,7 @@ import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Mine/Model/DoctorReportDataModel.dart';
 import 'package:flutter_jkxing/Mine/Model/ActivePerModel.dart';
+import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
 
 class MineRequest {
 	// 获取销售业绩、指标、提成等
@@ -111,6 +112,27 @@ class MineRequest {
 			context: context
 		).then((data) {
 			return data;
+		});
+	}
+	
+	// 药品明细
+	static Future<dynamic> getAgentSaleProDetail(int monthTime, int sortField, int sortType, int page, BuildContext context) {
+		return HttpUtil.getInstance().get(
+			'crm/api/agentProductStatis/agentSaleProductDetails',
+			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': monthTime, 'sortField': sortField, 'sortType': sortType, 'page': page, 'limit': 20},
+			context: context
+		).then((data) {
+			try {
+				if (data != null) {
+					return (data as List)?.map((e) {
+						return e == null ? null : MedicineItemModel.fromJson(e);
+					})?.toList();
+				} else {
+					return null;
+				}
+			} catch (e) {
+				return null;
+			}
 		});
 	}
 }

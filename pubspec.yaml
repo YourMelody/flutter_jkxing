@@ -91,5 +91,7 @@ flutter:
     - lib/Images/up_deep_icon.png
     - lib/Images/down_light_icon.png
     - lib/Images/down_deep_icon.png
+    - lib/Images/negative_icon.png
+    - lib/Images/positive_icon.png
 
 

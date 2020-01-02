@@ -22,8 +22,10 @@ class MedicineItemModel {
 		this.prescriptionType,      // 处方类型：0:空 1:其他 2:红OTC 3:绿OTC 4:处方药 5:管制处方药 9:非药品（4或5时展示RX标签）
 		this.dosage,                // 常规用法（'口服等等'）
 		this.priceCommission,       // 健康指数
-		this.productImageUrl        // 药品图片
-		);
+		this.productImageUrl,       // 药品图片
+		this.salesVolume,			// 销售数量
+		this.grossProfitMarginFlag
+	);
 
 	int productCode;
 	int mainProductCode;
@@ -41,6 +43,8 @@ class MedicineItemModel {
 	String dosage;
 	int priceCommission;
 	String productImageUrl;
+	int salesVolume;
+	int grossProfitMarginFlag;
 
 	factory MedicineItemModel.fromJson(Map<String, dynamic> json) => _$MedicineItemModelFromJson(json);
 	Map<String, dynamic> toJson() => _$MedicineItemModelToJson(this);

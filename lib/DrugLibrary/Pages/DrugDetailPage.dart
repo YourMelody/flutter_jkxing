@@ -58,7 +58,6 @@ class _DrugDetailState extends State<DrugDetailPage> {
 				MedicineItemModel respModel = MedicineItemModel.fromJson(respMap);
 				respModel.priceCommission = widget.drugModel.priceCommission;
 				respModel.ourPrice = widget.drugModel.ourPrice;
-				respModel.productImageUrl = 'https://img.jianke.com' + respModel.productImageUrl;
 				this.setState(() {
 					model = respModel;
 					introduction = respMap['introduction'];
