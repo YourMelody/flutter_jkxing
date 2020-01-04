@@ -91,7 +91,7 @@ class _InvitationQRCodeState extends State<InvitationQRCodePage> {
 									image: this?.investCodeImage ?? '',
 									width: 250 / 667 * MediaQuery.of(context).size.height,
 									height: 250 / 667 * MediaQuery.of(context).size.height,
-									fit: BoxFit.contain,
+									fit: BoxFit.cover,
 									fadeOutDuration: Duration(milliseconds: 20),
 									fadeInDuration: Duration(milliseconds: 20)
 								)

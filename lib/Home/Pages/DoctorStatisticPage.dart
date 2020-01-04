@@ -8,6 +8,8 @@ import 'package:flutter_jkxing/Home/Model/DoctorStatisticModel.dart';
 import 'InvitationQRCodePage.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
 
+import 'PersonalInfoPage.dart';
+
 // 首页->已通过列表->我的医生->医生统计
 // 我的->医生统计
 class DoctorStatisticPage extends StatefulWidget {
@@ -109,7 +111,9 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 	Widget _createDoctorHeaderItem(DoctorInfoOfHospitalModel model) {
 		return GestureDetector(
 			onTap: () {
-			
+				Navigator.of(context).push(MaterialPageRoute(
+					builder: (_) => PersonalInfoPage(model.userId)
+				));
 			},
 			child: Container(
 				padding: EdgeInsets.all(15),
@@ -121,7 +125,7 @@ class _DoctorStatisticState extends State<DoctorStatisticPage> {
 							image: this.statisticModel?.headImgShowPath ?? '',
 							height: 64,
 							width: 64,
-							fit: BoxFit.fitHeight,
+							fit: BoxFit.cover,
 							fadeOutDuration: Duration(milliseconds: 20),
 							fadeInDuration: Duration(milliseconds: 20)
 						),

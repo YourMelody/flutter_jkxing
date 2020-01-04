@@ -25,7 +25,8 @@ DoctorInfoOfHospitalModel _$DoctorInfoOfHospitalModelFromJson(Map<String, dynami
 		json['addNew'] as bool,
 		json['dataAuditStatus'] as int,
 		json['userPhone'] as String,
-		json['statu'] as int
+		json['statu'] as int,
+		json['salesVolume'] as int
 	);
 }
 
@@ -51,5 +52,6 @@ Map<String, dynamic> _$DoctorInfoOfHospitalModelToJson(DoctorInfoOfHospitalModel
 		'addNew': instance.addNew,
 		'dataAuditStatus': instance.dataAuditStatus,
 		'userPhone': instance.userPhone,
-		'statu': instance.statu
+		'statu': instance.statu,
+		'salesVolume': instance.salesVolume
 	};

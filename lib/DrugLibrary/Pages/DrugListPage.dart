@@ -189,6 +189,7 @@ class _DrugListState extends State<DrugListPage> {
 									child: FadeInImage.assetNetwork(
 										placeholder: 'lib/Images/img_default_medicine.png',
 										image: model.productImageUrl ?? '',
+										fit: BoxFit.cover,
 										width: 64, height: 64,
 										fadeOutDuration: Duration(milliseconds: 20),
 										fadeInDuration: Duration(milliseconds: 20)

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
-import 'package:flutter_jkxing/Home/Model/PendingAuthenticationModel.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Home/Pages/DoctorListOfHospitalPage.dart';
 
@@ -24,7 +24,7 @@ class HomeHospitalListPage extends StatefulWidget {
 
 class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticKeepAliveClientMixin {
 	List <AuthenticationDoctorModel> authDataSource = [];       // 已通过数据源，不分页
-	List <PendingAuthenticationModel> pendingDataSource = [];   // 待认证数据源，分页
+	List <DoctorInfoOfHospitalModel> pendingDataSource = [];   // 待认证数据源，分页
 	
 	int currentPage = 1;
 	EasyRefreshController controller = EasyRefreshController();
@@ -135,7 +135,7 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 			return _createAuthItem(model);
 		} else {
 			// 待认证
-			PendingAuthenticationModel model = this.pendingDataSource[index];
+			DoctorInfoOfHospitalModel model = this.pendingDataSource[index];
 			return _createPendingItem(model);
 		}
 	}
@@ -178,7 +178,7 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 	}
 	
 	// 待认证的item
-	Widget _createPendingItem(PendingAuthenticationModel model) {
+	Widget _createPendingItem(DoctorInfoOfHospitalModel model) {
 		return GestureDetector(
 			onTap: () {
 			
@@ -188,7 +188,7 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 	}
 	
 	// 待认证，userStatus为1，只展示手机号
-	Widget _phoneCell(PendingAuthenticationModel model) {
+	Widget _phoneCell(DoctorInfoOfHospitalModel model) {
 		return Container(
 			height: 54,
 			padding: EdgeInsets.only(left: 15, right: 33),
@@ -218,7 +218,7 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 	}
 	
 	// 待认证，userStatus不为1，展示医生信息
-	Widget _infoCell(PendingAuthenticationModel model) {
+	Widget _infoCell(DoctorInfoOfHospitalModel model) {
 		return Container(
 			height: 66,
 			padding: EdgeInsets.symmetric(horizontal: 15),
@@ -271,7 +271,7 @@ class _HomeHospitalListState extends State<HomeHospitalListPage> with AutomaticK
 		);
 	}
 	
-	Widget _getStatusLabel(PendingAuthenticationModel model) {
+	Widget _getStatusLabel(DoctorInfoOfHospitalModel model) {
 		if (model.userStatus == 1) {
 			return Text('未认证', style: TextStyle(fontSize: 14, color: Color(0xfff5a623)));
 		} else if (model.userStatus == 2) {

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
+import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Mine/Model/TeamSalesDetailModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
@@ -127,6 +128,28 @@ class MineRequest {
 				if (data != null) {
 					return (data as List)?.map((e) {
 						return e == null ? null : MedicineItemModel.fromJson(e);
+					})?.toList();
+				} else {
+					return null;
+				}
+			} catch (e) {
+				return null;
+			}
+		});
+	}
+	
+	// 药品分布
+	static Future<dynamic> getAgentSaleProDistributed(int monthTime, int productId, int page, BuildContext context, ToastType toastType) {
+		return HttpUtil.getInstance().get(
+			'crm/api/agentProductStatis/agentSaleProductDistributed',
+			data: {'monthTime': monthTime, 'productId': productId, 'page': page, 'limit': 20, 'agentId': PPSession.getInstance()?.userId ?? ''},
+			context: context,
+			showToast: toastType
+		).then((data) {
+			try {
+				if (data != null) {
+					return (data as List)?.map((e) {
+						return e == null ? null : DoctorInfoOfHospitalModel.fromJson(e);
 					})?.toList();
 				} else {
 					return null;

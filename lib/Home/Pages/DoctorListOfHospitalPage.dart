@@ -181,7 +181,7 @@ class _DoctorListOfHospitalState extends State<DoctorListOfHospitalPage> {
 							image: model?.headImgShowPath ?? '',
 							height: 48,
 							width: 48,
-							fit: BoxFit.fitHeight,
+							fit: BoxFit.cover,
 							fadeOutDuration: Duration(milliseconds: 20),
 							fadeInDuration: Duration(milliseconds: 20)
 						),

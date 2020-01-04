@@ -67,7 +67,7 @@ class InvitationPage extends StatelessWidget {
 						image: PPSession.getInstance()?.userModel?.investCodeImage == null ? '' : PPSession.getInstance().userModel.investCodeImage,
 						width: 180 / 667 * MediaQuery.of(context).size.height,
 						height: 180 / 667 * MediaQuery.of(context).size.height,
-						fit: BoxFit.contain
+						fit: BoxFit.cover
 					),
 					
 					Padding(padding: EdgeInsets.only(top: 8)),

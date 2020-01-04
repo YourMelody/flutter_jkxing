@@ -509,6 +509,7 @@ class _MineActiveState extends State<MineActivePage> {
 								image: model?.headImgShowPath ?? '',
 								height: 48,
 								width: 48,
+								fit: BoxFit.cover,
 								fadeOutDuration: Duration(milliseconds: 20),
 								fadeInDuration: Duration(milliseconds: 20)
 							),

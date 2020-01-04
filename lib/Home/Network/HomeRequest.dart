@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorStatisticModel.dart';
+import 'package:flutter_jkxing/Home/Model/PersonalInfoModel.dart';
 import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
-import 'package:flutter_jkxing/Home/Model/PendingAuthenticationModel.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Home/Model/InviteShareModel.dart';
 
@@ -48,7 +48,7 @@ class HomeRequest {
 		).then((data) {
 			try {
 				return (data as List)?.map((e) {
-					return e == null ? null : PendingAuthenticationModel.fromJson(e);
+					return e == null ? null : DoctorInfoOfHospitalModel.fromJson(e);
 				})?.toList();
 			} catch(e) {
 				return null;
@@ -116,6 +116,25 @@ class HomeRequest {
 				}
 				return null;
 			} catch(e) {
+				return null;
+			}
+		});
+	}
+	
+	// 个人信息
+	static Future<dynamic> getPersonDataStatusInfo(int doctorId, BuildContext context) {
+		return HttpUtil.getInstance().get(
+			'user/api/hospitalUser/v2/agentGetDoctorAuditDataStatus',
+			data: {'doctorId': doctorId},
+			context: context
+		).then((data) {
+			try {
+				if (data != null) {
+					return PersonalInfoModel.fromJson(data);
+				} else {
+					return null;
+				}
+			} catch (e) {
 				return null;
 			}
 		});

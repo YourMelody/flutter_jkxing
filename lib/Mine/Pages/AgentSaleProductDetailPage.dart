@@ -10,6 +10,7 @@ import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
+import 'package:flutter_jkxing/Mine/Pages/AgentProStatisticPage.dart';
 
 class AgentSaleProductDetailPage extends StatefulWidget {
 	@override
@@ -79,7 +80,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 			
 			// 处理刷新尾状态
 			List respArr = response;
-			if (respArr.length < 10) {
+			if (respArr.length < 20) {
 				controller.finishLoad(noMore: true);
 			} else {
 				controller.finishLoad(success: true);
@@ -324,16 +325,17 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 											placeholder: 'lib/Images/img_default_medicine.png',
 											image: model.productImageUrl ?? '',
 											width: 70, height: 70,
+											fit: BoxFit.cover,
 											fadeOutDuration: Duration(milliseconds: 20),
 											fadeInDuration: Duration(milliseconds: 20)
-										),
+										)
 									)
 								),
 								Positioned(
 									// Rx标签：prescriptionType为4（处方药）或5（管制处方药）时才展示
 									child: Offstage(
 										offstage: model?.prescriptionType != 4 && model?.prescriptionType != 5,
-										child: Image.asset('lib/Images/rx_label_flag.png', width: 28, height: 28)
+										child: Image.asset('lib/Images/rx_label_flag.png', width: 32, height: 32)
 									)
 								)
 							]
@@ -437,7 +439,10 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 										Expanded(child: Container()),
 										GestureDetector(
 											onTap: () {
-											
+												// 跳转药品分布
+												Navigator.of(context).push(MaterialPageRoute(
+													builder: (_) => AgentProStatisticPage(this.timeStamp, model.productCode)
+												));
 											},
 											child: Container(
 												decoration: BoxDecoration(
@@ -453,7 +458,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 												child: Text(
 													'药品分布',
 													style: TextStyle(fontSize: 12, color: Color(0xff6bcbd6))
-												),
+												)
 											)
 										)
 									],
@@ -467,6 +472,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 			),
 			
 			onTap: () {
+				// 跳转药品详情
 				Navigator.of(context).push(MaterialPageRoute(
 					builder: (_) => DrugDetailPage(model, this.configModel)
 				));
