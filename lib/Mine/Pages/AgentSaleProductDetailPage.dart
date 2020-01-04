@@ -6,6 +6,7 @@ import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/DrugLibrary/Pages/DrugDetailPage.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
+import 'package:flutter_jkxing/Utils/HttpUtil.dart';
 import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_jkxing/Order/Model/DrugConfigModel.dart';
 import 'package:flutter_jkxing/DrugLibrary/Model/MedicineItemModel.dart';
@@ -40,7 +41,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 			this.configModel = session.configModel;
 		}
 		WidgetsBinding.instance.addPostFrameCallback((_) {
-			_initData();
+			_initData(ToastType.ToastTypeNone);
 			_getDrugConfig();
 		});
 	}
@@ -59,13 +60,14 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 		}
 	}
 	
-	Future<void> _initData() async {
+	Future<void> _initData(ToastType toastType) async {
 		var response = await MineRequest.getAgentSaleProDetail(
 			this.timeStamp,
 			this.sortField,
 			this.sortField == 1 ? 2 : (this.sortDown ? 2 : 1),
 			this.currentPage,
-			context
+			context,
+			toastType
 		);
 		if (response != null) {
 			// 请求成功
@@ -158,7 +160,11 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 							this.timeStamp = tempTime.millisecondsSinceEpoch;
 							this.timeStr = '${tempTime.year}年${tempTime.month}月';
 						});
-						_initData();
+						// 延时执行原因：时间选择器的onConfirm内部会执行 Navigator.pop(context)，
+						//              会同时将请求的loading也pop掉。
+						Future.delayed(Duration(milliseconds: 200), (){
+							_initData(ToastType.ToastTypeNormal);
+						});
 					}
 				).showModal(context);
 			},
@@ -201,7 +207,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 								this.sortField = 1;
 							});
 						}
-						_initData();
+						_initData(ToastType.ToastTypeNormal);
 					},
 					child: Center(child: Text(
 						'销量',
@@ -224,7 +230,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 								this.sortDown = !this.sortDown;
 							});
 						}
-						_initData();
+						_initData(ToastType.ToastTypeNormal);
 					},
 					child: Row(
 						mainAxisAlignment: MainAxisAlignment.center,
@@ -273,10 +279,10 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 			showRefreshHeader: true,
 			onRefresh: () {
 				this.currentPage = 1;
-				return _initData();
+				return _initData(ToastType.ToastTypeError);
 			},
 			onLoad: () {
-				return _initData();
+				return _initData(ToastType.ToastTypeError);
 			},
 			type: this.type
 		);
@@ -395,34 +401,38 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 								// 价格和热度标签
 								Row(
 									children: <Widget>[
-										Text(
-											'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
-											style: TextStyle(fontSize: 18, color: Color(0xffe56767), fontWeight: FontWeight.bold),
-											maxLines: 1,
-											overflow: TextOverflow.ellipsis
-										),
-										Padding(padding: EdgeInsets.only(right: 8)),
-										Offstage(
-											offstage: PPSession.getInstance()?.userModel?.agentType != 1 || this?.configModel?.firstBit != '1',
-											child:  this?.configModel?.thirdBit == '1' && hotImgStr.length > 0 ?
-											Image.network(
-												hotImgStr,
-												height: 19,
-												fit: BoxFit.fitHeight,
-											) : this?.configModel?.secondBit == '1' ?
-											Text(
-												'(药品热度：${(model?.priceCommission ?? 0) / 100})',
-												style: TextStyle(fontSize: 15, color: Color(0xff999999)),
-												maxLines: 1,
-												overflow: TextOverflow.ellipsis
-											) : Container()
-										),
-										Padding(padding: EdgeInsets.only(right: 4)),
-										Offstage(
-											offstage: model?.grossProfitMarginFlag != 1 && model?.grossProfitMarginFlag != -1,
-											child: model?.grossProfitMarginFlag == 1 ? Image.asset('lib/Images/positive_icon.png', width: 18, height: 19) :
-												model?.grossProfitMarginFlag == -1 ? Image.asset('lib/Images/negative_icon.png', width: 18, height: 19) : Container()
-													
+										Row(
+											children: <Widget>[
+												Text(
+													'¥${((model?.ourPrice ?? 0)/100.0).toStringAsFixed(2)}',
+													style: TextStyle(fontSize: 18, color: Color(0xffe56767), fontWeight: FontWeight.bold),
+													maxLines: 1,
+													overflow: TextOverflow.ellipsis
+												),
+												Padding(padding: EdgeInsets.only(right: 8)),
+												Offstage(
+													offstage: PPSession.getInstance()?.userModel?.agentType != 1 || this?.configModel?.firstBit != '1',
+													child:  this?.configModel?.thirdBit == '1' && hotImgStr.length > 0 ?
+													Image.network(
+														hotImgStr,
+														height: 15,
+														fit: BoxFit.fitHeight,
+													) : this?.configModel?.secondBit == '1' ?
+													Text(
+														'(药品热度：${(model?.priceCommission ?? 0) / 100})',
+														style: TextStyle(fontSize: 13, color: Color(0xff0a1314)),
+														maxLines: 1,
+														overflow: TextOverflow.ellipsis
+													) : Container()
+												),
+												Padding(padding: EdgeInsets.only(right: 4)),
+												Offstage(
+													offstage: model?.grossProfitMarginFlag != 1 && model?.grossProfitMarginFlag != -1,
+													child: model?.grossProfitMarginFlag == 1 ? Image.asset('lib/Images/positive_icon.png', width: 15, height: 15) :
+													model?.grossProfitMarginFlag == -1 ? Image.asset('lib/Images/negative_icon.png', width: 15, height: 15) : Container()
+												
+												)
+											]
 										),
 										Expanded(child: Container()),
 										GestureDetector(

@@ -10,6 +10,7 @@ import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Home/Model/AuthenticationDoctorModel.dart';
 import 'package:flutter_jkxing/Home/Pages/DoctorStatisticPage.dart';
 
+// 首页->已通过列表->我的医生
 class DoctorListOfHospitalPage extends StatefulWidget {
 	final String agentName;
 	final String agentId;

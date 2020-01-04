@@ -4,6 +4,7 @@ import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Home/Pages/HomeHospitalListPage.dart';
 
+// 首页Content页
 class HomeContentPage extends StatefulWidget {
 	@override
 	State<StatefulWidget> createState() {

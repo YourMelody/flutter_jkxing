@@ -12,6 +12,7 @@ enum DoctorStatus {
 	PendingAuthentication   // 待认证
 }
 
+// 首页 已通过/待认证 列表
 class HomeHospitalListPage extends StatefulWidget {
 	final DoctorStatus doctorStatus;
 	HomeHospitalListPage(this.doctorStatus);

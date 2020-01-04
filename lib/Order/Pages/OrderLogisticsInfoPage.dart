@@ -10,6 +10,7 @@ import 'package:flutter_jkxing/Order/Network/OrderRequest.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 
+// 订单->订单详情->物流追踪
 class OrderLogisticsInfoPage extends StatefulWidget {
 	final String orderCode;
 	OrderLogisticsInfoPage(this.orderCode);

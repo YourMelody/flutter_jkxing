@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'LogisticsInfoModel.g.dart';
 
 @JsonSerializable()
+
+// 订单追踪model
 class LogisticsInfoModel {
   List<LogisticsInfoDesModel> logisticsList;
   String orderCode;

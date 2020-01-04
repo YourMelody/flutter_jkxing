@@ -116,11 +116,12 @@ class MineRequest {
 	}
 	
 	// 药品明细
-	static Future<dynamic> getAgentSaleProDetail(int monthTime, int sortField, int sortType, int page, BuildContext context) {
+	static Future<dynamic> getAgentSaleProDetail(int monthTime, int sortField, int sortType, int page, BuildContext context, ToastType toastType) {
 		return HttpUtil.getInstance().get(
 			'crm/api/agentProductStatis/agentSaleProductDetails',
 			data: {'agentId': PPSession.getInstance()?.userId ?? '', 'monthTime': monthTime, 'sortField': sortField, 'sortType': sortType, 'page': page, 'limit': 20},
-			context: context
+			context: context,
+			showToast: toastType
 		).then((data) {
 			try {
 				if (data != null) {

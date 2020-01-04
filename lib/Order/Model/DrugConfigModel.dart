@@ -4,6 +4,7 @@ part 'DrugConfigModel.g.dart';
 
 @JsonSerializable()
 
+// 药品配置相关model，用来控制各种标签显示，如：人气，推荐，特价等.
 class HotSpecialModel {
 	HotSpecialModel(this.limitRate, this.detailsPicUrl, this.rateIconUrl);
 	

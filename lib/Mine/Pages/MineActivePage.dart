@@ -9,6 +9,7 @@ import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Mine/Network/MineRequest.dart';
 import 'package:flutter_jkxing/Home/Pages/DoctorStatisticPage.dart';
 
+// 我的->活跃度
 class MineActivePage extends StatefulWidget {
 	@override
 	State<StatefulWidget> createState() {

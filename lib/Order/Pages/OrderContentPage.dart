@@ -7,6 +7,7 @@ import 'OrderListPage.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 
+// 订单Content页
 class OrderContentPage extends StatefulWidget {
 	final DoctorInfoOfHospitalModel doctorModel;
 	OrderContentPage({this.doctorModel});

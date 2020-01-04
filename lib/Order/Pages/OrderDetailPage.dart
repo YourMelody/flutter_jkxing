@@ -9,9 +9,9 @@ import 'package:flutter_jkxing/Order/Model/OrderDrugModel.dart';
 import 'package:flutter_jkxing/Order/Model/OrderModel.dart';
 import 'package:flutter_jkxing/Order/Network/DrugConfigRequest.dart';
 import 'package:flutter_jkxing/Utils/ProgressUtil.dart';
-
 import 'OrderLogisticsInfoPage.dart';
 
+// 订单->订单详情
 class OrderDetailPage extends StatefulWidget {
 	final OrderModel model;
 	OrderDetailPage(this.model);

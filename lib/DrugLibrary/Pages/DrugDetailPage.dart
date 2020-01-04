@@ -14,6 +14,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../Model/MedicineItemModel.dart';
 import '../Network/DrugLibRequest.dart';
 
+// 药品库->药品列表->药品详情
+// 我的->药品明细->药品详情
 class DrugDetailPage extends StatefulWidget {
 	DrugDetailPage(this.drugModel, this.configModel);
 	final MedicineItemModel drugModel;

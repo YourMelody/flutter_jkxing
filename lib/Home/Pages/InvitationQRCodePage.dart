@@ -5,6 +5,7 @@ import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Home/Model/InviteShareModel.dart';
 
+// 医生统计->查看医生专属二维码
 class InvitationQRCodePage extends StatefulWidget {
 	final DoctorInfoOfHospitalModel doctorModel;
 	InvitationQRCodePage(this.doctorModel);

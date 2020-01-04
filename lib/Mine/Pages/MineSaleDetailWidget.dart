@@ -5,7 +5,7 @@ import 'package:flutter_jkxing/Mine/Model/MineDetailModel.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
 
 /* *
- * 显示规则：
+ * 我的->头部->各种数据显示规则：
  *  1、预计个人提成和销售业绩，数据为空时显示0.00
  *  2、净毛利率数据为空时，显示0.00%
  *  3、月销售业绩和距离销售业绩，跨月查看数据为空，显示--，非跨月查看数据为空显示0.00

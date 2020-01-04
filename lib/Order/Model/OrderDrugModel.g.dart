@@ -2,10 +2,6 @@
 
 part of 'OrderDrugModel.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
 OrderDrugModel _$OrderDrugModelFromJson(Map<String, dynamic> json) {
 	return OrderDrugModel(
 		json['id'] as int,

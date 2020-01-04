@@ -8,6 +8,8 @@ import 'package:flutter_jkxing/Home/Model/DoctorStatisticModel.dart';
 import 'InvitationQRCodePage.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
 
+// 首页->已通过列表->我的医生->医生统计
+// 我的->医生统计
 class DoctorStatisticPage extends StatefulWidget {
 	final DoctorInfoOfHospitalModel doctorModel;
 	DoctorStatisticPage(this.doctorModel);

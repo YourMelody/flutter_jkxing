@@ -2,10 +2,6 @@
 
 part of 'OrderModel.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) {
 	return OrderModel(
 		json['id'] as int,

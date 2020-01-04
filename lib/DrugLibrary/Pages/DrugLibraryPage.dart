@@ -10,6 +10,7 @@ import '../Network/DrugLibRequest.dart';
 import 'DrugListPage.dart';
 import 'package:flutter_jkxing/Common/RefreshListView.dart';
 
+// 药品库
 class DrugLibraryPage extends StatefulWidget {
 	@override
 	_DrugLibraryPageState createState() => _DrugLibraryPageState();

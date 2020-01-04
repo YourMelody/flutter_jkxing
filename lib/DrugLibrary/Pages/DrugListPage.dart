@@ -10,6 +10,7 @@ import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/ZFSearchBar.dart';
 
+// 药品库->药品列表
 class DrugListPage extends StatefulWidget {
 	DrugListPage(this.drugClassModel, this.configModel);
 	final DrugClassModel drugClassModel;
