@@ -57,12 +57,12 @@ class HttpUtil {
 		);
 		dio = Dio(options);
 		
-		(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-			// 设置代理
-			client.findProxy = (uri) {
-				return 'PROXY 172.16.4.166:8888';
-			};
-		};
+//		(dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+//			// 设置代理
+//			client.findProxy = (uri) {
+//				return 'PROXY 192.168.36.77:8888';
+//			};
+//		};
 	}
 	
 	

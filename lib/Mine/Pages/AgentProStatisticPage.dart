@@ -118,9 +118,8 @@ class _AgentProStatisticState extends State<AgentProStatisticPage> {
 				));
 			},
 			child: Container(
-				height: 80,
 				alignment: Alignment.center,
-				padding: EdgeInsets.all(16),
+				padding: EdgeInsets.all(15),
 				decoration: BoxDecoration(
 					border: Border(bottom: BorderSide(color: Color(0xffe5e5e5), width: 0.5))
 				),

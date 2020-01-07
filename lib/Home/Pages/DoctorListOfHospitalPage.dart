@@ -166,7 +166,6 @@ class _DoctorListOfHospitalState extends State<DoctorListOfHospitalPage> {
 				}
 			},
 			child: Container(
-				height: 80,
 				alignment: Alignment.center,
 				padding: EdgeInsets.fromLTRB(0, 16, 9, 16),
 				margin: EdgeInsets.only(left: 15),

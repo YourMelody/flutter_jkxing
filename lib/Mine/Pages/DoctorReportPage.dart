@@ -58,7 +58,8 @@ class _DoctorReportState extends State<DoctorReportPage> {
 			appBar: ZFAppBar('医生报表', context: context),
 			body: ListView.builder(
 				itemCount: this.dataSource == null ? 2 : this.dataSource.length + 2,
-				itemBuilder: (context, index) => _createItem(index)
+				itemBuilder: (context, index) => _createItem(index),
+				padding: EdgeInsets.only(bottom: 20)
 			)
 		);
 	}
