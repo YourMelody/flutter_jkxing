@@ -6,6 +6,8 @@ import 'package:flutter_jkxing/Invitation/InvitationPage.dart';
 import 'package:flutter_jkxing/Mine/Pages/MinePage.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderContentPage.dart';
 
+import 'Common/PPSession.dart';
+
 class ZFBaseTabBar extends StatefulWidget {
 	@override
 	_ZFBaseTabBarState createState() => _ZFBaseTabBarState();
@@ -31,6 +33,7 @@ class _ZFBaseTabBarState extends State<ZFBaseTabBar> {
 	
 	@override
 	Widget build(BuildContext context) {
+		PPSession.getInstance().paddingBottom = MediaQuery.of(context).padding.bottom;
 		return Scaffold(
 			// 底部导航
 			bottomNavigationBar: _getCupertinoTabBar(),

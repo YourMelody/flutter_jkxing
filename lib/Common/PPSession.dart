@@ -10,6 +10,7 @@ class PPSession {
 	String userId;
 	String userToken;
 	int logOutType;     // 1用户在其它设备登陆  2用户被禁用
+	double paddingBottom;
 	
 	static PPSession getInstance() {
 		if(instance == null){

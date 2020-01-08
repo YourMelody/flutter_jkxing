@@ -35,9 +35,8 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	
 	@override
 	Widget build(BuildContext context) {
-		super.build(context);
 		MediaQueryData queryData = MediaQuery.of(context);
-		print('${queryData.size.height}-----${queryData.padding.top}-----${queryData.padding.bottom}');
+		super.build(context);
 		return Scaffold(
 			appBar: ZFAppBar(
 				'药品库',
@@ -57,7 +56,8 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 				controller: this.controller,
 				child: Container(
 					width: queryData.size.width,
-					height: queryData.size.height - queryData.padding.top - queryData.padding.bottom - 180 + (Platform.isAndroid ? 34 : 0),
+					// 146 = 94(顶部bar+搜索框高度) + 50(底部bar的高度) + 2(顶部bar和底部bar边框高度)
+					height: queryData.size.height - queryData.padding.top - PPSession.getInstance().paddingBottom - 146,
 					child: Row(
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: <Widget>[
