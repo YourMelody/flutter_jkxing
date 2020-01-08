@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Util {
 	// 金额格式化（添加逗号）
@@ -34,5 +36,27 @@ class Util {
 		} else {
 			return "";
 		}
+	}
+	
+	// dialog
+	void showMyGeneralDialog(BuildContext context, Widget child) {
+		showGeneralDialog(
+			context: context,
+			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+				return child;
+			},
+			barrierDismissible: true,
+			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+			transitionDuration: const Duration(milliseconds: 150),
+			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+				return FadeTransition(
+					opacity: CurvedAnimation(
+						parent: animation,
+						curve: Curves.easeOut
+					),
+					child: child
+				);
+			}
+		);
 	}
 }

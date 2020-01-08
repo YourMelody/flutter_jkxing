@@ -4,6 +4,7 @@ import 'package:flutter_jkxing/Common/ZFShareAlertView.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
 import 'package:flutter_jkxing/Home/Model/InviteShareModel.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
 
 // 医生统计->查看医生专属二维码
 class InvitationQRCodePage extends StatefulWidget {
@@ -133,32 +134,11 @@ class _InvitationQRCodeState extends State<InvitationQRCodePage> {
 					this.setState(() {
 						shareModel = response;
 					});
-					_showShare();
+					Util().showMyGeneralDialog(context, ZFShareAlertView());
 				}
 			});
 		} else {
-			_showShare();
+			Util().showMyGeneralDialog(context, ZFShareAlertView());
 		}
-	}
-	
-	void _showShare() {
-		showGeneralDialog(
-			context: context,
-			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-				return ZFShareAlertView();
-			},
-			barrierDismissible: true,
-			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-			transitionDuration: const Duration(milliseconds: 150),
-			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-				return FadeTransition(
-					opacity: CurvedAnimation(
-						parent: animation,
-						curve: Curves.easeOut
-					),
-					child: child
-				);
-			}
-		);
 	}
 }

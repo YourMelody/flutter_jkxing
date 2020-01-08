@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Order/Pages/OrderSearchEvent.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
 import 'OrderListPage.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_jkxing/Home/Model/DoctorInfoOfHospitalModel.dart';
@@ -133,83 +134,69 @@ class _OrderContentState extends State<OrderContentPage> with SingleTickerProvid
 			return;
 		}
 		TextEditingController _editingController = TextEditingController(text: this.searchDocName ?? '');
-		showGeneralDialog(
-			context: context,
-			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-				return SafeArea(child: GestureDetector(
-					onTap: () {
-						if (Navigator.of(context).canPop()) {
-							Navigator.of(context).pop();
-						}
-					},
-					child: StatefulBuilder(builder: (context, StateSetter setState) {
-						return Container(
-							color: Color.fromRGBO(0, 0, 0, 0),
-							child: Column(children: <Widget>[
-								// 搜索输入框
-								Container(
-									color: Colors.white,
-									height: 40,
-									padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-									child: Row(children: <Widget>[
-										Expanded(child: CupertinoTextField(
-											controller: _editingController,
-											maxLines: 1,
-											autofocus: true,
-											autocorrect: false,
-											textAlign: TextAlign.left,
-											style: TextStyle(fontSize: 16, color: Color(0xff3b4243)),
-											placeholder: '医生姓名',
-											clearButtonMode: OverlayVisibilityMode.editing,
-											cursorColor: Color(0xff6bcbd6),
-											decoration: BoxDecoration(
-												border: Border.all(width: 0, color: Colors.white),
-												borderRadius: BorderRadius.circular(16),
-												color: Color(0xfff4f6f9)
-											),
-											prefix: Container(
-												padding: EdgeInsets.only(left: 6),
-												child: Icon(
-													Icons.search,
-													color: Colors.grey,
-													size: 18
-												)
-											),
-											onSubmitted: (text) => _onSearch(),
-											onChanged: (text) {
-												setState(() {
-													searchDocName = text;
-												});
-											}
-										)),
-										Padding(padding: EdgeInsets.only(right: 10)),
-										GestureDetector(
-											onTap: () => _onSearch(),
-											child: Text(
-												this.searchDocName != null && this.searchDocName.length > 0 ? '搜索' : '取消',
-												style: TextStyle(fontSize: 16, color: Color(0xc00a1314), fontWeight: FontWeight.w400, decoration: TextDecoration.none)
+		Util().showMyGeneralDialog(
+			context,
+			SafeArea(child: GestureDetector(
+				onTap: () {
+					if (Navigator.of(context).canPop()) {
+						Navigator.of(context).pop();
+					}
+				},
+				child: StatefulBuilder(builder: (context, StateSetter setState) {
+					return Container(
+						color: Color.fromRGBO(0, 0, 0, 0),
+						child: Column(children: <Widget>[
+							// 搜索输入框
+							Container(
+								color: Colors.white,
+								height: 40,
+								padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+								child: Row(children: <Widget>[
+									Expanded(child: CupertinoTextField(
+										controller: _editingController,
+										maxLines: 1,
+										autofocus: true,
+										autocorrect: false,
+										textAlign: TextAlign.left,
+										style: TextStyle(fontSize: 16, color: Color(0xff3b4243)),
+										placeholder: '医生姓名',
+										clearButtonMode: OverlayVisibilityMode.editing,
+										cursorColor: Color(0xff6bcbd6),
+										decoration: BoxDecoration(
+											border: Border.all(width: 0, color: Colors.white),
+											borderRadius: BorderRadius.circular(16),
+											color: Color(0xfff4f6f9)
+										),
+										prefix: Container(
+											padding: EdgeInsets.only(left: 6),
+											child: Icon(
+												Icons.search,
+												color: Colors.grey,
+												size: 18
 											)
+										),
+										onSubmitted: (text) => _onSearch(),
+										onChanged: (text) {
+											setState(() {
+												searchDocName = text;
+											});
+										}
+									)),
+									Padding(padding: EdgeInsets.only(right: 10)),
+									GestureDetector(
+										onTap: () => _onSearch(),
+										child: Text(
+											this.searchDocName != null && this.searchDocName.length > 0 ? '搜索' : '取消',
+											style: TextStyle(fontSize: 16, color: Color(0xc00a1314), fontWeight: FontWeight.w400, decoration: TextDecoration.none)
 										)
-									])
-								),
-								Expanded(child: Container(color: Color(0x80000000)))
-							])
-						);
-					})
-				));
-			},
-			barrierDismissible: true,
-			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-			transitionDuration: const Duration(milliseconds: 150),
-			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-				return FadeTransition(
-					opacity: CurvedAnimation(
-						parent: animation,
-						curve: Curves.easeOut
-					),
-					child: child
-				);
-			}
+									)
+								])
+							),
+							Expanded(child: Container(color: Color(0x80000000)))
+						])
+					);
+				})
+			))
 		);
 	}
 	

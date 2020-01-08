@@ -20,7 +20,7 @@ class ZFProgressHUDView extends StatelessWidget {
 						color: Color.fromRGBO(0, 0, 0, 0.88),
 						borderRadius: BorderRadius.circular(18)
 					),
-					padding: EdgeInsets.all(12),
+					padding: EdgeInsets.all(16),
 					child: _getContentWidget(),
 					constraints: BoxConstraints(
 						minWidth: 90,

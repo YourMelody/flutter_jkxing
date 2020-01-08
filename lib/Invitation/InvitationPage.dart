@@ -3,6 +3,7 @@ import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFShareAlertView.dart';
 import 'package:flutter_jkxing/Redux/ZFAction.dart';
 import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
@@ -147,23 +148,9 @@ class InvitationPage extends StatelessWidget {
 	}
 	
 	void _getSharePage(BuildContext context) {
-		showGeneralDialog(
-			context: context,
-			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-				return ZFShareAlertView();
-			},
-			barrierDismissible: true,
-			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-			transitionDuration: const Duration(milliseconds: 150),
-			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-				return FadeTransition(
-					opacity: CurvedAnimation(
-						parent: animation,
-						curve: Curves.easeOut
-					),
-					child: child
-				);
-			}
+		Util().showMyGeneralDialog(
+			context,
+			ZFShareAlertView()
 		);
 	}
 }

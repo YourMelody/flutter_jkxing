@@ -3,6 +3,9 @@ import 'package:flutter_jkxing/Common/RefreshListView.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Home/Model/PersonalInfoModel.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
+import 'package:flutter_jkxing/Utils/Util.dart';
+
+import 'UploadDocAvatarPage.dart';
 
 /*
 * 医生统计->个人信息展示规则:
@@ -133,7 +136,9 @@ class _PersonalInfoState extends State<PersonalInfoPage> {
 			onTap: () {
 				if (index == 0) {
 					// 认证照片
-					
+					Navigator.of(context).push(MaterialPageRoute(
+						builder: (_) => UploadDocAvatarPage(widget.doctorId, this.perInfoModel.list[0].auditShowStatus, this.perInfoModel.list[0].auditType)
+					));
 				} else if (index ==1) {
 					// 工作证/工牌
 					
@@ -181,125 +186,111 @@ class _PersonalInfoState extends State<PersonalInfoPage> {
 	}
 	
 	void _showAlert() {
-		showGeneralDialog(
-			context: context,
-			pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-				return GestureDetector(
-					onTap: () {
-						Navigator.of(context).pop();
-					},
+		Util().showMyGeneralDialog(
+			context,
+			GestureDetector(
+				onTap: () {
+					Navigator.of(context).pop();
+				},
+				child: Container(
+					color: Color(0xb2000000),
+					alignment: Alignment.center,
 					child: Container(
-						color: Color(0xb2000000),
+						height: 225,
 						alignment: Alignment.center,
-						child: Container(
-							height: 225,
-							alignment: Alignment.center,
-							margin: EdgeInsets.symmetric(horizontal: 35),
-							padding: EdgeInsets.fromLTRB(15, 18, 15, 0),
-							decoration: BoxDecoration(
-								color: Colors.white,
-								borderRadius: BorderRadius.circular(5)
+						margin: EdgeInsets.symmetric(horizontal: 35),
+						padding: EdgeInsets.fromLTRB(15, 18, 15, 0),
+						decoration: BoxDecoration(
+							color: Colors.white,
+							borderRadius: BorderRadius.circular(5)
+						),
+						child: Column(children: <Widget>[
+							Text(
+								'请选择以哪个职称为准？',
+								style: TextStyle(
+									fontSize: 16,
+									color: Color(0xbf0a1314),
+									fontWeight: FontWeight.w500,
+									decoration: TextDecoration.none
+								)
 							),
-							child: Column(children: <Widget>[
-								Text(
-									'请选择以哪个职称为准？',
-									style: TextStyle(
-										fontSize: 16,
-										color: Color(0xbf0a1314),
-										fontWeight: FontWeight.w500,
-										decoration: TextDecoration.none
-									)
-								),
-								Padding(padding: EdgeInsets.only(top: 18)),
+							Padding(padding: EdgeInsets.only(top: 18)),
+							
+							GestureDetector(
+								onTap: () {
 								
-								GestureDetector(
-									onTap: () {
-									
-									},
-									child: Container(
-										decoration: BoxDecoration(
-											color: Color(0xff6bcbd6),
-											borderRadius: BorderRadius.circular(22)
-										),
-										height: 44,
-										alignment: Alignment.center,
-										child: Text(
-											'注册认证时填写的职称',
-											style: TextStyle(
-												fontSize: 16,
-												color: Colors.white,
-												fontWeight: FontWeight.normal,
-												decoration: TextDecoration.none
-											)
-										),
-										margin: EdgeInsets.only(bottom: 16)
-									)
-								),
-								
-								GestureDetector(
-									onTap: () {
-									
-									},
-									child: Container(
-										decoration: BoxDecoration(
+								},
+								child: Container(
+									decoration: BoxDecoration(
+										color: Color(0xff6bcbd6),
+										borderRadius: BorderRadius.circular(22)
+									),
+									height: 44,
+									alignment: Alignment.center,
+									child: Text(
+										'注册认证时填写的职称',
+										style: TextStyle(
+											fontSize: 16,
 											color: Colors.white,
-											borderRadius: BorderRadius.circular(22),
-											border: Border.all(
-												color: Color(0xff6bcbd6),
-												width: 1
-											)
-										),
-										height: 44,
-										alignment: Alignment.center,
-										child: Text(
-											'工作证/工牌上的职称',
-											style: TextStyle(
-												fontSize: 16,
-												color: Color(0xff6bcbd6),
-												fontWeight: FontWeight.normal,
-												decoration: TextDecoration.none
-											)
-										),
-										margin: EdgeInsets.only(bottom: 10)
-									)
-								),
+											fontWeight: FontWeight.normal,
+											decoration: TextDecoration.none
+										)
+									),
+									margin: EdgeInsets.only(bottom: 16)
+								)
+							),
+							
+							GestureDetector(
+								onTap: () {
 								
-								GestureDetector(
-									onTap: () {
-										Navigator.of(context).pop();
-									},
-									child: Container(
+								},
+								child: Container(
+									decoration: BoxDecoration(
 										color: Colors.white,
-										height: 44,
-										alignment: Alignment.center,
-										child: Text(
-											'取消',
-											style: TextStyle(
-												fontSize: 16,
-												color: Color(0x66000000),
-												fontWeight: FontWeight.normal,
-												decoration: TextDecoration.none
-											)
+										borderRadius: BorderRadius.circular(22),
+										border: Border.all(
+											color: Color(0xff6bcbd6),
+											width: 1
+										)
+									),
+									height: 44,
+									alignment: Alignment.center,
+									child: Text(
+										'工作证/工牌上的职称',
+										style: TextStyle(
+											fontSize: 16,
+											color: Color(0xff6bcbd6),
+											fontWeight: FontWeight.normal,
+											decoration: TextDecoration.none
+										)
+									),
+									margin: EdgeInsets.only(bottom: 10)
+								)
+							),
+							
+							GestureDetector(
+								onTap: () {
+									Navigator.of(context).pop();
+								},
+								child: Container(
+									color: Colors.white,
+									height: 44,
+									alignment: Alignment.center,
+									child: Text(
+										'取消',
+										style: TextStyle(
+											fontSize: 16,
+											color: Color(0x66000000),
+											fontWeight: FontWeight.normal,
+											decoration: TextDecoration.none
 										)
 									)
 								)
-							])
-						)
+							)
+						])
 					)
-				);
-			},
-			barrierDismissible: true,
-			barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-			transitionDuration: const Duration(milliseconds: 150),
-			transitionBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-				return FadeTransition(
-					opacity: CurvedAnimation(
-						parent: animation,
-						curve: Curves.easeOut
-					),
-					child: child
-				);
-			}
+				)
+			)
 		);
 	}
 }

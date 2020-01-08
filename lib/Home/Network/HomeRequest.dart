@@ -139,4 +139,23 @@ class HomeRequest {
 			}
 		});
 	}
+	
+	// 获取个人信息的认证照片
+	static Future<dynamic> getDocAvatarReq(int doctorId, int auditType, BuildContext context) {
+		return HttpUtil.getInstance().get(
+			'user/api/hospitalUser/agentGetDoctorCertificateDetail',
+			data: {'doctorId': doctorId, 'auditType': auditType},
+			context: context
+		).then((data) {
+			try {
+				if (data != null && (data as List).length > 0) {
+					 return (data as List)[0];
+				} else {
+					return null;
+				}
+			} catch (e) {
+				return null;
+			}
+		});
+	}
 }

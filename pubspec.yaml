@@ -93,5 +93,7 @@ flutter:
     - lib/Images/down_deep_icon.png
     - lib/Images/negative_icon.png
     - lib/Images/positive_icon.png
+    - lib/Images/doctor_upload_default.png
+    - lib/Images/certification_avator_x.png
 
 
