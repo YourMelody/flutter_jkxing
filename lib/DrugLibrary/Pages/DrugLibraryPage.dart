@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
@@ -36,44 +37,42 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	Widget build(BuildContext context) {
 		super.build(context);
 		MediaQueryData queryData = MediaQuery.of(context);
+		print('${queryData.size.height}-----${queryData.padding.top}-----${queryData.padding.bottom}');
 		return Scaffold(
-			appBar: ZFAppBar('药品库', showBackBtn: false),
+			appBar: ZFAppBar(
+				'药品库',
+				showBackBtn: false,
+				bottom: PreferredSize(
+					preferredSize: Size.fromHeight(50),
+					child: ZFSearchBar(
+						placeholder: '搜索药品',
+						onTapSearchBar: () {
+						
+						}
+					)
+				),
+				height: 94
+			),
 			body: RefreshListView(
 				controller: this.controller,
 				child: Container(
 					width: queryData.size.width,
-					height: queryData.size.height - queryData.padding.top - queryData.padding.bottom - 130,
-					child: Column(
+					height: queryData.size.height - queryData.padding.top - queryData.padding.bottom - 180 + (Platform.isAndroid ? 34 : 0),
+					child: Row(
+						crossAxisAlignment: CrossAxisAlignment.start,
 						children: <Widget>[
-							// 顶部搜索框
-							ZFSearchBar(
-								placeholder: '搜索药品',
-								onTapSearchBar: () {
-								
-								},
+							// 左侧主分类列表
+							Container(
+								width: 120,
+								child: _leftList()
 							),
 							
-							Expanded(
-								child: Container(
-									child: Row(
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: <Widget>[
-											// 左侧主分类列表
-											Container(
-												width: 120,
-												child: _leftList()
-											),
-											
-											// 右侧主分类下细分类列表
-											Expanded(child: Container(
-												color: Color(0xfff4f6f9),
-												padding: EdgeInsets.only(left: 8),
-												child: _rightList()
-											))
-										]
-									)
-								)
-							)
+							// 右侧主分类下细分类列表
+							Expanded(child: Container(
+								color: Color(0xfff4f6f9),
+								padding: EdgeInsets.only(left: 8),
+								child: _rightList()
+							))
 						]
 					)
 				),
