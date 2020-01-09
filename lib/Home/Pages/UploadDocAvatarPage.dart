@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Home/Network/HomeRequest.dart';
-import 'package:flutter_jkxing/Utils/Util.dart';
 
 import 'ESImageViewPage.dart';
 
@@ -86,7 +86,7 @@ class _UploadDocAvatarState extends State<UploadDocAvatarPage> {
 								}
 							} else {
 								// 拍照、选择照片
-								
+								_showSelectImageDialog();
 							}
 						},
 						child: ClipRRect(
@@ -216,6 +216,83 @@ class _UploadDocAvatarState extends State<UploadDocAvatarPage> {
 					child: ESImageViewPage(this.imgUrl)
 				)
 			)
+		);
+	}
+	
+	void _showSelectImageDialog() {
+		showModalBottomSheet(
+			context: context,
+			backgroundColor: Color(0xff5d5e5f),
+			builder: (BuildContext context) {
+				return Container(
+					height: 200 + PPSession.getInstance().paddingBottom,
+					padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+					color: Color(0xff6f7473),
+					child: Column(children: <Widget>[
+						GestureDetector(
+							onTap: () {
+							
+							},
+							child: Container(
+								height: 58,
+								alignment: Alignment.center,
+								decoration: BoxDecoration(
+									borderRadius: BorderRadius.only(
+										topLeft: Radius.circular(13),
+										topRight: Radius.circular(13)
+									),
+									color: Colors.white
+								),
+								child: Text(
+									'从相册选择',
+									style: TextStyle(fontSize: 20, color: Color(0xff0a1314))
+								)
+							)
+						),
+						Container(height: 1, color: Color(0xffe5e5e5)),
+						
+						GestureDetector(
+							onTap: () {
+							
+							},
+							child: Container(
+								height: 58,
+								alignment: Alignment.center,
+								margin: EdgeInsets.only(bottom: 8),
+								decoration: BoxDecoration(
+									borderRadius: BorderRadius.only(
+										bottomLeft: Radius.circular(13),
+										bottomRight: Radius.circular(13)
+									),
+									color: Colors.white
+								),
+								child: Text(
+									'拍摄',
+									style: TextStyle(fontSize: 20, color: Color(0xff0a1314))
+								),
+							)
+						),
+						
+						GestureDetector(
+							onTap: () {
+								Navigator.of(context).pop();
+							},
+							child: Container(
+								height: 58,
+								alignment: Alignment.center,
+								decoration: BoxDecoration(
+									borderRadius: BorderRadius.circular(13),
+									color: Colors.white
+								),
+								child: Text(
+									'取消',
+									style: TextStyle(fontSize: 20, color: Color(0xff0a1314))
+								),
+							)
+						)
+					])
+				);
+			}
 		);
 	}
 }
