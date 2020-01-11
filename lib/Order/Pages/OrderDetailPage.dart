@@ -277,7 +277,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 					)
 				)
 			]),
-			padding: EdgeInsets.symmetric(horizontal: 15),
+			padding: EdgeInsets.symmetric(horizontal: 15)
 		);
 	}
 	
@@ -302,7 +302,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 							style: TextStyle(
 								fontSize: 20,
 								color: Color(0xffe56767)
-							),
+							)
 						))
 					]),
 					Padding(padding: EdgeInsets.only(top: 35)),

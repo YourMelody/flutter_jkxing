@@ -26,7 +26,7 @@ class InvitationPage extends StatelessWidget {
 						_getMainContainer(context),
 						_getShareBtn(context)
 					],
-				),
+				)
 			)
 		);
 	}

@@ -122,7 +122,7 @@ class _DrugListState extends State<DrugListPage> {
 						placeholder: '搜索药品',
 						onTapSearchBar: () {
 						
-						},
+						}
 					),
 					Expanded(
 						child: RefreshListView(
@@ -214,8 +214,8 @@ class _DrugListState extends State<DrugListPage> {
 												decoration: BoxDecoration(
 													borderRadius: BorderRadius.circular(6.5),
 													color: Color(0xffcccccc)
-												),
-											),
+												)
+											)
 										),
 										Text(
 											model?.productName ?? '',

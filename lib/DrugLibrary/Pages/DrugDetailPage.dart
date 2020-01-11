@@ -126,7 +126,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 											webHeight = double.parse(result) + 55;
 										});
 									});
-								},
+								}
 							)
 						)
 					]
@@ -176,7 +176,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 								offstage: model?.prescriptionType != 4 && model?.prescriptionType != 5,
 								child: Container(
 									margin: EdgeInsets.only(right: 5),
-									child: Image.asset('lib/Images/rx_flag.png', width: 32, height: 16),
+									child: Image.asset('lib/Images/rx_flag.png', width: 32, height: 16)
 								)
 							),
 							Expanded(child: Text(

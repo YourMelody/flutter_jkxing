@@ -351,8 +351,8 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 												decoration: BoxDecoration(
 													borderRadius: BorderRadius.circular(6.5),
 													color: Color(0xffcccccc)
-												),
-											),
+												)
+											)
 										),
 										Expanded(child: Text(
 											model?.productName ?? '',
@@ -409,7 +409,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 													Image.network(
 														hotImgStr,
 														height: 15,
-														fit: BoxFit.fitHeight,
+														fit: BoxFit.fitHeight
 													) : this?.configModel?.secondBit == '1' ?
 													Text(
 														'(药品热度：${(model?.priceCommission ?? 0) / 100})',
@@ -423,7 +423,6 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 													offstage: model?.grossProfitMarginFlag != 1 && model?.grossProfitMarginFlag != -1,
 													child: model?.grossProfitMarginFlag == 1 ? Image.asset('lib/Images/positive_icon.png', width: 15, height: 15) :
 													model?.grossProfitMarginFlag == -1 ? Image.asset('lib/Images/negative_icon.png', width: 15, height: 15) : Container()
-												
 												)
 											]
 										),
