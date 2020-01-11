@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
@@ -92,14 +93,19 @@ class _UploadDocAvatarState extends State<UploadDocAvatarPage> {
 						child: ClipRRect(
 							borderRadius: BorderRadius.circular(49),
 							child: Stack(children: <Widget>[
-								FadeInImage.assetNetwork(
-									placeholder: 'lib/Images/doctor_upload_default.png',
-									image: this.imgUrl ?? '',
+								CachedNetworkImage(
+									imageUrl: this.imgUrl ?? '',
+									placeholder: (context, url) => Image.asset(
+										'lib/Images/doctor_upload_default.png',
+										width: 98,
+										height: 98,
+										fit: BoxFit.cover
+									),
 									width: 98,
 									height: 98,
 									fit: BoxFit.cover,
-									fadeOutDuration: Duration(milliseconds: 20),
-									fadeInDuration: Duration(milliseconds: 20)
+									fadeInDuration: Duration(milliseconds: 50),
+									fadeOutDuration: Duration(milliseconds: 50)
 								),
 								
 								Positioned(
@@ -287,7 +293,7 @@ class _UploadDocAvatarState extends State<UploadDocAvatarPage> {
 								child: Text(
 									'取消',
 									style: TextStyle(fontSize: 20, color: Color(0xff0a1314))
-								),
+								)
 							)
 						)
 					])

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
@@ -126,14 +127,19 @@ class _AgentProStatisticState extends State<AgentProStatisticPage> {
 				child: Row(children: <Widget>[
 					// 头像
 					ClipRRect(
-						child: FadeInImage.assetNetwork(
-							placeholder: 'lib/Images/hospital_avatar_default.png',
-							image: model?.headImgShowPath ?? '',
-							height: 48,
+						child: CachedNetworkImage(
+							imageUrl: model?.headImgShowPath ?? '',
+							placeholder: (context, url) => Image.asset(
+								'lib/Images/hospital_avatar_default.png',
+								width: 48,
+								height: 48,
+								fit: BoxFit.cover
+							),
 							width: 48,
+							height: 48,
 							fit: BoxFit.cover,
-							fadeOutDuration: Duration(milliseconds: 20),
-							fadeInDuration: Duration(milliseconds: 20)
+							fadeInDuration: Duration(milliseconds: 50),
+							fadeOutDuration: Duration(milliseconds: 50)
 						),
 						borderRadius: BorderRadius.circular(24)
 					),

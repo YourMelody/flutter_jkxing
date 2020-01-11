@@ -27,6 +27,10 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	@override
 	void initState() {
 		super.initState();
+		PPSession session = PPSession.getInstance();
+		if (session?.userModel?.agentType == 1) {
+			this.configModel = session.configModel;
+		}
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initData();
 			_getDrugConfig();
@@ -112,7 +116,7 @@ class _DrugLibraryPageState extends State<DrugLibraryPage> with AutomaticKeepAli
 	// 获取药品配置信息，药品热度/标签显示需要用到
 	void _getDrugConfig() {
 		PPSession session = PPSession.getInstance();
-		if (session.userModel.agentType == 1 && session.configModel == null) {
+		if (session?.userModel?.agentType == 1 && this.configModel == null) {
 			DrugConfigRequest.drugConfigReq().then((response) {
 				if (response != null) {
 					session.configModel = response;

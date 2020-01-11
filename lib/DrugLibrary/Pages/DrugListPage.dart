@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
@@ -158,24 +159,7 @@ class _DrugListState extends State<DrugListPage> {
 	
 	_itemBuilder(MedicineItemModel model) {
 		// 热度标签
-		String hotImgStr = '';
-		if (widget.configModel != null && widget.configModel?.firstBit == '1' && widget.configModel?.thirdBit == '1') {
-			if (widget.configModel?.rateArr?.length != null && widget.configModel.rateArr.length > 0) {
-				double ratio = 0.0;
-				if (model?.ourPrice != null && model.ourPrice > 0 && model?.priceCommission != null) {
-					ratio = (model.priceCommission / model.ourPrice) * 100.0;
-				}
-				if (widget.configModel.rateArr.last <= ratio) {
-					for(int i = 0; i < widget.configModel.rateArr.length; i++) {
-						double tmpRate = widget.configModel.rateArr[i];
-						if (tmpRate <= ratio) {
-							hotImgStr = widget.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
-							break;
-						}
-					}
-				}
-			}
-		}
+		String hotImgStr = PPSession.getInstance().getHotImgStr(model.ourPrice, model.priceCommission);
 		
 		return GestureDetector(
 			child: Container(
@@ -186,13 +170,19 @@ class _DrugListState extends State<DrugListPage> {
 						Stack(
 							children: <Widget>[
 								Positioned(
-									child: FadeInImage.assetNetwork(
-										placeholder: 'lib/Images/img_default_medicine.png',
-										image: model.productImageUrl ?? '',
+									child: CachedNetworkImage(
+										imageUrl: model.productImageUrl ?? '',
+										placeholder: (context, url) => Image.asset(
+											'lib/Images/img_default_medicine.png',
+											width: 64,
+											height: 64,
+											fit: BoxFit.cover
+										),
+										width: 64,
+										height: 64,
 										fit: BoxFit.cover,
-										width: 64, height: 64,
-										fadeOutDuration: Duration(milliseconds: 20),
-										fadeInDuration: Duration(milliseconds: 20)
+										fadeInDuration: Duration(milliseconds: 50),
+										fadeOutDuration: Duration(milliseconds: 50)
 									)
 								),
 								Positioned(
@@ -279,7 +269,7 @@ class _DrugListState extends State<DrugListPage> {
 													child: Text(
 														'(药品热度：${(model?.priceCommission ?? 0) / 100})',
 														style: TextStyle(fontSize: 12, color: Color(0xff999999))
-													),
+													)
 												) : Container()
 										)
 									]

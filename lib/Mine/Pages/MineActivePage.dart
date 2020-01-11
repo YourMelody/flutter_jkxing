@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -504,14 +505,19 @@ class _MineActiveState extends State<MineActivePage> {
 				child: Row(
 					children: <Widget>[
 						ClipRRect(
-							child: FadeInImage.assetNetwork(
-								placeholder: 'lib/Images/img_default_medicine.png',
-								image: model?.headImgShowPath ?? '',
-								height: 48,
+							child: CachedNetworkImage(
+								imageUrl: model?.headImgShowPath ?? '',
+								placeholder: (context, url) => Image.asset(
+									'lib/Images/img_default_medicine.png',
+									width: 48,
+									height: 48,
+									fit: BoxFit.cover
+								),
 								width: 48,
+								height: 48,
 								fit: BoxFit.cover,
-								fadeOutDuration: Duration(milliseconds: 20),
-								fadeInDuration: Duration(milliseconds: 20)
+								fadeInDuration: Duration(milliseconds: 50),
+								fadeOutDuration: Duration(milliseconds: 50)
 							),
 							borderRadius: BorderRadius.circular(24)
 						),

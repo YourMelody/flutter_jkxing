@@ -12,6 +12,7 @@ import 'Login/LoginRequest.dart';
 import 'Mine/Pages/ResetPwdPage.dart';
 
 void main() {
+	WidgetsFlutterBinding.ensureInitialized();
 	PPSession session = PPSession.getInstance();
 	session.isLogin().then((value) async {
 		if (value == true && PPSession.getInstance().userModel == null) {

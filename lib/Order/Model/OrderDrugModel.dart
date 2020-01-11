@@ -12,7 +12,7 @@ class OrderDrugModel {
 	int id;
 	String prescriptionCode;
 	int productId;
-	String  productName;
+	String productName;
 	int amount;
 	String packing;
 	int salePrice;

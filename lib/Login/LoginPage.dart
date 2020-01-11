@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_jkxing/Common/UserModel.dart';
@@ -191,13 +192,20 @@ class _LoginPageState extends State<LoginPageWidget> {
 					)),
 					GestureDetector(
 						onTap: () => _getImgToken(),
-						child: FadeInImage.assetNetwork(
-							placeholder: this.tokenStr == 'failed' ? 'lib/Images/login_token_failed.png' : 'lib/Images/login_token_loading.png',
-							image: '${ZFBaseUrl().BjUrl()}/user/api/sms/authCode?token=' + this.tokenStr,
+						child: CachedNetworkImage(
+							imageUrl: '${ZFBaseUrl().BjUrl()}/user/api/sms/authCode?token=' + this.tokenStr,
+							placeholder: (context, url) => Image.asset(
+								this.tokenStr == 'failed' ? 'lib/Images/login_token_failed.png' : 'lib/Images/login_token_loading.png',
+								width: 105,
+								height: 40,
+								fit: BoxFit.cover
+							),
 							width: 105,
 							height: 40,
-							fit: BoxFit.cover
-						)
+							fit: BoxFit.cover,
+							fadeInDuration: Duration(milliseconds: 50),
+							fadeOutDuration: Duration(milliseconds: 50)
+						),
 					)
 				]
 			)

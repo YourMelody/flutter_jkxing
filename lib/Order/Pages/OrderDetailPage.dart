@@ -26,6 +26,10 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	@override
 	void initState() {
 		super.initState();
+		PPSession session = PPSession.getInstance();
+		if (session?.userModel?.agentType == 1) {
+			this.configModel = session.configModel;
+		}
 		WidgetsBinding.instance.addPostFrameCallback((_) {
 			_initData();
 		});
@@ -33,7 +37,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	
 	void _initData() {
 		PPSession session = PPSession.getInstance();
-		if (session.userModel.agentType == 1 && session.configModel == null) {
+		if (session?.userModel?.agentType == 1 && this.configModel == null) {
 			DrugConfigRequest.drugConfigReq().then((response) {
 				if (response != null) {
 					session.configModel = response;
@@ -68,25 +72,7 @@ class _OrderDetailState extends State<OrderDetailPage> {
 	// 药品
 	Widget _createDrugItem(OrderDrugModel drugModel) {
 		// 热度标签
-		String hotImgStr = '';
-		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
-			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
-				double ratio = 0.0;
-				if (drugModel?.salePrice != null && drugModel.salePrice > 0) {
-					ratio = (drugModel.doctorPriceCommission / drugModel.salePrice) * 100.0;
-				}
-				
-				if (this.configModel.rateArr.last <= ratio) {
-					for(int i = 0; i < this.configModel.rateArr.length; i++) {
-						double tmpRate = this.configModel.rateArr[i];
-						if (tmpRate < ratio) {
-							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
-							break;
-						}
-					}
-				}
-			}
-		}
+		String hotImgStr = PPSession.getInstance().getHotImgStr(drugModel.salePrice, drugModel.doctorPriceCommission);
 
 		return Container(
 			height: 48,

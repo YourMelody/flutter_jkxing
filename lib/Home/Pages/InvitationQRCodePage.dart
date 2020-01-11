@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 import 'package:flutter_jkxing/Common/ZFShareAlertView.dart';
@@ -38,6 +39,7 @@ class _InvitationQRCodeState extends State<InvitationQRCodePage> {
 	
 	@override
 	Widget build(BuildContext context) {
+		double imgWidth = 250 / 667 * MediaQuery.of(context).size.height;
 		return Scaffold(
 			appBar: ZFAppBar(
 				'邀请患者二维码',
@@ -87,14 +89,19 @@ class _InvitationQRCodeState extends State<InvitationQRCodePage> {
 							Container(
 								alignment: Alignment.center,
 								padding: EdgeInsets.only(top: 8),
-								child: FadeInImage.assetNetwork(
-									placeholder: 'lib/Images/img_invite_n0_network.png',
-									image: this?.investCodeImage ?? '',
-									width: 250 / 667 * MediaQuery.of(context).size.height,
-									height: 250 / 667 * MediaQuery.of(context).size.height,
+								child: CachedNetworkImage(
+									imageUrl: this?.investCodeImage ?? '',
+									placeholder: (context, url) => Image.asset(
+										'lib/Images/img_invite_n0_network.png',
+										width: imgWidth,
+										height: imgWidth,
+										fit: BoxFit.cover
+									),
+									width: imgWidth,
+									height: imgWidth,
 									fit: BoxFit.cover,
-									fadeOutDuration: Duration(milliseconds: 20),
-									fadeInDuration: Duration(milliseconds: 20)
+									fadeInDuration: Duration(milliseconds: 50),
+									fadeOutDuration: Duration(milliseconds: 50)
 								)
 							)
 						])

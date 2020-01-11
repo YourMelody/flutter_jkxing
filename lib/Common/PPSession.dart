@@ -32,7 +32,7 @@ class PPSession {
 		pref.remove('kSessionAccess_userToken');
 	}
 	
-	// 判断用户是否登陆--刚启动App用该方法（此时PPSession为null），其它情况可直接根据PPSession来判断
+	// 判断用户是否登陆---刚启动App用该方法（此时PPSession为null），其它情况可直接根据PPSession来判断
 	Future isLogin() async {
 		SharedPreferences pref = await SharedPreferences.getInstance();
 		String tempId = pref.getString('kSessionAccess_userId');
@@ -45,5 +45,28 @@ class PPSession {
 		} else {
 			return false;
 		}
+	}
+	
+	// 获取药品热度标签
+	String getHotImgStr(int ourPrice, int priceCommission) {
+		String hotImgStr = '';
+		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
+			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
+				double ratio = 0.0;
+				if (ourPrice != null && ourPrice > 0 && priceCommission != null) {
+					ratio = (priceCommission / ourPrice) * 100.0;
+				}
+				if (this.configModel.rateArr.last <= ratio) {
+					for(int i = 0; i < this.configModel.rateArr.length; i++) {
+						double tmpRate = this.configModel.rateArr[i];
+						if (tmpRate <= ratio) {
+							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
+							break;
+						}
+					}
+				}
+			}
+		}
+		return hotImgStr;
 	}
 }

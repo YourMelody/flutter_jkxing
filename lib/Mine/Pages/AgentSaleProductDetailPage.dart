@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
@@ -38,7 +39,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 		timeStamp = monthTime.millisecondsSinceEpoch;
 		timeStr = '${nowTime.year}年${nowTime.month}月';
 		PPSession session = PPSession.getInstance();
-		if (session.userModel.agentType == 1 && session.configModel != null) {
+		if (session?.userModel?.agentType == 1) {
 			this.configModel = session.configModel;
 		}
 		WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,7 +50,8 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 	
 	// 获取药品配置信息，药品热度/标签显示需要用到
 	void _getDrugConfig() {
-		if (this.configModel == null) {
+		PPSession session = PPSession.getInstance();
+		if (session?.userModel?.agentType == 1 && this.configModel == null) {
 			DrugConfigRequest.drugConfigReq().then((response) {
 				if (response != null) {
 					PPSession.getInstance().configModel = response;
@@ -291,24 +293,7 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 	
 	_itemBuilder(MedicineItemModel model) {
 		// 热度标签
-		String hotImgStr = '';
-		if (this.configModel != null && this.configModel?.firstBit == '1' && this.configModel?.thirdBit == '1') {
-			if (this.configModel?.rateArr?.length != null && this.configModel.rateArr.length > 0) {
-				double ratio = 0.0;
-				if (model?.ourPrice != null && model.ourPrice > 0 && model?.priceCommission != null) {
-					ratio = (model.priceCommission / model.ourPrice) * 100.0;
-				}
-				if (this.configModel.rateArr.last <= ratio) {
-					for(int i = 0; i < this.configModel.rateArr.length; i++) {
-						double tmpRate = this.configModel.rateArr[i];
-						if (tmpRate <= ratio) {
-							hotImgStr = this.configModel?.hotSpecialItems[i]?.rateIconUrl ?? '';
-							break;
-						}
-					}
-				}
-			}
-		}
+		String hotImgStr = PPSession.getInstance().getHotImgStr(model.ourPrice, model.priceCommission);
 		
 		return GestureDetector(
 			child: Container(
@@ -321,13 +306,19 @@ class _AgentSaleProductDetailState extends State<AgentSaleProductDetailPage> {
 								Positioned(
 									child: Container(
 										padding: EdgeInsets.all(5),
-										child: FadeInImage.assetNetwork(
-											placeholder: 'lib/Images/img_default_medicine.png',
-											image: model.productImageUrl ?? '',
-											width: 70, height: 70,
+										child: CachedNetworkImage(
+											imageUrl: model.productImageUrl ?? '',
+											placeholder: (context, url) => Image.asset(
+												'lib/Images/img_default_medicine.png',
+												width: 70,
+												height: 70,
+												fit: BoxFit.cover
+											),
+											width: 70,
+											height: 70,
 											fit: BoxFit.cover,
-											fadeOutDuration: Duration(milliseconds: 20),
-											fadeInDuration: Duration(milliseconds: 20)
+											fadeInDuration: Duration(milliseconds: 50),
+											fadeOutDuration: Duration(milliseconds: 50)
 										)
 									)
 								),

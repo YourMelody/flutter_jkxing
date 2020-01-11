@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -155,13 +156,17 @@ class _DrugDetailState extends State<DrugDetailPage> {
 					children: <Widget>[
 						Padding(padding: EdgeInsets.only(top: 13)),
 						// 图片
-						Center(child: FadeInImage.assetNetwork(
-							placeholder: 'lib/Images/img_default_medicine.png',
-							image: model?.productImageUrl ?? '',
+						Center(child: CachedNetworkImage(
+							imageUrl: model?.productImageUrl ?? '',
+							placeholder: (context, url) => Image.asset(
+								'lib/Images/img_default_medicine.png',
+								height: 170,
+								fit: BoxFit.fitHeight
+							),
 							height: 170,
 							fit: BoxFit.fitHeight,
-							fadeOutDuration: Duration(milliseconds: 20),
-							fadeInDuration: Duration(milliseconds: 20),
+							fadeInDuration: Duration(milliseconds: 50),
+							fadeOutDuration: Duration(milliseconds: 50)
 						)),
 						Padding(padding: EdgeInsets.only(top: 12)),
 						
@@ -252,25 +257,6 @@ class _DrugDetailState extends State<DrugDetailPage> {
 	
 	// 热度标签
 	Widget _createHotLabel(MedicineItemModel model) {
-		String hotImgStr = '';
-		if (widget.configModel != null && widget.configModel?.firstBit == '1' && widget.configModel?.thirdBit == '1') {
-			if (widget.configModel?.rateArr?.length != null && widget.configModel.rateArr.length > 0) {
-				double ratio = 0.0;
-				if (model?.ourPrice != null && model.ourPrice > 0 && model?.priceCommission != null) {
-					ratio = (model.priceCommission / model.ourPrice) * 100.0;
-				}
-				if (widget.configModel.rateArr.last <= ratio) {
-					for(int i = 0; i < widget.configModel.rateArr.length; i++) {
-						double tmpRate = widget.configModel.rateArr[i];
-						if (tmpRate <= ratio) {
-							hotImgStr = widget.configModel?.hotSpecialItems[i]?.detailsPicUrl ?? '';
-							break;
-						}
-					}
-				}
-			}
-		}
-		
 		if (PPSession.getInstance()?.userModel?.agentType != 1 || widget?.configModel?.firstBit != '1') {
 			return Container();
 		} else if (widget?.configModel?.thirdBit == '1') {
@@ -281,7 +267,7 @@ class _DrugDetailState extends State<DrugDetailPage> {
 					height: 56,
 					padding: EdgeInsets.only(left: 8),
 					child: Image.network(
-						hotImgStr ?? '',
+						PPSession.getInstance().getHotImgStr(model.ourPrice, model.priceCommission),
 						fit: BoxFit.contain
 					)
 				)

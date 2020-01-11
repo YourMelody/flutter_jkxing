@@ -1,11 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jkxing/Common/PPSession.dart';
 import 'package:flutter_jkxing/Common/ZFShareAlertView.dart';
-import 'package:flutter_jkxing/Redux/ZFAction.dart';
-import 'package:flutter_jkxing/Redux/ZFAuthState.dart';
 import 'package:flutter_jkxing/Utils/Util.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 import 'package:flutter_jkxing/Common/ZFAppBar.dart';
 
 class InvitationPage extends StatelessWidget {
@@ -35,6 +32,7 @@ class InvitationPage extends StatelessWidget {
 	}
 	
 	Widget _getMainContainer(BuildContext context) {
+		double imgWidth = 180 / 667 * MediaQuery.of(context).size.height;
 		return Positioned(
 			top: 15,
 			left: 20,
@@ -63,12 +61,19 @@ class InvitationPage extends StatelessWidget {
 					)),
 					
 					Padding(padding: EdgeInsets.only(top: 15)),
-					FadeInImage.assetNetwork(
-						placeholder: 'lib/Images/img_invite_n0_network.png',
-						image: PPSession.getInstance()?.userModel?.investCodeImage == null ? '' : PPSession.getInstance().userModel.investCodeImage,
-						width: 180 / 667 * MediaQuery.of(context).size.height,
-						height: 180 / 667 * MediaQuery.of(context).size.height,
-						fit: BoxFit.cover
+					CachedNetworkImage(
+						imageUrl: PPSession.getInstance()?.userModel?.investCodeImage == null ? '' : PPSession.getInstance().userModel.investCodeImage,
+						placeholder: (context, url) => Image.asset(
+							'lib/Images/img_invite_n0_network.png',
+							width: imgWidth,
+							height: imgWidth,
+							fit: BoxFit.cover
+						),
+						width: imgWidth,
+						height: imgWidth,
+						fit: BoxFit.cover,
+						fadeInDuration: Duration(milliseconds: 50),
+						fadeOutDuration: Duration(milliseconds: 50)
 					),
 					
 					Padding(padding: EdgeInsets.only(top: 8)),
