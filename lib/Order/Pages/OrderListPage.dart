@@ -101,7 +101,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 				padding: EdgeInsets.fromLTRB(12, 15, 12, 15),
 				separatorBuilder: (context, index) {
 					return Container(height: 15, color: Color(0xfff4f6f9));
-				},
+				}
 			),
 			onRefresh: () {
 				this.currentPage = 1;
@@ -209,7 +209,7 @@ class _OrderListState extends State<OrderListPage> with AutomaticKeepAliveClient
 								child: Text('处方金额：', style: TextStyle(
 									fontSize: 12,
 									color: Color(0xff999999)
-								)),
+								))
 							),
 							Expanded(child: Text(
 								_getMoney(model.price),
